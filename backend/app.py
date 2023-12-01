@@ -30,7 +30,7 @@ class Users(db.Model):
 # Create a members API route 
 @app.route("/members")
 def members():
-    return{"members": ["Messikh Wissal", "Elabed Amina", "Selidja Abderraouf", "Hennane Douaa", "Boughouas Mohamed"]}
+    return{"members": [ "Elabed Amina","Messikh Wissal", "Selidja Abderraouf", "Hennane Douaa", "Boughouas Mohamed"]}
 
 if __name__ == "__main__":
     app.run(debug=True)
