@@ -7,7 +7,7 @@ This project is a web application designed to search scientific articles using a
 
 1. [Technologies](#technologies)
 2. [Folder Structure](#folder-structure)
-3. [Installation]
+3. [Installation](#installation)
 
 ## Technologies
 ### Frontend:
@@ -54,6 +54,7 @@ This project is a web application designed to search scientific articles using a
           - pages/         (all the pages of the website)
           - styles/        (contains global styling where raw CSS is required, use TailwindCSS otherwise)
       App.jsx            (this is where all pages will be called and where routes are handled)
+
 
 ## Installation
 ### Frontend
