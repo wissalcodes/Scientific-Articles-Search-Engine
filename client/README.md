@@ -37,23 +37,25 @@ This project is a web application designed to search scientific articles using a
 </details>
 
 ## Folder Structure
+### Backend:
 - backend/
-      - app/
-          - models/        (contains the data models)
-          - routes/        (the main page route, main components will be called here)
-          - static/        (client-side resources like images, CSS...)
-      - run.py            (app entry point)
-      - config.py         (environment configurations)
+  - app/
+    - models/        (contains the data models)
+    - routes/        (the main page route, main components will be called here)
+    - static/        (client-side resources like images, CSS...)
+  - run.py            (app entry point)
+  - config.py         (environment configurations)
 
+### Frontend:
 - client/
-      - public/
-          - fonts/         (contains the data models)
-          - images/        (the main page route, main components will be called here)
-      - src/
-          - components/    (folders of React components, each page has a separate folder)
-          - pages/         (all the pages of the website)
-          - styles/        (contains global styling where raw CSS is required, use TailwindCSS otherwise)
-      App.jsx            (this is where all pages will be called and where routes are handled)
+  - public/
+    - fonts/         (contains the data models)
+    - images/        (the main page route, main components will be called here)
+  - src/
+    - components/    (folders of React components, each page has a separate folder)
+    - pages/         (all the pages of the website)
+    - styles/        (contains global styling where raw CSS is required, use TailwindCSS otherwise)
+  - App.jsx            (this is where all pages will be called and where routes are handled)
 
 
 ## Installation
