@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 export const Sample = () => {
   const [members, setMembers] = useState([]);
 
