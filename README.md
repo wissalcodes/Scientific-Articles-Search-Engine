@@ -1,5 +1,16 @@
 # Scientific Articles Search Engine
 
+## Contribution guidelines
+
+  ### - create a branch for each section
+  ### - branches will follow the naming convention ```<member name>/<feature or section name> ```
+        example: wissal/authentication
+  ### - try to provide meaningfull commit messages 
+        example: added an api route for user credentials
+  ### - open a Pull Request after finishing a section or feature
+
+  ## *!!! NEVER PUSH TO MAIN OR AUTOMATICALLY MERGE YOUR BRANCH TO MAIN, EVEN IF YOUR BRANCH CAN BE AUTOMATICALLY MERGED !!!*
+
 ## Description
 
 This project is a web application designed to search scientific articles using a set of keywords
