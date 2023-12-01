@@ -37,29 +37,71 @@ This project is a web application designed to search scientific articles using a
 </details>
 
 ## Folder Structure
-----/backend
-            |___ /app
-            |    |___ /models    (contains the data models)
-            |    |___ /routes    (the main page route, main components will be called here)
-            |    |___ /static    (client side ressources like images, css..)
-            |
-            run.py              (app entry point)
-            config.py           (environement configurations)
-----/client
-            |___ /public
-            |    |___ /fonts    (contains the data models)
-            |    |___ /images    (the main page route, main components will be called here)
-            |    
-            |
-            |___ /src
-            |    |___ /components    (folders of react components, each page has a separate folder)
-            |    |___ /pages         (all the pages of the website)
-            |    |___ /styles        (contains global styling where raw CSS is required, use TailwindCSS otherwise)
-            App.jsx                  (this is where all pages will be called and where routes are handled)
+- backend/
+      - app/
+          - models/        (contains the data models)
+          - routes/        (the main page route, main components will be called here)
+          - static/        (client-side resources like images, CSS...)
+      - run.py            (app entry point)
+      - config.py         (environment configurations)
+
+- client/
+      - public/
+          - fonts/         (contains the data models)
+          - images/        (the main page route, main components will be called here)
+      - src/
+          - components/    (folders of React components, each page has a separate folder)
+          - pages/         (all the pages of the website)
+          - styles/        (contains global styling where raw CSS is required, use TailwindCSS otherwise)
+      App.jsx            (this is where all pages will be called and where routes are handled)
 
 ## Installation
 ### Frontend
-  Navigate to the client folder
-  ```cd client ```
+  - If you don't have Node.js installed, navigate to (https://nodejs.org/en) and download the latest stable version (LTS) then install it.
+  - Navigate to the client folder
+    ``` cd client ```
+  - Run the command
+    ``` yarn install ```
+  - Start the development server by running
+    ``` yarn dev```
+  - CTRL + Click the link displayed in the terminal to view the local development server.
+
+### Backend
+  - If you don't have Python installed, navigate to (https://www.python.org/downloads/) and download the last release then install it.
+  - Navigate to the backend folder
+     ``` cd backend ```
+  - Install Flask and flask_sqlalchemy by typing the command
+     ``` pip install Flask flask-sqlalchemy ```
+  - Start the flask server by running
+     ``` python run.py ```
+    
+#### Starting the database
+  - Open a terminal and make sure you are at the backend folder
+  - Start a python shell by typing
+    ```python```
+  - Inside the python shell, enter the  following 2 commands
+    ```python
+    from app import app, db
+    ```
+    ```python
+    with app.app_context(): 
+      db.create_all()
+    ```
+    this will create an SQLite database file with the specified name in config.py containing all the database tables defined in models 
+    
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+  
 
     
