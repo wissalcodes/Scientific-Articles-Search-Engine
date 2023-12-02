@@ -103,6 +103,7 @@ This project is a web application designed to search scientific articles using a
     ```
     this will create an SQLite database file with the specified name in config.py containing all the database tables defined in models 
     
+    End
 
     
 
