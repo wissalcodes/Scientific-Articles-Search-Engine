@@ -1,32 +1,35 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from config import Config
+from flask_restx import Api
+from flask_restx import Namespace, Resource
+from .database import db
+from .models.user import User
+
+
 
 app = Flask(__name__)
+app.config.from_object(Config)
+api = Api(app, doc='/docs')
+db.init_app(app)
 
 CORS(app, origins=["http://localhost:5173"])
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = "key"
-
-db = SQLAlchemy(app)
 
 # Import your routes
 from .routes import main
 
-# Create an example of a model (table) in the database
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    email = db.Column(db.String(120), nullable=False, unique=True)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
 # Register the blueprint
 app.register_blueprint(main.bp)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@api.route('/hello')
+class HelloRessource(Resource):
+    def get(self):
+        return{"message":"Hello world!"}
+    
+#to add in our db
+@app.shell_context_processor
+def make_shell_context():
+    return{
+        "db" : db,
+        "User" : User
+    }
