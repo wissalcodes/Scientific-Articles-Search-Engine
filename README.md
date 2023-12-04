@@ -60,8 +60,8 @@ This project is a web application designed to search scientific articles using a
 ### Frontend:
 - client/
   - public/
-    - fonts/         (contains the data models)
-    - images/        (the main page route, main components will be called here)
+    - fonts/         
+    - images/        
   - src/
     - components/    (folders of React components, each page has a separate folder)
     - pages/         (all the pages of the website)
