@@ -72,6 +72,10 @@ This project is a web application designed to search scientific articles using a
 ## Installation
 ### Frontend
   - If you don't have Node.js installed, navigate to (https://nodejs.org/en) and download the latest stable version (LTS) then install it.
+  - install yarn command on the command prompt by running
+    ```nmp -g install yarn ```
+  - check if it successfully installed by running
+    ``` yarn --version ```
   - Navigate to the client folder
     ``` cd client ```
   - Run the command
@@ -103,8 +107,6 @@ This project is a web application designed to search scientific articles using a
     ```
     this will create an SQLite database file with the specified name in config.py containing all the database tables defined in models 
     
-    End
-
     
 
 

@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\Wissa\OneDrive\Desktop\Scientific-Articles-Search-Engine\backend
+set VIRTUAL_ENV=C:\Users\User\Desktop\TP IGL\Scientific-Articles-Search-Engine
 
 if not defined PROMPT set PROMPT=$P$G
 
