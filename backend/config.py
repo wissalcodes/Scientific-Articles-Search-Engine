@@ -1,4 +1,4 @@
-from decouple import config
+#from decouple import config
 
 class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite3'
