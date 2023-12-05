@@ -1,6 +1,4 @@
 from flask_restx import  Namespace, Resource
-from app.models.user import User 
-
 
 auth_ns = Namespace('auth', description='Authentication operations')
 
@@ -23,4 +21,5 @@ class Signin(Resource):
     def get(self):
         # Implement logic for handling GET requests to /auth/signin
         return {'message': 'GET request to signin endpoint'}
+
 
