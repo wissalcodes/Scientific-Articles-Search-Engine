@@ -1,19 +1,21 @@
 from flask import Flask
-from flask_cors import CORS
+#from flask_cors import CORS
 from config import Config
 from flask_restx import Api
 from flask_restx import Namespace, Resource
 from .database import db
 from .models.user import User
-
-
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object(Config)
-api = Api(app, doc='/docs')
-db.init_app(app)
 
-CORS(app, origins=["http://localhost:5173"])
+api = Api(app, doc='/docs')
+
+db.init_app(app)
+migrate=Migrate(app,db)
+
+#CORS(app, origins=["http://localhost:5173"])
 
 # Import your routes
 from .routes import main
