@@ -5,6 +5,7 @@ from .models.user import User
 from flask_migrate import Migrate
 from flask_restx import Api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 ##APP##
 app = Flask(__name__)
@@ -21,8 +22,11 @@ init_routes(app, api)
 db.init_app(app)
 migrate=Migrate(app,db)
 
+##Authentication tokens##
 JWTManager(app)
-#CORS(app, origins=["http://localhost:5173"])
+
+##Backend x client##
+CORS(app)
 
 #to add in our db
 @app.shell_context_processor
