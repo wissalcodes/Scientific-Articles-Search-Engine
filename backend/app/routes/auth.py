@@ -19,7 +19,6 @@ def init_auth_routes(app,api):
             "username" : fields.String(required =True, description='Username'),
             "email" : fields.String(required=True,description='Email address'),
             "password":fields.String(required=True,description="Password"),
-            "confirm_password":fields.String(required=True,description="Confirm Password")
         }
     
     )
@@ -37,9 +36,7 @@ def init_auth_routes(app,api):
     @auth_ns.route('/signup')
     class Signup(Resource):
         
-        # @auth_ns.marshal_with(signup_model) # returns an object
-        @auth_ns.expect(signup_model)
-        
+        @auth_ns.expect(signup_model)        
         def post(self):
             data =request.get_json()
             
@@ -47,12 +44,12 @@ def init_auth_routes(app,api):
             db_user=User.query.filter_by(username=username).first()
             
             if db_user is not None:
-                return jsonify({"message" : f"User with username ({username}) already exists"})
+                return make_response(jsonify({"error" : f"User with username ({username}) already exists"}),400)
             
             email=data.get('email')
             db_user=User.query.filter_by(email=email).first()
             if db_user is not None:
-                return jsonify({"message":f"User with email ({email}) already exists"})
+                return make_response(jsonify({"error":f"User with email ({email}) already exists"}),400)
             
             new_user=User(
                 first_name = data.get('first_name'),
@@ -63,43 +60,41 @@ def init_auth_routes(app,api):
             )
             new_user.save() # add to db
 
-            return jsonify({"message":"User registered successfuly"})
+            return make_response(jsonify({"message":"User registered successfuly"}),201)
         
         
-        def get(self):
-            # Implement logic for handling GET requests to /auth/signin
-            return {'message': 'GET request to signup endpoint'}
-
     @auth_ns.route('/signin')
     class Signin(Resource):
-        
         @auth_ns.expect(login_model)
         def post(self):
-            data=request.get_json()
-            
-            email=data.get('email')
-            password=data.get('password')
-            
+            data = request.get_json()
+
+            email = data.get('email')
+            password = data.get('password')
+
             db_user = User.query.filter_by(email=email).first()
-            
-            if db_user and check_password_hash(db_user.password,password):
-                access_token = create_access_token(identity=db_user.email)
-                refresh_token = create_refresh_token(identity=db_user.email)
-                return jsonify(
-                    {
-                        "access token":access_token,
-                        "refresh token":refresh_token
-                    }
+
+            if db_user:
+                
+                if check_password_hash(db_user.password, password):
+                    
+                    access_token = create_access_token(identity=db_user.email)
+                    refresh_token = create_refresh_token(identity=db_user.email)
+                    return make_response(
+                        jsonify({
+                            "access_token": access_token,
+                            "refresh_token": refresh_token,
+                        }), 200
+                    )
+                else:
+                    return make_response(
+                        jsonify({"error": "Authentication failed. Incorrect password."}), 401
+                    )
+            else:
+                return make_response(
+                    jsonify({"error": "Authentication failed. User not found."}), 401
                 )
-            # else
-            #     return jsonify ({"error":"authentication failed"})
-            
-            return {'message': 'Signin endpoint'}
-        
-        def get(self):
-            # Implement logic for handling GET requests to /auth/signin
-            return {'message': 'GET request to signin endpoint'}
-    
+
     api.add_namespace(auth_ns)
     
     @auth_ns.route('/refresh') #refresh the expired tokens
