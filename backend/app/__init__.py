@@ -13,9 +13,7 @@ app.config.from_object(Config)
 ##API##
 api = Api(app,title='API',doc='/docs')
 
-# Import routes after initializing app and api
 from .routes import init_routes
-# Initialize routes with app and api instances
 init_routes(app, api)
 
 ##DATABASE##
@@ -23,7 +21,9 @@ db.init_app(app)
 migrate=Migrate(app,db)
 
 ##Authentication tokens##
-JWTManager(app)
+jwt = JWTManager(app)
+from .routes import init_jwt
+init_jwt(jwt,api)
 
 ##Backend x client##
 CORS(app)

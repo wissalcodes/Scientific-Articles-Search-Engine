@@ -10,7 +10,6 @@ class User(db.Model):
     password = db.Column(db.String(30),nullable = False)
     date_added =  db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Create A String
     def __repr__(self):
         return '<Name %r>' % self.name
     
