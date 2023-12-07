@@ -1,9 +1,9 @@
 
 def init_routes(app, api):
     
-    from . import auth
+    from . import auth_manager
     
-    auth.init_auth_routes(app, api)
+    auth_manager.init_auth_routes(app, api)
     
 def init_jwt(jwt,api):
     
