@@ -7,7 +7,7 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="flex flex-col relative w-screen">
+    <div className="font-lora flex flex-col relative w-screen">
       <div className="h-full w-full ">
         <BrowserRouter>
           <Routes>

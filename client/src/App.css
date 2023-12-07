@@ -43,3 +43,17 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Custom Fonts */
+@font-face {
+  font-family: "lora";
+  src: url("/fonts/Lora/Lora-VariableFont_wght.ttf") format("ttf");
+  /* Add other font formats and variations if needed */
+}
+
+/* Custom Fonts */
+@font-face {
+  font-family: "merryweather";
+  src: url("/fonts/Merriweather/Merriweather-Regular.ttf") format("ttf");
+  /* Add other font formats and variations if needed */
+}

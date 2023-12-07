@@ -5,10 +5,10 @@ const Register = () => {
     alert("Sign Up");
   };
   return (
-    <div className="w-full pt-[100px] md:grid md:pt-[200px] pb-[60px] lg:grid-cols-2 xl:grid-cols-[45%,55%] justify-center items-center ">
+    <div className=" px-[30px] text-[##F1D896] lg:px-[70px] xl:px-[108px] w-full pt-[100px] md:grid md:pt-[200px] pb-[60px] lg:grid-cols-2 xl:grid-cols-[45%,55%] justify-center items-center ">
       <div className="hidden md:flex  xl:text-[20px] text-[16px] w-full justify-center items-center pr-[50px] ">
-        <div className="bg-[gray] px-[20px] lg:px-[40px] xl:px-[70px] py-[50px] flex-col w-full justify-center items-start rounded-[15px]">
-          <h1>CREER UN COMPTE</h1>
+        <div className="bg-[#356356] px-[20px] lg:px-[40px] xl:px-[70px] py-[50px] flex-col w-full justify-center items-start rounded-[15px]">
+          <h1 className="text-[#F1D896]">CREER UN COMPTE</h1>
           <div className="w-full justify-center items-center flex-col">
             <div className="w-full mb-[10px] pt-[60px] flex flex-col justify-center items-start">
               <h1 className="font-light">NOM ET PRENOM</h1>
@@ -64,8 +64,10 @@ const Register = () => {
       </div>
       <div className="w-full h-full flex flex-col justify-start md:mt-[450px] items-start">
         <div className="md:ml-[90px] w-full  grid-rows-[30%,70%] justify-center items-start">
-          <div className=" lg:text-[40px] text-[24px] leading-[1] xl:text-[50px] font-light w-full flex md:justify-start justify-center items-center ">
-            <h1 className="text-center md:text-start">Inscrivez-vous!</h1>
+          <div className=" lg:text-[40px] text-[24px] leading-[1] xl:text-[50px] font-bold w-full flex md:justify-start justify-center items-center ">
+            <h1 className="text-center md:text-start text-[#395143]">
+              Inscrivez-vous!
+            </h1>
           </div>
           <div className="md:pt-[30px] pt-[20px] w-full xl:text-[30px] text-[16px] lg:text-[20px] font-light flex md:justify-start justify-center items-center">
             <p className="flex text-center md:text-start">

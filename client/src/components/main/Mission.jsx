@@ -2,10 +2,12 @@ import React from "react";
 
 const Mission = () => {
   return (
-    <div className=" w-full md:grid md:grid-cols-[40%,60%] md:pt-[180px] pt-[100px] ">
+    <div className=" w-full md:grid md:grid-cols-[40%,60%] md:pt-[180px] pt-[100px] px-[30px] lg:px-[70px] xl:px-[108px]">
       <div className="w-full  grid-rows-[30%,70%] justify-center items-start">
-        <div className=" lg:text-[40px] text-[24px] leading-[1] xl:text-[50px] font-light w-full flex md:justify-start justify-center items-center">
-          <h1 className="text-center md:text-start">Notre Mission</h1>
+        <div className=" lg:text-[40px] text-[24px] leading-[1] xl:text-[50px] font-bold w-full flex md:justify-start justify-center items-center">
+          <h1 className="text-center md:text-start text-[#395143]">
+            Notre Mission
+          </h1>
         </div>
         <div className="pt-[30px] w-full xl:text-[30px] text-[16px] lg:text-[20px] font-light flex justify-start items-center">
           <p className="flex text-center md:text-start">

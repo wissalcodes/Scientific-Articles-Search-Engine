@@ -1,9 +1,9 @@
 import React from "react";
 const Articles = () => {
   return (
-    <div className=" w-full  pt-[150px] ">
+    <div className="px-[30px] lg:px-[70px] xl:px-[108px] w-full  pt-[150px] ">
       <div className="w-full flex  justify-center md:justify-start items-center">
-        <h1 className="text-center text-[24px] xl:text-[50px] lg:text-[40px] font-light md:text-start">
+        <h1 className="text-center text-[#395143] font-bold text-[24px] xl:text-[50px] lg:text-[40px]  md:text-start">
           Dans l'actualite
         </h1>
       </div>
