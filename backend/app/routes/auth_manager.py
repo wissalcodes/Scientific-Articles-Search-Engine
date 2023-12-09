@@ -6,7 +6,7 @@ from flask_jwt_extended import create_access_token,create_refresh_token,jwt_requ
  
 
     
-def init_auth_routes(app,api):
+def init_auth_routes(api):
     
     auth_ns = Namespace('auth', description='Authentication operations')
     

@@ -15,7 +15,7 @@ app.config.from_object(Config)
 api = Api(app,title='API',doc='/docs')
 
 from .routes import init_routes
-init_routes(app, api)
+init_routes(api)
 
 ##DATABASE##
 db.init_app(app)

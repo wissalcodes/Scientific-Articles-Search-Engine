@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required
 from app.models.user import User
 from app import db
 
-def init_logout_routes(jwt,api):
+def init_auth_routes(api):
     
     user_ns = Namespace('user',description='users operations')
         
@@ -25,7 +25,7 @@ def init_logout_routes(jwt,api):
         
         @user_ns.expect(all_users_model)
         @user_ns.marshal_with(all_users_model)
-        @jwt_required()
+        # @jwt_required()
         def get(self):
             
             page = request.args.get('page',default=1, type=int)
