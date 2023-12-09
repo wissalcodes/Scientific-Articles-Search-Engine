@@ -25,7 +25,7 @@ def init_auth_routes(api):
         
         @user_ns.expect(all_users_model)
         @user_ns.marshal_with(all_users_model)
-        # @jwt_required()
+        @jwt_required()
         def get(self):
             
             page = request.args.get('page',default=1, type=int)
