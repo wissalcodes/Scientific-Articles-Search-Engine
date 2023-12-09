@@ -1,4 +1,3 @@
-from flask_jwt_extended import jwt_required
 from app.models.token_block_list import TokenBlocklist
 from app import db
 from flask_restx import Namespace, Resource
@@ -8,7 +7,6 @@ from flask import jsonify, make_response
 def init_logout_routes(jwt,api):
     
     logout_ns = Namespace('logout', description='Logging out operations')
-
     
     api.add_namespace(logout_ns)
     
@@ -17,7 +15,7 @@ def init_logout_routes(jwt,api):
         jti = jwt_data['jti']
 
         token = db.session.query(TokenBlocklist).filter(TokenBlocklist.jti == jti).scalar()
-        # this query returns none if the token is not blacklisted
+       
         return token is not None # returns false in case its not blacklisted
     
     @logout_ns.route('/') 

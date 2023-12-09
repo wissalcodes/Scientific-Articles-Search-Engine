@@ -7,7 +7,8 @@ def init_routes(app, api):
     
 def init_jwt(jwt,api):
     
-    from . import logout_manager
+    from . import logout_manager,users_manager
     
     logout_manager.init_logout_routes(jwt,api)
+    users_manager.init_logout_routes(jwt,api)
 
