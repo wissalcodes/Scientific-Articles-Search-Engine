@@ -1,4 +1,3 @@
-from flask_jwt_extended import jwt_required
 from app.models.token_block_list import TokenBlocklist
 from app import db
 from flask_restx import Namespace, Resource
@@ -8,7 +7,6 @@ from flask import jsonify, make_response
 def init_logout_routes(jwt,api):
     
     logout_ns = Namespace('logout', description='Logging out operations')
-
     
     api.add_namespace(logout_ns)
     
@@ -17,9 +15,21 @@ def init_logout_routes(jwt,api):
         jti = jwt_data['jti']
 
         token = db.session.query(TokenBlocklist).filter(TokenBlocklist.jti == jti).scalar()
-        # this query returns none if the token is not blacklisted
+       
         return token is not None # returns false in case its not blacklisted
     
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_data):
+        return make_response(jsonify({'message': 'Token has expired'}), 401)
+    
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return make_response(jsonify({'message': 'Signature verification failed. Invalid token!'}), 401)
+    
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return make_response(jsonify({'message': 'Token is missing'}),401)
+        
     @logout_ns.route('/') 
     class LogoutResource(Resource):
         
@@ -31,6 +41,8 @@ def init_logout_routes(jwt,api):
             token_block = TokenBlocklist(jti=jti)
             token_block.save_Token_to_db() #revoke the access
             return make_response(jsonify({"message: ":"Logged out successfully",
-                                        "message:": f"{token_type} token revoked successfully"}),200)            
+                                        "message:": f"{token_type} token revoked successfully"}),200)
+            
+                
             
     

@@ -1,13 +1,18 @@
 
-def init_routes(app, api):
+def init_routes(api):
     
-    from . import auth
+    from . import auth_manager,admin_dashboard_manager
     
-    auth.init_auth_routes(app, api)
+    auth_manager.init_auth_routes( api)
+    admin_dashboard_manager.init_auth_routes (api)
     
 def init_jwt(jwt,api):
     
-    from . import logout
+    from . import logout_manager, access_manager
     
-    logout.init_logout_routes(jwt,api)
+    logout_manager.init_logout_routes(jwt,api)
+    access_manager.init_logout_routes(jwt,api)
+    
+# def init_app(app):
+#     pass
 

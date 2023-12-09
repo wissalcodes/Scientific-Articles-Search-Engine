@@ -8,6 +8,7 @@ class User(db.Model):
     username =  db.Column(db.String(20), nullable=False, unique = True) 
     email =  db.Column(db.String(120), nullable = False, unique = True)
     password = db.Column(db.String(30),nullable = False)
+    role = db.Column(db.String(10), default = 'user')
     date_added =  db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
