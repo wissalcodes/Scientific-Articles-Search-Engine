@@ -2,10 +2,11 @@ from flask import request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt, current_user
 from app.models.user import User
+from app import db
 
 def init_auth_routes(api):
     
-    user_ns = Namespace('admin_dashboard',description='admin operations')
+    admin_ns = Namespace('admin_dashboard',description='admin operations')
         
     all_users_model=api.model(
     
@@ -19,27 +20,56 @@ def init_auth_routes(api):
     
     )
     
-    @user_ns.route('/all_users')
+    @admin_ns.route('/all_users')
     class UserResource (Resource):
         
-        @user_ns.expect(all_users_model)
-        @user_ns.marshal_with(all_users_model)
+        @admin_ns.expect(all_users_model)
+        @admin_ns.marshal_with(all_users_model)
         @jwt_required()
         def get(self):
             
             claims = get_jwt()
             if claims.get('is_admin') == True :
   
-                users = User.query.all()
+                users = User.query.filter_by(role='user').all()
+                email_to_delete = 'admin@gmail.com'
 
+                for user in users:
+                    if user.email == email_to_delete:
+                        users.remove(user)
+                        
                 return users
             
             return None
+            # else:
+            #     return {'message': 'Permission denied'}, 403  
         
+       
+        @admin_ns.expect(all_users_model) 
+        @jwt_required()
         def post(self): #to add a new moderator
-            pass
+            
+            claims = get_jwt()
+            if claims.get('is_admin') == True : 
+                data = request.get_json()
+                email = data.get('email')
+                
+                user_to_moderator = User.query.filter_by(email=email).first()
+                
+                if user_to_moderator:
+                    user_to_moderator.role = 'moderator'
+                    db.session.commit()
+                    return {'message':  'role updated to moderator'},200
+                else:
+                    return {'message': 'User not found'}, 404
+                
+            else:
+                return {'message': 'Permission denied'}, 403  
+            
+                 
+            
     
-    @user_ns.route('/my_profile')
+    @admin_ns.route('/my_profile')
     class UserCurrentResource (Resource):
         
         @jwt_required()
@@ -53,25 +83,31 @@ def init_auth_routes(api):
             })
         
         
-    @user_ns.route('/all_moderators')
+    @admin_ns.route('/all_moderators')
     class ModeratorResource (Resource):
 
-        @user_ns.expect(all_users_model)
-        @user_ns.marshal_with(all_users_model)
+        @admin_ns.expect(all_users_model)
+        @admin_ns.marshal_with(all_users_model)
         @jwt_required()
         
         def get(self):
             claims = get_jwt()
             if claims.get('is_admin') == True :
-                
-                #modifyyy: query on the role  (filter)          
-                moderators = User.query.filter_by()
+                moderators = User.query.filter_by(role='moderator').all()
+                email_to_delete = 'admin@gmail.com'
 
+                for user in moderators:
+                    if user.email == email_to_delete:
+                        moderators.remove(user)
+                        
                 return moderators
             
             return None
             
+            # else:
+            #     return {'message': 'Permission denied'}, 403  
+            
         def delete(self): # to reset the role of a moderator to a regular user
             pass
         
-    api.add_namespace(user_ns)
+    api.add_namespace(admin_ns)
