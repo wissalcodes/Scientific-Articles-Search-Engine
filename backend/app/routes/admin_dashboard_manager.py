@@ -15,7 +15,6 @@ def init_auth_routes(api):
             "last_name" : fields.String(required=True, description= 'Last Name'),
             "username" : fields.String(required =True, description='Username'),
             "email" : fields.String(required=True,description='Email address'),
-            #add password
         }
     
     )
