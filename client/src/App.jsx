@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, MemoryRouter } from "react-router-dom";
 import Main from "./pages/Main";
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import "./App.css";
+import SignIn from "./pages/SignIn";
 
 function App() {
   return (
     <div className="font-lora flex flex-col relative w-screen">
-      <div className="h-full w-full ">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Main />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
       <Navbar />
-      <Footer />
+      <SignIn />
+      {/* <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/sign_in" element={<div>hehheh</div>} />
+        </Routes>
+      </MemoryRouter>
+      <Navbar />
+      <Footer /> */}
     </div>
   );
 }
