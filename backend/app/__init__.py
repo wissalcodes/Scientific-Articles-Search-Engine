@@ -1,33 +1,34 @@
 from flask import Flask
-#from flask_cors import CORS
 from config import Config
-from flask_restx import Api
-from flask_restx import Namespace, Resource
 from .database import db
 from .models.user import User
 from flask_migrate import Migrate
+from flask_restx import Api
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
+##APP##
 app = Flask(__name__)
 app.config.from_object(Config)
 
-api = Api(app, doc='/docs')
+##API##
+api = Api(app,title='API',doc='/docs')
 
+from .routes import init_routes
+init_routes(api)
+
+##DATABASE##
 db.init_app(app)
 migrate=Migrate(app,db)
 
-#CORS(app, origins=["http://localhost:5173"])
+##Authentication tokens##
+jwt = JWTManager(app)
+from .routes import init_jwt
+init_jwt(jwt,api)
 
-# Import your routes
-from .routes import main
+##Backend x client##
+CORS(app)
 
-# Register the blueprint
-app.register_blueprint(main.bp)
-
-@api.route('/hello')
-class HelloRessource(Resource):
-    def get(self):
-        return{"message":"Hello world!"}
-    
 #to add in our db
 @app.shell_context_processor
 def make_shell_context():
@@ -35,3 +36,5 @@ def make_shell_context():
         "db" : db,
         "User" : User
     }
+    
+    
