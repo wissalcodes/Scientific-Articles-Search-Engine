@@ -10,7 +10,7 @@ import SignUp from "./pages/SignUp";
 function App() {
   return (
     <div className="font-lora flex flex-col relative w-screen">
-      <SignIn />
+      <SignUp />
       {/* <MemoryRouter>
         <Routes>
           <Route path="/" element={<Main />} />
