@@ -3,6 +3,8 @@ import AuthNavbar from "../components/layout/AuthNavbar";
 import SignInIllustration from "../../public/images/authentication/sign-in-illustration.svg";
 import { EyeController } from "../components/authentication/EyeController";
 import ErrorMessage from "../components/authentication/Error";
+import axios from "axios";
+import Cookies from "js-cookie";
 const SignIn = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -12,7 +14,6 @@ const SignIn = () => {
   const [user, setUser] = useState(null);
   const handleSignIn = async () => {
     setErrorMsg("");
-
     if (email === "") {
       setErrorMsg("E-mail field cannot be empty.");
     } else if (password === "") {
@@ -23,15 +24,27 @@ const SignIn = () => {
         password: password,
       });
       try {
-        // call the POST api
-        // const response = await axios.post(
-        //   "https://project-platform.onrender.com/api/v1/auth/signIn",
-        //   { email, password }
-        // );
-        // const responseData = response.data;
+        // call the POST api for sign in
+        const response = await axios.post("http://localhost:5000/auth/signin", {
+          email,
+          password,
+        });
+        if (response.status === 200) {
+          const token = response.data.access_token;
+
+          // Set the token in a secure HTTP-only cookie
+          Cookies.set("authToken", token, {
+            expires: 7,
+            secure: true,
+            httpOnly: true,
+          });
+
+          console.log("Successful sign in ", response.data);
+        } else {
+          console.log("Failed to log in user");
+        }
         // const token = responseData.data.member.memberId;
         // Cookies.set("authToken", token, { expires: 7 }); // Set the cookie to expire in 7 days
-        // console.log("Sign-in successful", token);
       } catch (error) {
         console.error("Error:", error);
         if (error.response) {
@@ -44,10 +57,7 @@ const SignIn = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(user);
-    setTimeout(() => {}, 1000);
-  }, [user]);
+  useEffect(() => {}, [user]);
   return (
     <div className="w-screen h-screen relative bg-[#E7E4D5]">
       <AuthNavbar />

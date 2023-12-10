@@ -9,6 +9,8 @@ from flask_cors import CORS
 
 ##APP##
 app = Flask(__name__)
+##Backend x client##
+CORS(app, origins="http://localhost:5174")
 app.config.from_object(Config)
 
 ##API##
@@ -26,8 +28,6 @@ jwt = JWTManager(app)
 from .routes import init_jwt
 init_jwt(jwt,api)
 
-##Backend x client##
-CORS(app)
 
 #to add in our db
 @app.shell_context_processor

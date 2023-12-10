@@ -3,6 +3,8 @@ import RegisterNav from "../components/layout/RegisterNav";
 import SignUpIllustration from "../../public/images/authentication/sign-up-illustration.svg";
 import { EyeController } from "../components/authentication/EyeController";
 import ErrorMessage from "../components/authentication/Error";
+import axios from "axios";
+import Cookies from "js-cookie";
 const SignIn = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -46,20 +48,30 @@ const SignIn = () => {
       });
       console.log(user);
       try {
-        // call the POST api
-        // const response = await axios.post(
-        //   "https://project-platform.onrender.com/api/v1/auth/signIn",
-        //   { email, password }
-        // );
-        // const responseData = response.data;
-        // const token = responseData.data.member.memberId;
-        // Cookies.set("authToken", token, { expires: 7 }); // Set the cookie to expire in 7 days
-        // console.log("Sign-in successful", token);
+        // call the POST api for sign in
+        const response = await axios.post("http://localhost:5000/auth/signup", {
+          email: email,
+          password: password,
+          last_name: lastName,
+          first_name: firstName,
+          username: username,
+        });
+        if (response.status === 201) {
+          console.log("Successful sign up ", response.data);
+        }
       } catch (error) {
         console.error("Error:", error);
         if (error.response) {
-          console.error("Server Error Message:", error.response.data);
-          setErrorMsg(error.response.data.message || "Sign-up failed");
+          setmailErrorMsg("");
+          setLastNameErrorMsg("");
+          if (error.response.status === 401) {
+            setmailErrorMsg("Adresse mail deja utilisee");
+          }
+          if (error.response.status === 400) {
+            setLastNameErrorMsg("Nom d'utilisateur deja utilise");
+          } else {
+            console.log("Network error");
+          }
         } else {
           setErrorMsg("An error occurred during sign-in");
         }
