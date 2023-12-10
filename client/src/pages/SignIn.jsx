@@ -2,48 +2,91 @@ import React, { useState, useEffect } from "react";
 import AuthNavbar from "../components/layout/AuthNavbar";
 import SignInIllustration from "../../public/images/authentication/sign-in-illustration.svg";
 import { EyeController } from "../components/authentication/EyeController";
+import ErrorMessage from "../components/authentication/Error";
 const SignIn = () => {
   const [password, setPassword] = useState("");
-  const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [rememberUser, setRememberUser] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [user, setUser] = useState(null);
+  const handleSignIn = async () => {
+    setErrorMsg("");
 
+    if (email === "") {
+      setErrorMsg("E-mail field cannot be empty.");
+    } else if (password === "") {
+      setErrorMsg("Password field cannot be empty.");
+    } else {
+      setUser({
+        email: email,
+        password: password,
+      });
+      try {
+        // call the POST api
+        // const response = await axios.post(
+        //   "https://project-platform.onrender.com/api/v1/auth/signIn",
+        //   { email, password }
+        // );
+        // const responseData = response.data;
+        // const token = responseData.data.member.memberId;
+        // Cookies.set("authToken", token, { expires: 7 }); // Set the cookie to expire in 7 days
+        // console.log("Sign-in successful", token);
+      } catch (error) {
+        console.error("Error:", error);
+        if (error.response) {
+          console.error("Server Error Message:", error.response.data);
+          setErrorMsg(error.response.data.message || "Sign-in failed");
+        } else {
+          setErrorMsg("An error occurred during sign-in");
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(user);
+    setTimeout(() => {}, 1000);
+  }, [user]);
   return (
-    <div className="w-screen h-screen relative">
+    <div className="w-screen h-screen relative bg-[#E7E4D5]">
       <AuthNavbar />
-      <div className="w-screen h-screen grid grid-cols-2">
-        <div className="h-full w-full bg-[#E7E4D5] ietms-center justify-center flex flex-col">
-          <div className="flex flex-col mx-[100px] justify-center items-center">
+      <div className="w-screen h-screen flex flex-col lg:grid lg:grid-cols-[55%,45%] xl:grid-cols-2">
+        <div className="lg:hidden h-[90vh] lg:h-full w-full rounded-[20px] bg-[#395143] flex flex-col items-center justify-center">
+          <img className="w-[80%] h-[80%]" src={SignInIllustration} />
+        </div>
+        <div className="h-full w-full mb-[100px] bg-[#E7E4D5] ietms-center justify-center flex flex-col">
+          <div className="flex flex-col mx-[20px] sm:mx-[30px] md:mx-[70px] lg:mx-[100px] justify-center items-center">
             <div className="w-full flex justify-start items-start">
-              <h1 className="text-[#152522] font-bold font-merryweather text-[24px] lg:text-[40px] xl:text-[50px]">
+              <h1 className="text-[#152522] hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[40px] xl:text-[50px]">
                 Se connecter
               </h1>
             </div>
             <div className="w-full flex flex-col justify-center items-center ">
-              <div className="w-full mb-[10px]  lg:pt-[60px] flex flex-col justify-center items-start">
+              <div className="w-full mb-[10px] pt-[20px] lg:pt-[60px] flex justify items-start">
                 <h1 className="font-semibold font-merryweather text-[#395143]">
                   E-MAIL
                 </h1>
+                <ErrorMessage message={errorMsg} />
               </div>
-              <div className="w-full flex bg-[white] px-[20px] py-[15px] rounded-[10px]">
+              <div className="w-full flex bg-[white] px-[20px]  py-[10px] lg:py-[15px]  rounded-[10px]">
                 <input
-                  className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
+                  className="text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent pr-[10px]"
                   type="text"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
             </div>
             <div className="w-full flex flex-col justify-center items-center ">
-              <div className="w-full mb-[10px]  lg:pt-[30px] flex flex-col justify-center items-start">
+              <div className="w-full mb-[10px] pt-[10px] lg:pt-[30px] flex flex-col justify-center items-start">
                 <h1 className="font-semibold font-merryweather text-[#395143]">
                   MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[15px] rounded-[10px]">
+              <div className="relative w-full flex bg-[white] px-[20px] py-[10px] lg:py-[15px] rounded-[10px]">
                 <input
-                  className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
+                  className="text-[16px] focus:outline-none w-[90%] focus:border-transparent  bg-transparent pr-[10px]"
                   type={isPasswordVisible ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -52,9 +95,11 @@ const SignIn = () => {
                   <EyeController onVisibilityChange={setIsPasswordVisible} />
                 </div>
               </div>
-              <div className="w-full h-full flex flex-col justify-center items-start pt-[40px]">
-                <div className="w-[50%]  flex bg-[#1D3A35] px-[20px] py-[10px] rounded-[10px]">
-                  <button className="text-[32px] mx-auto font-lora text-[#F1D896] bg-transparent pr-[10px]">
+              <div className="w-full h-full flex flex-col justify-center lg:items-start pt-[40px]">
+                <div className="lg:w-[50%] w-full  flex bg-[#1D3A35] px-[20px] py-[3px] lg:py-[10px] rounded-[10px]">
+                  <button
+                    onClick={handleSignIn}
+                    className="text-[25px] lg:text-[32px]  mx-auto font-lora text-[#F1D896] bg-transparent pr-[10px]">
                     Sign in
                   </button>
                 </div>
@@ -66,7 +111,7 @@ const SignIn = () => {
             </div>
           </div>
         </div>
-        <div className="h-full w-full bg-[#395143] flex flex-col items-center justify-center">
+        <div className="hidden h-full w-full bg-[#395143] lg:flex flex-col items-center justify-center">
           <img className="w-[70%] h-[70%]" src={SignInIllustration} />
         </div>
       </div>
