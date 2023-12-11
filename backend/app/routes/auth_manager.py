@@ -1,3 +1,4 @@
+from datetime import datetime,timedelta
 from flask import request,jsonify, make_response
 from flask_restx import  Namespace, Resource,fields
 from app.models.user import User 
@@ -77,7 +78,7 @@ def init_auth_routes(api):
                 
                 if check_password_hash(db_user.password, password):
                     
-                    access_token = create_access_token(identity=db_user.email)
+                    access_token = create_access_token(identity=db_user.email,expires_delta=timedelta(hours=24))
                     refresh_token = create_refresh_token(identity=db_user.email)
                     return make_response(
                         jsonify({

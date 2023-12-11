@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt, current_user
+from werkzeug.security import check_password_hash
 from app.models.user import User
 from app import db
 
@@ -20,19 +21,29 @@ def init_auth_routes(api):
     
     )
     
+    password_change_model=api.model(
+    
+        'Change password',
+        {
+            "old_password": fields.String(required=True, description='Old password'),
+            "new_password": fields.String(required=True, description='New password')
+        }
+    
+    )
+    
     @admin_ns.route('/all_users')
     class UserResource (Resource):
         
         @admin_ns.expect(all_users_model)
         @admin_ns.marshal_with(all_users_model)
         @jwt_required()
-        def get(self):
+        def get(self):#display all users
             
             claims = get_jwt()
             if claims.get('is_admin') == True :
   
                 users = User.query.filter_by(role='user').all()
-                email_to_delete = 'admin@gmail.com'
+                email_to_delete = 'admin'
 
                 for user in users:
                     if user.email == email_to_delete:
@@ -59,7 +70,7 @@ def init_auth_routes(api):
                 if user_to_moderator:
                     user_to_moderator.role = 'moderator'
                     db.session.commit()
-                    return {'message':  'role updated to moderator'},200
+                    return {'message':  'Role updated to moderator'},200
                 else:
                     return {'message': 'User not found'}, 404
                 
@@ -73,7 +84,7 @@ def init_auth_routes(api):
     class UserCurrentResource (Resource):
         
         @jwt_required()
-        def get(self):
+        def get(self):#display info of the profile
             
             return jsonify({
                 "first name" : current_user.first_name,
@@ -81,6 +92,23 @@ def init_auth_routes(api):
                 "username":current_user.username,
                 "email" : current_user.email
             })
+            
+        @jwt_required()
+        @admin_ns.expect(password_change_model)
+        def post(self):#change the password
+            
+            old_password=request.get_json().get('old_password')
+            identity=get_jwt().get('sub')
+            user=User.query.filter_by(email=identity).first()
+
+            if check_password_hash(user.password, old_password):
+                
+                new_password=request.get_json.get('new_password')
+                user.update_password(new_password)
+                return {'message':'Password updated successfully'},200
+            else:
+                return {'message':'The old password is wrong'},401
+            
         
         
     @admin_ns.route('/all_moderators')
@@ -90,22 +118,15 @@ def init_auth_routes(api):
         @admin_ns.marshal_with(all_users_model)
         @jwt_required()
         
-        def get(self):
+        def get(self):#display all the moderators
             claims = get_jwt()
             if claims.get('is_admin') == True :
                 moderators = User.query.filter_by(role='moderator').all()
-                email_to_delete = 'admin@gmail.com'
-
-                for user in moderators:
-                    if user.email == email_to_delete:
-                        moderators.remove(user)
-                        
+                                        
                 return moderators
             
             return None
             
-            # else:
-            #     return {'message': 'Permission denied'}, 403  
         
         @admin_ns.expect(all_users_model)
         @jwt_required()
@@ -120,7 +141,7 @@ def init_auth_routes(api):
                 if moderator_to_user:
                     moderator_to_user.role = 'user'
                     db.session.commit()
-                    return {'message':  'role updated to user'},200
+                    return {'message':  'Role reseted to user'},200
                 else:
                     return {'message': 'User not found'}, 404
                 
