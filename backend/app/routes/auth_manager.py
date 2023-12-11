@@ -1,9 +1,9 @@
-from datetime import datetime,timedelta
+from datetime import timedelta
 from flask import request,jsonify, make_response
 from flask_restx import  Namespace, Resource,fields
 from app.models.user import User 
 from werkzeug.security import generate_password_hash,check_password_hash
-from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt_identity
+from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt_identity,current_user
     
 def init_auth_routes(api):
     
@@ -31,7 +31,7 @@ def init_auth_routes(api):
         }
     
     )
-    
+        
     @auth_ns.route('/signup')
     ##add decorator for logged out ppl
     class Signup(Resource):
@@ -103,7 +103,19 @@ def init_auth_routes(api):
         def post(self):
             current_user = get_jwt_identity()
             new_access_token=create_access_token(identity=current_user)
-            return make_response(jsonify({"access token : ":new_access_token}),200)       
+            return make_response(jsonify({"access token : ":new_access_token}),200)      
+        
+    @auth_ns.route('/redirect')
+    class RedirectResource(Resource):
+        @jwt_required()
+        def get(self):
+            return jsonify({
+                "first name" : current_user.first_name,
+                "last name" : current_user.last_name,
+                "username":current_user.username,
+                "email" : current_user.email,
+                "role": current_user.role
+            })
         
    
     

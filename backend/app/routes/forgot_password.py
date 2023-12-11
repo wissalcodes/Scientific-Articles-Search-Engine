@@ -6,7 +6,7 @@ import requests
 
 # to do: replace the keys by the env var
 
-def init_forg_pass(api,mail):
+def init_auth_routes(api):
     forgot_ns=Namespace('forgot_password', description= 'forgot password operations')
     api.add_namespace(forgot_ns)
     

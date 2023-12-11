@@ -33,7 +33,6 @@ CORS(app)
 ##Reset password##
 mail=Mail()
 mail.init_app(app)
-init_mail(api,mail)
 
 #to add in our db
 @app.shell_context_processor
