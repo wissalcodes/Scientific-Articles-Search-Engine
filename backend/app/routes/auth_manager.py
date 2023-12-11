@@ -116,6 +116,12 @@ def init_auth_routes(api):
                 "email" : current_user.email,
                 "role": current_user.role
             })
+    
+    @auth_ns.route('/')
+
+    class RedirectResource(Resource):
+        def get(self):
+            return {'message':'hello world!'},200
         
    
     

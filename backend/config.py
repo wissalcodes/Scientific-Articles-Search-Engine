@@ -12,6 +12,12 @@ class Config:
     MAIL_USE_SSL = False
     MAIL_USERNAME = 'apikey'
     MAIL_PASSWORD = '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'
+
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///test_database.db'
+    TESTING = True 
+
+
     
     
     
