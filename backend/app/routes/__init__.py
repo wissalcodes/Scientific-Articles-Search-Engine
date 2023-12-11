@@ -12,7 +12,12 @@ def init_jwt(jwt,api):
     
     logout_manager.init_logout_routes(jwt,api)
     access_manager.init_logout_routes(jwt,api)
+   
+def init_mail(api,mail):
     
+    from . import forgot_password
+    
+    forgot_password.init_forg_pass (api,mail)
 # def init_app(app):
 #     pass
 

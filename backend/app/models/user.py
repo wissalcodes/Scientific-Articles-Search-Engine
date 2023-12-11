@@ -1,5 +1,7 @@
+from flask import url_for
 from app.database import db
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key =True)  
@@ -22,6 +24,7 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
         
-    def update(self):
-        pass
-
+    def update_password(self,password):
+        self.password = generate_password_hash(password)
+        db.session.commit()
+        
