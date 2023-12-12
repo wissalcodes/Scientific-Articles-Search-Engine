@@ -106,8 +106,25 @@ def init_auth_routes(api):
             
             # else:
             #     return {'message': 'Permission denied'}, 403  
-            
+        
+        @admin_ns.expect(all_users_model)
+        @jwt_required()
         def delete(self): # to reset the role of a moderator to a regular user
-            pass
+            claims=get_jwt()
+            if claims.get('is_admin')==True:
+                data = request.get_json()
+                email = data.get('email')
+                
+                moderator_to_user = User.query.filter_by(email=email,role='moderator').first()
+                
+                if moderator_to_user:
+                    moderator_to_user.role = 'user'
+                    db.session.commit()
+                    return {'message':  'role updated to user'},200
+                else:
+                    return {'message': 'User not found'}, 404
+                
+            else:
+                return {'message': 'Permission denied'}, 403  
         
     api.add_namespace(admin_ns)

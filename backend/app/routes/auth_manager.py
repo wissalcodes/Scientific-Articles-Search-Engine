@@ -3,7 +3,6 @@ from flask_restx import  Namespace, Resource,fields
 from app.models.user import User 
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt_identity
- 
     
 def init_auth_routes(api):
     
@@ -33,6 +32,7 @@ def init_auth_routes(api):
     )
     
     @auth_ns.route('/signup')
+    ##add decorator for logged out ppl
     class Signup(Resource):
         
         @auth_ns.expect(signup_model)        
@@ -102,8 +102,9 @@ def init_auth_routes(api):
         def post(self):
             current_user = get_jwt_identity()
             new_access_token=create_access_token(identity=current_user)
-            return make_response(jsonify({"access token : ":new_access_token}),200)            
-            
+            return make_response(jsonify({"access token : ":new_access_token}),200)       
+        
+   
     
         
 
