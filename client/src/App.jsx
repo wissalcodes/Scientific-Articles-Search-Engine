@@ -7,10 +7,11 @@ import "./App.css";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { PasswordRecovery } from "./pages/PasswordRecovery";
+import { MailSent } from "./pages/MailSent";
 function App() {
   return (
     <div className="font-lora flex flex-col relative w-screen">
-      <PasswordRecovery />
+      <MailSent />
       {/* <MemoryRouter>
         <Routes>
           <Route path="/" element={<Main />} />
