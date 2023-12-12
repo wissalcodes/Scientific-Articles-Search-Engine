@@ -4,6 +4,7 @@ import SignInIllustration from "../../public/images/authentication/sign-in-illus
 import { EyeController } from "../components/authentication/EyeController";
 import ErrorMessage from "../components/authentication/Error";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 const SignIn = () => {
   const [password, setPassword] = useState("");
@@ -115,7 +116,7 @@ const SignIn = () => {
                 </div>
                 <p className="font-lora text-[#395143] font-semibold pt-[40px]">
                   <span className="text-[#8C876F]">Mot de passe oublié ? </span>
-                  Récupérez-le maintenant !
+                  <Link to="/reset_password"> Récupérez-le maintenant !</Link>
                 </p>
               </div>
             </div>

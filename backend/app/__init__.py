@@ -13,7 +13,7 @@ from .routes import init_routes,init_jwt,init_mail
 ##APP##
 app = Flask(__name__)
 ##Backend x client##
-CORS(app, origins="http://localhost:5174")
+CORS(app, origins="http://localhost:5173")
 app.config.from_object(Config)
 
 ##API##
