@@ -17,7 +17,7 @@ export const MailSent = () => {
           <div>Logo</div>
           <div>Websitename</div>
         </div>
-        <div className="h-[60vh]  w-[90vw] lg:hidden flex flex-col items-center bg-[#BEB9A1] justify-start pt-[80px] lg:pt-0 rounded-[10px] md:rounded-[17px]">
+        <div className="h-[60vh]  w-[90vw] lg:hidden flex flex-col items-center bg-[#BEB9A1] justify-start pt-[80px] md:pt-[100px] lg:pt-0 rounded-[10px] md:rounded-[17px]">
           <h1 className="text-[36px] font-bold font-merryweather text-[#1D3A35]">
             Lien Envoye!
           </h1>
