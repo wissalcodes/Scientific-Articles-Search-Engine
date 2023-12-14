@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_restx import Api
+from flask_restx import Api,Resource
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_mail import Mail
@@ -8,7 +8,7 @@ from flask_mail import Mail
 from config import Config
 from .database import db
 from .models.user import User
-from .routes import init_routes,init_jwt,init_mail
+from .routes import init_routes,init_jwt
 
 ##APP##
 app = Flask(__name__)
@@ -33,7 +33,6 @@ CORS(app)
 ##Reset password##
 mail=Mail()
 mail.init_app(app)
-init_mail(api,mail)
 
 #to add in our db
 @app.shell_context_processor
@@ -42,5 +41,4 @@ def make_shell_context():
         "db" : db,
         "User" : User
     }
-    
     
