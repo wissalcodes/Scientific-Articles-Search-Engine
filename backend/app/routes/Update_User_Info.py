@@ -5,7 +5,7 @@ from app.database import db
 
 users_bp = Blueprint('users_manager', __name__)
 
-@users_bp.route('/update_user/<int:user_id>', methods=['POST','GET'])
+@users_bp.route('/update_user/<int:user_id>', methods=['POST'])
 def update_user_route(user_id):
     # Retrieve user by ID
     user = User.query.get(user_id)
