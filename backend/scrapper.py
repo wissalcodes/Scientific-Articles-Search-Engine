@@ -18,45 +18,14 @@ def get_pdf_urls(folder_url):
         return None
 
 def download_pdf_from_url(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return BytesIO(response.content)
-    else:
-        return None
-
-def extract_text_from_list_pdf(pdf_urls):
-     
-    if pdf_urls:
-        for pdf_url in pdf_urls:
-            pdf_buffer = download_pdf_from_url(pdf_url)
-            if pdf_buffer:
-                text=extract_text(pdf_buffer)
-                
-                titles, i =extract_title(extract_head_text(text))
-                
-                authors, j=extract_authors(extract_head_text(text),k=i)
-                
-                institutions=extract_intitutions(extract_head_text(text),k=j)
-                
-                print('title')
-                print(titles)
-                print('authors')
-                print(authors)
-                # print('institu')
-                # print(institutions)
-                
-                # abstract, keywords, references, my_text=extract_abstract_keywords_references_final_text(text)
-                # print('abstract')
-                # print(abstract)
-                # print('keywords')
-                # print(keywords)
-                # print('references')
-                # print(referenprint('authors')
-                # print(authors)ces)
-                # print(my_text)
-                
-            else:
-                print(f"Failed to download PDF from {pdf_url}")
+    try :
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return BytesIO(response.content)
+        else:
+            return None
+    except Exception as e:
+        print(e)
 
 def extract_head_text(text):
     lines = text.split('\n')
@@ -77,27 +46,26 @@ def extract_head_text(text):
     
     return head_text 
 
-def extract_title(article_text,k=0):
+def extract_title(article_text,new_text):
     """Extracts the title of an article from its text."""
     lines = article_text.split('\n')
     extract_lines = []
     data = []
 
-    if lines[k]=='':
-        k+=1
-        
-    for i, line in enumerate(lines, start=k):
+    for i, line in enumerate(lines, start=0):
         if lines[i].strip() == '' :
             break        
+        new_text=new_text.replace(lines[i],'')
         extract_lines.append(lines[i])
         i += 1
 
     data = '\n'.join(extract_lines)    
     data = data.replace("\n"," ")
     
-    return data, i
 
-def extract_authors(article_text,k):
+    return data, i, new_text
+
+def extract_authors(article_text,k,new_text):
     """Extracts the authors of an article from its text."""
     lines = article_text.split('\n')
     extract_lines = []
@@ -109,7 +77,9 @@ def extract_authors(article_text,k):
         
     for i, line in enumerate(lines, start=k):
         if lines[i].strip() == '' or lines[i].lower().replace(" ", "").startswith(tuple(words)) or lines[i][0].isdigit()  :
-            break        
+            break    
+        
+        new_text=new_text.replace(lines[i],'')    
         extract_lines.append(lines[i])
         i += 1
 
@@ -122,10 +92,10 @@ def extract_authors(article_text,k):
     _authors = ''.join(char for char in data if not char.isdigit())
     authors = re.split(separator_pattern, _authors)
     data = [item for item in authors if item.strip() != ""]
-    
-    return data, i
 
-def extract_intitutions(article_text,k):
+    return data, i,new_text
+
+def extract_intitutions(article_text,k,new_text):
     """Extracts institutions of an article from its text."""
     lines = article_text.split('\n')
     extract_lines = []
@@ -137,13 +107,15 @@ def extract_intitutions(article_text,k):
     for i, line in enumerate(lines, start=k):
         if i >= len(lines):
             break    
+        new_text=new_text.replace(lines[i],'')
         extract_lines.append(lines[i])
         i += 1
 
     data = '\n'.join(extract_lines)    
     separator = "\n"
     data = data.split(separator)
-    return data
+
+    return data,new_text
 
 def extract_abstract_keywords_references_final_text(text):
     """Extracts abstract & keywords & references & final_text of an article from its text."""
@@ -175,8 +147,12 @@ def extract_abstract_keywords_references_final_text(text):
                 my_text=my_text.replace(lines[i],'')
                 extract_lines.append(lines[i])
                 i += 1
+                
             abstract = '\n'.join(extract_lines)
-        
+            matched_string = match.group()
+            abstract = abstract.replace(matched_string,"")
+            abstract = abstract.replace("\n"," ")
+            
         ### extract keywords ###
         extract_lines = []
         pattern = re.compile(r'\b(?:keyword|keywords|k e y w o r d s|k e y w o r d|keyword:|keywords:|k e y w o r d s :|k e y w o r d :)\b', re.IGNORECASE)
@@ -192,8 +168,15 @@ def extract_abstract_keywords_references_final_text(text):
                 my_text=my_text.replace(lines[i],'')
                 extract_lines.append(lines[i])
                 i += 1
-            keywords = '\n'.join(extract_lines)
-            
+                
+            keywords = '\n'.join(extract_lines)    
+            matched_string = match.group()
+            keywords = keywords.replace(matched_string,"")
+            separators = [",", ";", "|", "&",'\n']
+            separator_pattern = "|".join(map(re.escape, separators))
+            _keywords = re.split(separator_pattern, keywords)
+            keywords = [item for item in _keywords if item.strip() != ""]
+                        
         ### extract references ###   
         extract_lines = []
         pattern = re.compile(r'\b(?:reference|references|r e f e r e n c e s|r e f e r e n c e|reference:|references:|r e f e r e n c e s :|r e f e r e n c e :)\b', re.IGNORECASE)
@@ -211,16 +194,40 @@ def extract_abstract_keywords_references_final_text(text):
                 extract_lines.append(lines[i])
                 i += 1
             references = '\n'.join(extract_lines)
-    
+            matched_string = match.group()
+            references = references.replace(matched_string,"")
+            
     my_text = re.sub('\n+', '\n', my_text).strip()
     return abstract, keywords, references, my_text
     
 def remove_empty_lines(text):
     return re.sub(r'\n\s*\n', '\n', text)      
+
+def extract_text_from_list_pdf(pdf_urls):
+    if pdf_urls:
+        for pdf_url in pdf_urls:
+            pdf_buffer = download_pdf_from_url(pdf_url)
+            if pdf_buffer:
+                
+                text=extract_text(pdf_buffer)
+                # abstract, keywords, references
+                abstract, keywords, references, ne_text=extract_abstract_keywords_references_final_text(text)
+                
+                b_text = extract_head_text(text)
+                print('abstract :\n',abstract,'keywords:\n',keywords,'references:\n',references)
+                #titles, authors,institutions
+                titles, i, n_text =extract_title(b_text,new_text=ne_text)
+                authors, j, _text=extract_authors(b_text,k=i,new_text=n_text)
+                institutions,new_text=extract_intitutions(b_text,k=j,new_text=_text)
+                print('title :\n',titles,'authors:\n',authors,'institutions:\n',institutions)
+                #text of the article
+                new_text = re.sub('\n+', '\n', new_text).strip()
+                ################send to elastic search
+            else:
+                print(f"Failed to download PDF from {pdf_url}")
             
 if __name__ == '__main__':
 
     folder_url = 'https://drive.google.com/drive/u/1/folders/1HPpYklybqUbP2Mik6vwSs3prGsdjddlD'
-    pdf_urls = get_pdf_urls(folder_url)
-    text=extract_text_from_list_pdf(pdf_urls)
+    text=extract_text_from_list_pdf(get_pdf_urls(folder_url))
 
