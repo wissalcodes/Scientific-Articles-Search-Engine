@@ -39,13 +39,13 @@ class User(db.Model):
     def email_exists(email):
         return User.query.filter_by(email=email).first() is not None
 
+
+
     def update_email(self, new_email):
         if not User.is_valid_email(new_email):
             return 'Invalid email format', False
-
         if User.email_exists(new_email):
             return 'Email already exists', False
-
         try:
             self.email = new_email
             db.session.commit()
@@ -54,11 +54,27 @@ class User(db.Model):
             db.session.rollback()
             return 'Database error occurred', False
                     
-    def update(self, username=None, first_name=None, last_name=None):
-       if username is not None:
-          self.username = username
-       if first_name is not None:
-          self.first_name = first_name
-       if last_name is not None:
-           self.last_name = last_name
-       db.session.commit()
+    def update_name(self, new_name):
+        self.first_name = new_name
+        db.session.commit()
+
+    def update_family_name(self, new_family_name):
+        self.last_name = new_family_name
+        db.session.commit()
+
+    @staticmethod
+    def username_exists(username):
+        return User.query.filter_by(username=username).first() is not None
+
+    def update_username(self, new_username):
+        if User.username_exists(new_username):
+            return 'Username already exists', False
+
+        try:
+            self.username = new_username
+            db.session.commit()
+            return 'Username updated successfully', True
+        except Exception as e:
+            db.session.rollback()
+            return f'Database error occurred: {e}', False
+
