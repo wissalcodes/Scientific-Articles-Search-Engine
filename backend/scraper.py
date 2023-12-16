@@ -2,7 +2,8 @@ from io import BytesIO
 import re
 import requests
 from pdfminer.high_level import extract_text
-from flask import jsonify
+from elasticsearch import Elasticsearch
+from datetime import datetime
 
 def get_pdf_urls(folder_url):
     # Make a request to the Google Drive API to get file information
@@ -274,7 +275,9 @@ def extract_data_from_articles(pdf_urls):
                     "abstract":abstract,
                     "keywords":keywords,
                     "text":new_text,
-                    "references":references
+                    "references":references,
+                    "url":pdf_url,
+                    "date":datetime.utcnow
                 }
                 ################send to elastic search
             else:
@@ -285,4 +288,5 @@ if __name__ == '__main__':
     folder_url = 'https://drive.google.com/drive/u/1/folders/1HPpYklybqUbP2Mik6vwSs3prGsdjddlD'
     
     extract_data_from_articles(get_pdf_urls(folder_url))
+    
 
