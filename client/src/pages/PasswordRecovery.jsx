@@ -44,7 +44,7 @@ export const PasswordRecovery = () => {
       <div className="absolute left-[20px] lg:translate-y-[25vh] xl:translate-y-[18vh] h-full w-0 lg:w-[500px] xl:w-[720px]">
         <img src={MDPOublie} />
       </div>
-      <div className="h-[55vh] lg:h-full w-full px-[50px] py-[40px] bg-[#BEB9A1] lg:rounded-b-[0px] rounded-b-[30px] flex flex-col">
+      <div className="h-[55vh] lg:h-full w-full px-[50px] py-[40px] bg-[#395143] lg:rounded-b-[0px] rounded-b-[30px] flex flex-col">
         <div className="flex items-center justify-start h-[10%] w-full">
           <div>Logo</div>
           <div>Websitename</div>
@@ -79,10 +79,10 @@ export const PasswordRecovery = () => {
             />
           </div>
           <div className="lg:pt-[40px] pt-[20px] xl:pt-[54px] w-full flex items-end justify-end">
-            <div className="lg:w-[30%] w-full flex bg-[#395143] px-[20px] py-[5px] rounded-[10px] ">
+            <div className="transform transition-transform duration-200 ease-in-out hover:scale-110 lg:w-[30%] w-full flex bg-gradient-to-r from-[#395143] to-[#A79629] px-[20px] py-[5px] rounded-[10px] ">
               <button
                 onClick={handleResetMail}
-                className="lg:text-[28px] text-[24px] mx-auto font-lora text-[#F1D896] bg-transparent ">
+                className="lg:text-[28px] text-[24px] mx-auto font-lora text-[#E7E4D5] bg-transparent ">
                 Envoyer
               </button>
             </div>

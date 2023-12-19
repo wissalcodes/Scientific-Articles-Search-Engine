@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 const SignIn = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [rememberUser, setRememberUser] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [user, setUser] = useState(null);
@@ -60,17 +59,20 @@ const SignIn = () => {
 
   useEffect(() => {}, [user]);
   return (
-    <div className="w-screen h-screen relative bg-[#E7E4D5]">
+    <div className="w-screen h-screen pb-[10%] lg:mb-0 relative bg-[#E7E4D5] lg:bg-gradient-to-r from-[#395143] to-[#A79629] ">
       <AuthNavbar />
       <div className="w-screen h-screen flex flex-col lg:grid lg:grid-cols-[55%,45%] xl:grid-cols-2">
-        <div className="lg:hidden h-[90vh] lg:h-full w-full rounded-[20px] bg-[#395143] flex flex-col items-center justify-center">
-          <img className="w-[80%] h-[80%]" src={SignInIllustration} />
+        <div className="hidden h-0 lg:h-full w-full lg:flex flex-col items-center justify-center">
+          <img className="w-[70%] h-[70%]" src={SignInIllustration} />
         </div>
-        <div className="h-full w-full mb-[100px] bg-[#E7E4D5] ietms-center justify-center flex flex-col">
-          <div className="flex flex-col mx-[20px] sm:mx-[30px] md:mx-[70px] lg:mx-[100px] justify-center items-center">
+        <div className="lg:hidden h-full w-full rounded-b-[20px] bg-gradient-to-r from-[#395143] to-[#A79629] flex flex-col items-center justify-center py-[5%]">
+          <img className="w-[80%]  h-[80%]" src={SignInIllustration} />
+        </div>
+        <div className="h-full  w-full  items-start justify-center flex flex-col">
+          <div className="flex bg-[#E7E4D5] w-full lg:w-[80%] lg:rounded-[15px] px-[9%] py-[5%] flex-col  sm:px-[10%]  justify-center items-center">
             <div className="w-full flex justify-start items-start">
-              <h1 className="text-[#152522] hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[40px] xl:text-[50px]">
-                Se connecter
+              <h1 className="text-[#152522] leading-[120%] hidden lg:block font-semibold font-merryweather text-start text-[24px] lg:text-[40px] xl:text-[50px]">
+                Connectez-vous maintenant !
               </h1>
             </div>
             <div className="w-full flex flex-col justify-center items-center ">
@@ -80,7 +82,7 @@ const SignIn = () => {
                 </h1>
                 <ErrorMessage message={errorMsg} />
               </div>
-              <div className="w-full flex bg-[white] px-[20px]  py-[10px] lg:py-[15px]  rounded-[10px]">
+              <div className="w-full drop-shadow flex bg-[white] px-[20px]  py-[10px] lg:py-[15px]  rounded-[10px]">
                 <input
                   className="text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent pr-[10px]"
                   type="text"
@@ -95,7 +97,7 @@ const SignIn = () => {
                   MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[10px] lg:py-[15px] rounded-[10px]">
+              <div className="relative w-full drop-shadow flex bg-[white] px-[20px] py-[10px] lg:py-[15px] rounded-[10px]">
                 <input
                   className="text-[16px] focus:outline-none w-[90%] focus:border-transparent  bg-transparent pr-[10px]"
                   type={isPasswordVisible ? "text" : "password"}
@@ -107,23 +109,20 @@ const SignIn = () => {
                 </div>
               </div>
               <div className="w-full h-full flex flex-col justify-center lg:items-start pt-[40px]">
-                <div className="lg:w-[50%] w-full  flex bg-[#1D3A35] px-[20px] py-[3px] lg:py-[10px] rounded-[10px]">
+                <div className="transform transition-transform duration-200 ease-in-out hover:scale-110 lg:w-[60%] w-full drop-shadow flex bg-[#395143] px-[20px] py-[10px] lg:py-[10px] rounded-[10px] lg:mb-[10px] ">
                   <button
                     onClick={handleSignIn}
-                    className="text-[25px] lg:text-[32px]  mx-auto font-lora text-[#F1D896] bg-transparent pr-[10px]">
-                    Sign in
+                    className="text-[18px] lg:text-[24px]  mx-auto font-lora text-[#FFF3B2] bg-transparent pr-[10px]">
+                    SE CONNECTER
                   </button>
                 </div>
-                <p className="font-lora text-[#395143] font-semibold pt-[40px]">
+                <p className="font-lora text-[#395143] font-semibold pt-[15px] ">
                   <span className="text-[#8C876F]">Mot de passe oublié ? </span>
                   <Link to="/reset_password"> Récupérez-le maintenant !</Link>
                 </p>
               </div>
             </div>
           </div>
-        </div>
-        <div className="hidden h-full w-full bg-[#395143] lg:flex flex-col items-center justify-center">
-          <img className="w-[70%] h-[70%]" src={SignInIllustration} />
         </div>
       </div>
     </div>
