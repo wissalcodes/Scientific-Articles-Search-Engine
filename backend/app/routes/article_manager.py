@@ -27,7 +27,6 @@ def index_article():
     )
     response = requests.post('http://localhost:9200/articles_index/_doc/' + article_data['article_id'], json=article.to_dict())
     return jsonify(response.json())
-
 @article_manager.route('/search_articles', methods=['POST'])
 def search_articles():
     search_data = request.json
@@ -68,6 +67,9 @@ def search_articles():
                 }
             }
         }
+
+    # Add sorting by publication_date in descending order (most recent first)
+    search_query["sort"] = [{"publication_date": {"order": "desc"}}]
 
     response = requests.get('http://localhost:9200/articles_index/_search', json=search_query)
     return jsonify(response.json())
