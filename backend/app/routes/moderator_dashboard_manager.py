@@ -137,3 +137,25 @@ def init_auth_routes(api):
             
    
     api.add_namespace(moderator_ns)
+
+# # Search documents route
+# @app.route('/api/search_document')
+# def search_document():
+#     data = flask.request.json
+    
+#     field_name = data['field_name']
+#     query = data['query']
+
+#     result = esknn.search_document(query, field_name)
+
+#     documents = []
+
+#     hits = result['hits']['hits']
+
+#     for hit in hits:
+#         documents.append(hit['_source'])
+
+#     return {
+#         "status": 200,
+#         "documents": documents
+#     }

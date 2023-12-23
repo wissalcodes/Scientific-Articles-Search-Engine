@@ -1,9 +1,6 @@
 from io import BytesIO
 import re
 import requests
-from pdfminer.high_level import extract_text
-from elasticsearch import Elasticsearch
-from datetime import datetime
 
 def get_pdf_urls(folder_url):
     # Make a request to the Google Drive API to get file information
@@ -242,51 +239,3 @@ def extract_abstract_keywords_references_final_text(text):
     
 def remove_empty_lines(text):
     return re.sub(r'\n\s*\n', '\n', text)      
-
-def extract_data_from_articles(pdf_urls):
-    """ extract the data from a URL that contains a bunch of scientific articles """
-    if pdf_urls:
-        for pdf_url in pdf_urls:
-            pdf_buffer = download_pdf_from_url(pdf_url)
-            if pdf_buffer:
-                
-                text=extract_text(pdf_buffer)
-                
-                # abstract, keywords, references
-                abstract, keywords, references, ne_text=extract_abstract_keywords_references_final_text(text)
-
-                b_text = extract_head_text(text)
-                # print('abstract :\n',abstract,'keywords:\n',keywords,'references:\n',references)
-                
-                #titles, authors,institutions
-                title, i, n_text =extract_title(b_text,new_text=ne_text)
-                authors, j, _text=extract_authors(b_text,k=i,new_text=n_text)
-                institutions,new_text=extract_intitutions(b_text,k=j,new_text=_text)
-                # print('title :\n',title,'authors:\n',authors,'institutions:\n',institutions)
-                
-                #text of the article
-                new_text = re.sub('\n+', '\n', new_text).strip()
-                # print(new_text)
-                
-                return {
-                    "title":title,
-                    "authors":authors,
-                    "institutions":institutions,
-                    "abstract":abstract,
-                    "keywords":keywords,
-                    "text":new_text,
-                    "references":references,
-                    "url":pdf_url,
-                    "date":datetime.utcnow
-                }
-                ################send to elastic search
-            else:
-                return None
-            
-if __name__ == '__main__':
-
-    folder_url = 'https://drive.google.com/drive/u/1/folders/1HPpYklybqUbP2Mik6vwSs3prGsdjddlD'
-    
-    extract_data_from_articles(get_pdf_urls(folder_url))
-    
-
