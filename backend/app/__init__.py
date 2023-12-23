@@ -10,15 +10,18 @@ from config import Config
 from .database import db
 from .models.user import User
 from .routes.users_manager import users_bp
-
 from .routes import init_routes, init_jwt, init_mail
+from .routes.article_manager import article_manager
 
 ##APP##
 app = Flask(__name__)
 app.config.from_object(Config)
 
 ## Register  users Blueprint
-app.register_blueprint(users_bp, url_prefix='/users')  
+app.register_blueprint(users_bp, url_prefix='/users') 
+ ## Register  users Blueprint
+
+app.register_blueprint(article_manager)
 
 ##API##
 api = Api(app, title='API', doc='/docs')
