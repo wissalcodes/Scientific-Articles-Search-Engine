@@ -241,8 +241,11 @@ def init_ad(api,esknn):
 
                 # Check if the URL is from drive.google.com and the path starts with '/drive/folders/' or the path starts with '/u/' (user-owned folder)
                 if (parsed_url.netloc == 'drive.google.com' and path_components[1] == 'drive' and path_components[2] == 'folders') or  (parsed_url.netloc == 'drive.google.com' and path_components[2] == 'u' and path_components[1] == 'drive' and path_components[4] == 'folders'):  
-                    extract_data_from_articles(get_pdf_urls(data))
-                    return {'message':'articles uploaded'}, 200
+                    response = extract_data_from_articles(get_pdf_urls(data))
+                    if response is not None :
+                        return {'message':'articles uploaded'}, 200
+                    else:
+                        return {'error':'can not extract articles from the provided url'},400
                 else:
                     return {'error':'the provided url is not a google drive folder'}, 400
             else:
@@ -292,5 +295,8 @@ def init_ad(api,esknn):
                     print(f'The article n° {i} has been uploaded to elastic search successfully')
                 else:
                     return None
+                
+        else:
+            return None
                 
                 

@@ -42,6 +42,7 @@ result = esknn.create_index()
 
 init_route_admin(api,esknn) 
 
+
 #to add in our db
 @app.shell_context_processor
 def make_shell_context():
