@@ -1,10 +1,9 @@
 from flask import make_response, request, jsonify
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt, get_jwt, current_user
+from flask_jwt_extended import jwt_required, current_user
 from werkzeug.security import check_password_hash
 from app.models.user import User
-from app import db
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import check_password_hash
 
 def init_auth_routes(api):
     

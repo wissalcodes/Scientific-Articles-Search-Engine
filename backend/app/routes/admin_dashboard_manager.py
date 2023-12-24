@@ -228,10 +228,9 @@ def init_ad(api,esknn):
     
  
     @admin_ns.route('/upload_articles')
-    class ModifyModeratorResource(Resource):
+    class UploadResource(Resource):
         
         @jwt_required()
-        
         def post(self):
             claims = get_jwt()
             if claims.get('is_admin') == True : 
@@ -239,7 +238,6 @@ def init_ad(api,esknn):
                 
                 parsed_url = urlparse(data)
                 path_components = parsed_url.path.split('/')
-                print(path_components)
 
                 # Check if the URL is from drive.google.com and the path starts with '/drive/folders/' or the path starts with '/u/' (user-owned folder)
                 if (parsed_url.netloc == 'drive.google.com' and path_components[1] == 'drive' and path_components[2] == 'folders') or  (parsed_url.netloc == 'drive.google.com' and path_components[2] == 'u' and path_components[1] == 'drive' and path_components[4] == 'folders'):  
