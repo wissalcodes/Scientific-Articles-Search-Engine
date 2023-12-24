@@ -236,7 +236,13 @@ def init_ad(api,esknn):
             claims = get_jwt()
             if claims.get('is_admin') == True : 
                 data = request.get_json().get('url')
-                if urlparse(data).netloc == 'drive.google.com' and urlparse(data).path.startswith('/drive/folders/') :  
+                
+                parsed_url = urlparse(data)
+                path_components = parsed_url.path.split('/')
+                print(path_components)
+
+                # Check if the URL is from drive.google.com and the path starts with '/drive/folders/' or the path starts with '/u/' (user-owned folder)
+                if (parsed_url.netloc == 'drive.google.com' and path_components[1] == 'drive' and path_components[2] == 'folders') or  (parsed_url.netloc == 'drive.google.com' and path_components[2] == 'u' and path_components[1] == 'drive' and path_components[4] == 'folders'):  
                     extract_data_from_articles(get_pdf_urls(data))
                     return {'message':'articles uploaded'}, 200
                 else:
