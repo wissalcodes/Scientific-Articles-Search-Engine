@@ -11,20 +11,15 @@ def init_ad(api,esknn):
         
     article_model=api.model(
     
-        'Article display',
+        'Article',
         {
-            "id" : fields.Integer(required=True,description='ID'),
-            "title" : fields.String(required=True, description='Title'),
-            "authors" : fields.String(required=True, description= 'Authors'),
-            "institutions" : fields.String(required =True, description='Institutions'),
-            "abstract" : fields.String(required=True,description='Abstract'),
-            "keywords" : fields.String(required=True,description='Keywords'),
-            "text" : fields.String(required=True,description='Text'),
-            "references" : fields.String(required=True,description='References'),
-            "url": fields.String(required=True,description='Pdf URL'),
-            "date" : fields.String(required=True,description='Date'),
-            "is_published" : fields.String(required=True,description='Published?'),
-
+            "title" : fields.String(description='Title'),
+            "authors" : fields.String(description= 'Authors'),
+            "institutions" : fields.String(description='Institutions'),
+            "abstract" : fields.String(description='Abstract'),
+            "keywords" : fields.String(description='Keywords'),
+            "text" : fields.String(description='Text'),
+            "references" : fields.String(description='References'),
         }
     
     )
@@ -84,7 +79,7 @@ def init_ad(api,esknn):
                 
                 return {'message':'Password updated successfully'},200
             else:
-                return {'message':'The old password is wrong'},401
+                return {'error':'The old password is wrong'},401
        
     @moderator_ns.route('/my_profile/change_infos')
     class ModeratorResource (Resource):     
@@ -140,20 +135,12 @@ def init_ad(api,esknn):
                     return {'message','all articles have been moderated'},500
             
             else:
-                return {'message': 'Permission denied'}, 403  
+                return {'error': 'Permission denied'}, 403  
     
     
     @moderator_ns.route('/articles/moderate/<id>')
     class ArticleResource (Resource):
-        
-        @jwt_required()
-        def get(self,id): # display one article
-            if current_user.role == 'moderator':
-                pass
-            else:
-                return {'message': 'Permission denied'}, 403  
-        
-        
+            
         @jwt_required()
         def delete(self,id): # delete an article
             if current_user.role == 'moderator':
@@ -165,17 +152,44 @@ def init_ad(api,esknn):
                 else:
                     return {"error": "the article can not be deleted"}, 500
             else:
-                return {'message': 'Permission denied'}, 403  
+                return {'error': 'Permission denied'}, 403  
         
-       
+        @moderator_ns.expect(article_model)
         @jwt_required()
-        def post(self,id): #correct articles; modify one article (over-write the same article)
+        def put(self,id): #correct articles
             if current_user.role == 'moderator':
-                pass
+                data = request.get_json()
+
+                title=data.get('title','')
+                authors=data.get('authors','')
+                institutions=data.get('institutions','')
+                abstract=data.get('abstract','')
+                keywords=data.get('keywords','')
+                article=data.get('article','')
+                references=data.get('references','')
+
+                if len (title) > 0:
+                    esknn.correct_article(id,'title',title)
+                if len (authors) > 0:
+                    esknn.correct_article(id,'authors',authors)
+                if len (institutions) > 0:
+                    esknn.correct_article(id,'institutions',institutions)
+                if len (abstract) > 0:
+                    esknn.correct_article(id,'abstract',abstract)
+                if len (keywords) > 0:
+                    esknn.correct_article(id,'keywords',keywords)
+                if len (article) > 0:
+                    esknn.correct_article(id,'article',article)
+                if len (references) > 0:
+                    esknn.correct_article(id,'references',references)
+                
+                esknn.correct_article(id,'is_published',True)
+
+                return {'message': 'article published successfully'},200
+                            
             else:
-                return {'message': 'Permission denied'}, 403  
+                return {'error': 'Permission denied'}, 403  
             
-   
     api.add_namespace(moderator_ns)
 
 

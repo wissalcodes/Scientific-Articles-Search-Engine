@@ -150,3 +150,19 @@ class ESKNN():
         except Exception:
         
             return 0
+        
+        
+    def correct_article(self, article_id, field_to_update, data):
+        try:
+            field_update = {
+                'doc': {
+                    field_to_update : data
+                }
+            }
+            es.update(index=INDEX_NAME, id=article_id, body=field_update)
+            
+            return 1
+        
+        except Exception:
+        
+            return 0
