@@ -119,25 +119,34 @@ class ESKNN():
         return result
     
     
-    # return all the articles that has not been moderated
-    # def search_document(self, query, field_name) -> Dict:
-    #     ''' Search a index\n
-    #         --------------
-    #         Takes -> fvecs\n
-    #         Returns -> dict from es
-    #     '''
-    #     result = es.search(
-    #         request_timeout=30,
-    #         index=INDEX_NAME,
-    #         body={
-    #             'query': {
-    #                 'match': {
-    #                     field_name: {
-    #                         'query': query
-    #                     }
-    #                 }
-    #             }
-    #         }
-    #     )
-
-    #     return result
+    def search_unpublished_document(self):
+        
+        # return all the articles that has not been moderated
+        try:
+            result = es.search(
+                request_timeout=30,
+                index=INDEX_NAME,
+                body={
+                'query': {
+                        'term': {
+                            'is_published': False
+                        }
+                    }
+                }
+            )
+            return result
+        
+        except Exception:
+            return 0
+        
+    def delete_unpublished_document(self,article_id):
+        
+        # Delete the article by ID from the Elasticsearch index
+        try:
+            
+            es.delete(index=INDEX_NAME, id=article_id)
+            return 1
+        
+        except Exception:
+        
+            return 0
