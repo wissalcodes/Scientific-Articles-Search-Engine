@@ -1,33 +1,19 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Sample } from "./components/sample/Sample";
+//import { useState, useEffect } from "react";
+//import axios from "axios";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PopoutArticle from "./component/PopoutArticle";
 import "./App.css";
-function App() {
+function App () {
   return (
-    <div className="flex flex-col h-screen w-screen">
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="flex font-bold flex-col h-screen w-screen bg-slate-500 justify-center items-center text-[50px]">
-                Welcome!
-                <div className="font-light text-[30px]">
-                  * in the link, add /members to view running flask server
-                </div>
-                <div className="font-light text-[30px]">
-                  * in the link, add /teammembers to view rendering of API
-                  response
-                </div>
-              </div>
-            }
-          />
-          <Route path="teammembers" element={<Sample />} />
-        </Routes>
-      </BrowserRouter>
+     <div className="flex flex-col h-screen w-screen">
+    <Router>
+      <Routes>
+        {/* Define routes here */}
+        <Route path="/" element={<PopoutArticle/>} />
+        {/* Add more routes as needed */}
+      </Routes>
+    </Router>
     </div>
   );
 }
-
 export default App;
