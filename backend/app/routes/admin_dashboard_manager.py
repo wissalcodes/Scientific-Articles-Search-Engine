@@ -1,3 +1,5 @@
+import json
+from urllib.parse import urlparse
 from flask import make_response, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt, current_user
@@ -5,8 +7,11 @@ from werkzeug.security import check_password_hash
 from app.models.user import User
 from app import db
 from werkzeug.security import generate_password_hash,check_password_hash
+from app.engine.scraper import *
+from pdfminer.high_level import extract_text
+from datetime import datetime
 
-def init_auth_routes(api):
+def init_ad(api,esknn):
     
     admin_ns = Namespace('admin_dashboard',description='admin operations')
         
@@ -222,4 +227,76 @@ def init_auth_routes(api):
                 return {'message': 'Permission denied'}, 403  
             
     
+ 
+    @admin_ns.route('/upload_articles')
+    class UploadResource(Resource):
+        
+        @jwt_required()
+        def post(self):
+            claims = get_jwt()
+            if claims.get('is_admin') == True : 
+                data = request.get_json().get('url')
+                
+                parsed_url = urlparse(data)
+                path_components = parsed_url.path.split('/')
+
+                # Check if the URL is from drive.google.com and the path starts with '/drive/folders/' or the path starts with '/u/' (user-owned folder)
+                if (parsed_url.netloc == 'drive.google.com' and path_components[1] == 'drive' and path_components[2] == 'folders') or  (parsed_url.netloc == 'drive.google.com' and path_components[2] == 'u' and path_components[1] == 'drive' and path_components[4] == 'folders'):  
+                    pdf_urls = get_pdf_urls(data)
+                    i=0
+                    if pdf_urls:
+                        for pdf_url in pdf_urls:
+                            
+                            try :
+                                response = requests.get(pdf_url, timeout=20)
+                                if response.status_code == 200:
+                                    pdf_buffer= BytesIO(response.content)
+                                else:
+                                    pdf_buffer= None
+                            except Exception as e:
+                                print(e)
+                            
+                            if pdf_buffer:
+                                
+                                text = extract_text(pdf_buffer)
+                                
+                                title,i=extract_title(text)
+                                authors,institutions=extract_authors_institutions(extract_head_text(text),k=i)
+
+                                output= {
+                                    "title":title,
+                                    "authors":authors,
+                                    "institutions":institutions,
+                                    "abstract":extract_abstract(text),
+                                    "keywords":extract_keywords(text),
+                                    "article":extract_full_text(text),
+                                    "references":extract_references(text),
+                                    "url":pdf_url,
+                                    "date": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                    "is_published":False
+                                }
+
+                                with open("output.json", "a") as json_file:
+                                    json.dump(output, json_file, indent=2)
+                                    json_file.write('\n')
+                                
+                                response = esknn.insert_document(output)
+                                
+                                if response != 0:
+                                    i=+1
+                                    return {'message':f'The article n° {i} has been uploaded to elastic search successfully'}, 200
+                                else:
+                                    return {'error':'Failed to index the article'},400
+                                
+                            else:
+                                return {'error':'Failed to download the article from google drive, check your internet connection'},401
+                    
+                else:
+                    return {'error':'the provided url is not a google drive folder'}, 400
+            else:
+                return {'message': 'Permission denied'}, 403  
+            
+    
     api.add_namespace(admin_ns)
+
+   

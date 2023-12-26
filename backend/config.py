@@ -1,5 +1,3 @@
-from flask_mail import Mail
-
 class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite3'
     SECRET_KEY = '4f0280d43e2b66fe2b651f32440955c7'
@@ -12,6 +10,8 @@ class Config:
     MAIL_USE_SSL = False
     MAIL_USERNAME = 'apikey'
     MAIL_PASSWORD = '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'
+    INDEX_NAME = 'articles'
+    ESKNN_HOST = 'http://localhost:9200'
 
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///test_database.db'
