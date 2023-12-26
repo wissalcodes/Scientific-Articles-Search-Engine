@@ -37,7 +37,7 @@ import React, { useState } from 'react';
           <img src={closeIcon} alt="Close Icon" className="absolute top-0 right-0 cursor-pointer " style={{ width: '16px', height: '15px', marginRight: '14px', marginTop: '15px' }} onClick={handleCloseClick} />
           <div className="grid-cols-[1fr,1fr] gap-[20px] lg:grid-cols-[5fr,1fr,1fr] grid">
             <div className="flex items-center">
-              <h1 className="text-black font-merriweather text-2xl text-left mt-5 ml-0 font-semibold">
+              <h1 className="text-black font-merriweather text-2xl text-left mt-5 ml-5 font-semibold">
                 Title: {articleData.title}
               </h1>
             </div>
