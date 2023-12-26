@@ -17,7 +17,7 @@ def get_pdf_urls(folder_url):
 
 def download_pdf_from_url(url):
     try :
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=20)
         if response.status_code == 200:
             return BytesIO(response.content)
         else:
@@ -44,198 +44,193 @@ def extract_head_text(text):
     
     return head_text 
 
-def extract_title(article_text,new_text):
+def extract_title(article_text):
     """Extracts the title of an article from its text."""
     lines = article_text.split('\n')
     extract_lines = []
-    delete_lines = []
     data = []
 
     for i, line in enumerate(lines, start=0):
         if lines[i].strip() == '' :
             break        
-        delete_lines.append(lines[i])
         extract_lines.append(lines[i])
         i += 1
 
     data = '\n'.join(extract_lines)    
     data = data.replace("\n"," ")
     
-    new_text_lines = new_text.split('\n')
-    
-    for line in delete_lines:
-        if line in new_text_lines:
-            new_text_lines.remove(line)
-            
-    new_text = '\n'.join(new_text_lines).strip()
-    
-    return data, i, new_text
-
-def extract_authors(article_text,k,new_text):
-    """Extracts the authors of an article from its text."""
-    lines = article_text.split('\n')
-    extract_lines = []
-    delete_lines = []
-
-    data = []
-    words= ['laboratory','institute','university','department','center','school','college']
-
-    if lines[k]=='':
-        k+=1
-        
-    for i, line in enumerate(lines, start=k):
-        if lines[i].strip() == '' or lines[i].lower().replace(" ", "").startswith(tuple(words)) or lines[i][0].isdigit()  :
-            break    
-        
-        delete_lines.append(lines[i])
-        extract_lines.append(lines[i])
-        i += 1
-
-    
-    data = '\n'.join(extract_lines)    
-    
-    separators = [",", ";", "|", "&", "and"]
-    # Create a regular expression pattern that matches any of the separators
-    separator_pattern = "|".join(map(re.escape, separators))
-    
-    _authors = ''.join(char for char in data if not char.isdigit())
-    authors = re.split(separator_pattern, _authors)
-    data = [item for item in authors if item.strip() != ""]
-    
-    new_text_lines = new_text.split('\n')
-    
-    for line in delete_lines:
-        if line in new_text_lines:
-            new_text_lines.remove(line)
-            
-    new_text = '\n'.join(new_text_lines).strip()
-
-    return data, i,new_text
-
-def extract_intitutions(article_text,k,new_text):
-    """Extracts institutions of an article from its text."""
-    lines = article_text.split('\n')
-    extract_lines = []
-    delete_lines=[]
-    data = []
-
-    if lines[k]=='':
-        k+=1
-                
-    for i, line in enumerate(lines, start=k):
-        if i >= len(lines):
-            break    
-        delete_lines.append(lines[i])
-        extract_lines.append(lines[i])
-        i += 1
-
-    data = '\n'.join(extract_lines)    
-    separator = "\n"
-    data = data.split(separator)
-    
-    new_text_lines = new_text.split('\n')
-    
-    for line in delete_lines:
-        if line in new_text_lines:
-            new_text_lines.remove(line)
-            
-    new_text = '\n'.join(new_text_lines).strip()
-
-    return data,new_text
-
-def extract_abstract_keywords_references_final_text(text):
-    """Extracts abstract & keywords & references & final_text of an article from its text."""
-    
-    lines = text.split('\n')
-    extract_lines = []
-    delete_lines = []
-    abstract=''
-    keywords=''
-    references=''
-    my_text=text
-
-    for i, line in enumerate(lines, start=1):
-
-        ### extract abstract ###
-        pattern = re.compile(r'\b(?:abstract|a b s t r a c t|summary|abstract:|summary:|a b s t r a c t :)\b', re.IGNORECASE)
-        match = re.search(pattern, line.strip())  
-        if match:
-            delete_lines.append(line)
-            extract_lines.append(line)
-            line_without_spaces = line.replace(" ", "")            
-            if(len(line_without_spaces)<=9):
-                # Find the first non-empty line after the match
-                while i < len(lines) and not lines[i].strip():
-                    i += 1
-            # Collect lines until the first empty line or i find 'keyword'
-            while i < len(lines) and lines[i].strip():
-                if lines[i].lower().replace(" ", "").startswith('keyword') or lines[i].lower().replace(" ", "").startswith('introduction'):
-                    break
-                delete_lines.append(lines[i])
-                extract_lines.append(lines[i])
-                i += 1
-                
-            abstract = '\n'.join(extract_lines)
-            matched_string = match.group()
-            abstract = abstract.replace(matched_string,"")
-            abstract = abstract.replace("\n"," ")
-            
-        ### extract keywords ###
-        extract_lines = []
-        pattern = re.compile(r'\b(?:keyword|keywords|k e y w o r d s|k e y w o r d|keyword:|keywords:|k e y w o r d s :|k e y w o r d :)\b', re.IGNORECASE)
-        match = re.search(pattern, line.strip())  
-        if match:
-            delete_lines.append(line)
-            extract_lines.append(line)
-            line_without_spaces = line.replace(" ", "")            
-            if(len(line_without_spaces)<=9):
-                while i < len(lines) and not lines[i].strip():
-                    i += 1    
-            while i < len(lines) and lines[i].strip():
-                delete_lines.append(lines[i])
-                extract_lines.append(lines[i])
-                i += 1
-                
-            keywords = '\n'.join(extract_lines)    
-            matched_string = match.group()
-            keywords = keywords.replace(matched_string,"")
-            separators = [",", ";", "|", "&",'\n']
-            separator_pattern = "|".join(map(re.escape, separators))
-            _keywords = re.split(separator_pattern, keywords)
-            keywords = [item for item in _keywords if item.strip() != ""]
-                        
-        ### extract references ###   
-        extract_lines = []
-        pattern = re.compile(r'\b(?:reference|references|r e f e r e n c e s|r e f e r e n c e|reference:|references:|r e f e r e n c e s :|r e f e r e n c e :)\b', re.IGNORECASE)
-        match = re.search(pattern, line.strip())          
-        if match:
-            delete_lines.append(line)
-            extract_lines.append(line)            
-            line_without_spaces = line.replace(" ", "")
-            if(len(line_without_spaces)<=11):
-                while i < len(lines) and not lines[i].strip():
-                    i += 1    
-            # Collect lines until the end
-            while i < len(lines) :
-                delete_lines.append(lines[i])
-                extract_lines.append(lines[i])
-                i += 1
-            references = '\n'.join(extract_lines)
-            matched_string = match.group()
-            references = references.replace(matched_string,"")
-            separator = ". \n"
-            references = references.split(separator)
-    
-    my_text_lines = my_text.split('\n')
-    
-    for line in delete_lines:
-        if line in my_text_lines:
-            my_text_lines.remove(line)
-            
-    my_text = '\n'.join(my_text_lines).strip()
-    
-    my_text = re.sub(r'\n\s*\n', '\n', my_text) 
-    return abstract, keywords, references, my_text
+    return data, i
     
 def remove_empty_lines(text):
     return re.sub(r'\n\s*\n', '\n', text)      
+
+def is_email(line):
+    email_pattern = re.compile(r'\S+@\S+')
+    return bool(re.match(email_pattern, line))
+
+def split_text(input_text,k):
+    lines = input_text.split('\n')
+    lines = lines[k:]
+    # Create a new list excluding lines containing emails
+    lines_without_emails = [line if not is_email(line.strip()) else '' for line in lines]
+
+    # Join the lines to reconstruct the text without emails
+    input_text_without_emails = '\n'.join(lines_without_emails)
+
+    # Split the text without emails into blocks
+    text_blocks = input_text_without_emails.strip().split('\n\n')
+
+    # Trim each block to remove leading and trailing whitespaces
+    text_blocks = [block.strip() for block in text_blocks]
+
+    return text_blocks
+
+def extract_authors_institutions(input_text, k):
+    text_blocks = split_text(input_text, k)
+
+    authors = []
+    institutions = []
+
+    for block in text_blocks:
+        # Split each block into lines
+        lines = block.split('\n')
+
+        if lines:
+            # The first line is the author, append to authors list
+            authors.append(lines[0].strip())
+
+            # The rest of the lines are institutions, append to institutions list
+            institutions_block = '\n'.join(line.strip() for line in lines[1:] if line.strip())
+            institutions.append(institutions_block)
+
+    # Filter out empty strings from authors and institutions
+    authors = list(filter(None, authors))
+    institutions = list(filter(None, institutions))
+
+    return authors, institutions
+ 
+def extract_references(input_text):
+    lines = input_text.split('\n')
+    references_started = False
+    references_lines = []
+
+    for line in lines:
+        # Convert the line to lowercase for case-insensitive matching
+        lower_line = line.lower()
+
+        # Check if the line contains the keyword 'references'
+        if 'references' in lower_line:
+            references_started = True
+            continue  # Skip the line containing 'references' itself
+
+        # If 'references' has been found, append the lines to the list
+        if references_started:
+            references_lines.append(line)
+    
+    references = '\n'.join(references_lines)
+    separator = "["
+    references = references.split(separator)
+    i = 0
+    while i < len(references):
+        # Check if the item is empty or contains only spaces
+        if references[i] == "" or references[i].isspace():
+            del references[i]
+        else:
+            # Replace '\n' with ' ' in the non-empty item
+            references[i] = references[i].replace('\n', ' ')
+            i += 1 
+
+    return references               
+                            
+def extract_keywords(input_text):
+    lines = input_text.split('\n')
+    keyword_lines = []
+    keywords_to_stop = ['introduction', 'css concepts', 'acm reference format:', '1 introduction','1. introduction']
+    keywords_started = False
+    
+    for line in lines:
+        # Convert the line to lowercase for case-insensitive matching
+        lower_line = line.lower()
+
+        if 'keywords' in lower_line or 'index terms' in lower_line:
+            keywords_started = True
+            continue 
+
+        if keywords_started:
+            # Append the line to the abstract_lines
+            keyword_lines.append(line)
+                # Check if the line is empty or contains specific keywords to stop
+            if not line.strip() or any(lower_line.startswith(keyword) for keyword in keywords_to_stop):
+                break
+        
+    keywords = '\n'.join(keyword_lines).strip() 
+    separators = [",", ";", "|", "&",'\n']
+    separator_pattern = "|".join(map(re.escape, separators))
+    _keywords = re.split(separator_pattern, keywords)
+    __keywords = [item for item in _keywords if item.strip() != ""]
+    keywords = [item for item in __keywords if item.strip() != " "] ##
+
+    return keywords
+  
+def extract_abstract(input_text):
+    lines = input_text.split('\n')
+    abstract_lines = []
+    keywords_to_stop = ['introduction', 'css concepts', 'keywords', '1 introduction']
+    abstract_started = False
+    
+    for line in lines:
+        # Convert the line to lowercase for case-insensitive matching
+        lower_line = line.lower()
+
+        if 'abstract' in lower_line or '1 abstract' in lower_line:
+            abstract_started = True
+            continue 
+
+        if abstract_started:
+            # Append the line to the abstract_lines
+            abstract_lines.append(line)
+                # Check if the line is empty or contains specific keywords to stop
+            if not line.strip() or any(lower_line.startswith(keyword) for keyword in keywords_to_stop):
+                break
+        
+
+    # Join the lines to form the abstract text
+    abstract_text = '\n'.join(abstract_lines).strip()
+    abstract_text = abstract_text.replace("\n"," ")
+
+    return abstract_text
+
+def extract_full_text(input_text):
+    lines = input_text.split('\n')
+    text_lines = []
+    keywords_to_stop = ['references', 'acknowledgments']
+    text_started = False
+    
+    for line in lines:
+        # Convert the line to lowercase for case-insensitive matching
+        lower_line = line.lower()
+        
+        if 'introduction' in lower_line or '1 introduction' in lower_line or 'i. introduction' in lower_line  or '1. introduction' in lower_line or 'use cases' in lower_line:
+            text_started = True
+            continue 
+
+        if text_started:
+            # Append the line to the abstract_lines
+            text_lines.append(line)
+                # Check if the line is empty or contains specific keywords to stop
+            if any(lower_line.startswith(keyword) for keyword in keywords_to_stop):
+                break
+        
+
+    # Join the lines to form the abstract text
+    text = '\n'.join(text_lines).strip()
+    text = text.replace("\n"," ")
+    
+    output_file_path = 'output.txt'
+
+        # Open the file in write mode and write the text
+    with open(output_file_path, 'w', encoding='utf-8') as file:
+        file.write(text)
+
+
+    return text

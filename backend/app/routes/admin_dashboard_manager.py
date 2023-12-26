@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlparse
 from flask import make_response, request, jsonify
 from flask_restx import Namespace, Resource, fields
@@ -241,11 +242,55 @@ def init_ad(api,esknn):
 
                 # Check if the URL is from drive.google.com and the path starts with '/drive/folders/' or the path starts with '/u/' (user-owned folder)
                 if (parsed_url.netloc == 'drive.google.com' and path_components[1] == 'drive' and path_components[2] == 'folders') or  (parsed_url.netloc == 'drive.google.com' and path_components[2] == 'u' and path_components[1] == 'drive' and path_components[4] == 'folders'):  
-                    response = extract_data_from_articles(get_pdf_urls(data))
-                    if response is not None :
-                        return {'message':'articles uploaded'}, 200
-                    else:
-                        return {'error':'can not extract articles from the provided url'},400
+                    pdf_urls = get_pdf_urls(data)
+                    i=0
+                    if pdf_urls:
+                        for pdf_url in pdf_urls:
+                            
+                            try :
+                                response = requests.get(pdf_url, timeout=20)
+                                if response.status_code == 200:
+                                    pdf_buffer= BytesIO(response.content)
+                                else:
+                                    pdf_buffer= None
+                            except Exception as e:
+                                print(e)
+                            
+                            if pdf_buffer:
+                                
+                                text = extract_text(pdf_buffer)
+                                
+                                title,i=extract_title(text)
+                                authors,institutions=extract_authors_institutions(extract_head_text(text),k=i)
+
+                                output= {
+                                    "title":title,
+                                    "authors":authors,
+                                    "institutions":institutions,
+                                    "abstract":extract_abstract(text),
+                                    "keywords":extract_keywords(text),
+                                    "article":extract_full_text(text),
+                                    "references":extract_references(text),
+                                    "url":pdf_url,
+                                    "date": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                    "is_published":False
+                                }
+
+                                with open("output.json", "a") as json_file:
+                                    json.dump(output, json_file, indent=2)
+                                    json_file.write('\n')
+                                
+                                response = esknn.insert_document(output)
+                                
+                                if response != 0:
+                                    i=+1
+                                    return {'message':f'The article n° {i} has been uploaded to elastic search successfully'}, 200
+                                else:
+                                    return {'error':'Failed to index the article'},400
+                                
+                            else:
+                                return {'error':'Failed to download the article from google drive, check your internet connection'},401
+                    
                 else:
                     return {'error':'the provided url is not a google drive folder'}, 400
             else:
@@ -254,49 +299,4 @@ def init_ad(api,esknn):
     
     api.add_namespace(admin_ns)
 
-    def extract_data_from_articles(pdf_urls):
-        """ extract the data from a URL that contains a bunch of scientific articles """
-        i=0
-        if pdf_urls:
-            for pdf_url in pdf_urls:
-                pdf_buffer = download_pdf_from_url(pdf_url)
-                if pdf_buffer:
-                    
-                    text = extract_text(pdf_buffer)
-                    
-                    # abstract, keywords, references
-                    abstract, keywords, references, ne_text=extract_abstract_keywords_references_final_text(text)
-
-                    b_text = extract_head_text(text)
-                    
-                    #titles, authors,institutions
-                    title, i, n_text =extract_title(b_text,new_text=ne_text)
-                    authors, j, _text=extract_authors(b_text,k=i,new_text=n_text)
-                    institutions,new_text=extract_intitutions(b_text,k=j,new_text=_text)
-                    
-                    #text of the article
-                    new_text = re.sub('\n+', '\n', new_text).strip()
-                    output= {
-                        "title":title,
-                        "authors":authors,
-                        "institutions":institutions,
-                        "abstract":abstract,
-                        "keywords":keywords,
-                        "article":new_text,
-                        "references":references,
-                        "url":pdf_url,
-                        "date": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                        "is_published":False
-                    }
-                    
-                    esknn.insert_document(output) # ingest data to elastic search
-                    
-                    i=+1
-                    print(f'The article n° {i} has been uploaded to elastic search successfully')
-                else:
-                    return None
-                
-        else:
-            return None
-                
-                
+   

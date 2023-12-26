@@ -1,5 +1,5 @@
 from config import Config
-from elasticsearch import Elasticsearch, helpers
+from elasticsearch import Elasticsearch
 from typing import Dict
 import warnings
 
@@ -22,59 +22,31 @@ class ESKNN():
                 "properties": {
                     "title": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "authors": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "institutions": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                       
                     },
                     "abstract": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "keywords": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "article": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "references": {
                         "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        }
+                        
                     },
                     "date": {
                         "type": "date",
@@ -103,21 +75,12 @@ class ESKNN():
             
     
     def insert_document(self, document) -> None:
-        rows = [
-            {
-                '_index': INDEX_NAME,
-                '_source': document
-            }
-        ]
-
-        result = helpers.bulk(
-            es,
-            rows,
-            request_timeout=30
-        )
-
-        return result
-    
+        
+        try :
+            es.index(index=INDEX_NAME, body=document)
+            return 1
+        except Exception:
+            return 0
     
     def search_unpublished_document(self):
         
