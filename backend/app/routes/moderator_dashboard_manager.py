@@ -33,8 +33,7 @@ def init_ad(api,esknn):
             "new_password": fields.String(required=True, description='New password')
         }
     
-    )
-     
+    )    
     
     change_profile_model=api.model(
     
@@ -50,25 +49,30 @@ def init_ad(api,esknn):
             
     
     @moderator_ns.route('/my_profile')
+    
     class ModeratorResource (Resource):
-        
+                
+        @moderator_ns.doc(description='To Display the info of the profile.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(responses={200: 'Success'})
+        @moderator_ns.marshal_with(change_profile_model)
         @jwt_required()
-        def get(self):#display info of the profile
+        
+        def get(self):
             
-            return jsonify({
-                "first name" : current_user.first_name,
-                "last name" : current_user.last_name,
-                "username":current_user.username,
-                "email" : current_user.email           
-            })
+            return current_user,200
     
     @moderator_ns.route('/my_profile/change_password')
     class ModeratorResource (Resource):
             
         @jwt_required()
         @moderator_ns.expect(password_change_model)
-        
-        def post(self):#change the password
+        @moderator_ns.doc(description='To change the password.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(params={'old_password': {'description': 'The old password', 'required': True, 'type': 'string'},'new_password': {'description': 'The new password', 'required': True, 'type': 'string'}})
+        @moderator_ns.doc(responses={200: 'Updated', 400: 'old password is wrong', 401: 'Unauthorized'})
+       
+        def post(self):
             
             old_password=request.get_json().get('old_password')
                         
@@ -87,7 +91,12 @@ def init_ad(api,esknn):
         @jwt_required()
         @moderator_ns.expect(change_profile_model)
         
-        def post(self):#changer infos personnels
+        @moderator_ns.doc(description='To modify the personnal information of the authentified moderator.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(responses={200: 'Success', 403: 'Unauthorized', 400 :'user already exists'})
+        @moderator_ns.doc(params={'first_name': {'description': 'The First Name', 'required': False, 'type': 'string'}, 'last_name': {'description': 'The last name', 'required': False, 'type': 'string'},'username': {'description': 'The username', 'required': False, 'type': 'string'},'email': {'description': 'The email', 'required': False, 'type': 'string'}})
+      
+        def post(self):
             
             data=request.get_json()  
                          
@@ -119,9 +128,35 @@ def init_ad(api,esknn):
     @moderator_ns.route('/articles')
     class ArticleResource (Resource):
 
-        @jwt_required()       
-        def get(self): #display all the unpublished articles 
+        @jwt_required()     
+        @moderator_ns.doc(description='To display all the articles that has not been moderated yet.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(responses={200: 'Success', 403: 'Unauthorized', 400 :'An error occured while trying to manipulate elastic search'})
+
+        
+        def get(self): 
             
+            """
+            
+            ---
+            Return: {
+            'results': fields.Nested({
+                'id': fields.String,
+                'source': fields.Nested({
+                    'title': fields.String,
+                    'authors': fields.String,
+                    'institutions': fields.String,
+                    'abstract': fields.String,
+                    'keywords': fields.String,
+                    'article': fields.String,
+                    'references': fields.String,
+                    'date': fields.DateTime(dt_format='rfc822'),
+                    'url': fields.String,
+                    'is_published': fields.Boolean,
+                })
+            })
+            }
+            """
             if current_user.role == 'moderator':
                 response = esknn.search_unpublished_document()
                 if(response != 0):
@@ -132,7 +167,7 @@ def init_ad(api,esknn):
 
                     return {'results': results},200
                 else:
-                    return {'message','all articles have been moderated'},500
+                    return {'error','An error occured while trying to manipulate elastic search'},400
             
             else:
                 return {'error': 'Permission denied'}, 403  
@@ -142,7 +177,11 @@ def init_ad(api,esknn):
     class ArticleResource (Resource):
             
         @jwt_required()
-        def delete(self,id): # delete an article
+        @moderator_ns.doc(description='To delete an article.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(responses={200: 'Success', 403: 'Unauthorized', 400 :'An error occured while trying to manipulate elastic search'})
+
+        def delete(self,id):
             if current_user.role == 'moderator':
                 response = esknn.delete_unpublished_document(id)
                 
@@ -150,13 +189,18 @@ def init_ad(api,esknn):
                     
                     return {'message': 'article deleted successfully'},200
                 else:
-                    return {"error": "the article can not be deleted"}, 500
+                    return {"error": "An error occured while trying to manipulate elastic search"}, 400
             else:
                 return {'error': 'Permission denied'}, 403  
         
         @moderator_ns.expect(article_model)
         @jwt_required()
-        def put(self,id): #correct articles
+        @moderator_ns.doc(description='To correct an article.',
+             security=[{"Bearer Token": []}])
+        @moderator_ns.doc(responses={200: 'Success', 403: 'Unauthorized'})
+        @moderator_ns.doc(params={'title': {'description': 'The Title', 'required': False, 'type': 'string'}, 'authors': {'description': 'The authors', 'required': False, 'type': 'string'},'institutions': {'description': 'The institutions', 'required': False, 'type': 'string'},'abstract': {'description': 'The abstract', 'required': False, 'type': 'string'},'keywords': {'description': 'The keywords', 'required': False, 'type': 'string'},'article': {'description': 'The Full text of the article', 'required': False, 'type': 'string'},'references': {'description': 'The references', 'required': False, 'type': 'string'}})
+
+        def put(self,id): 
             if current_user.role == 'moderator':
                 data = request.get_json()
 
