@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 ##API##
-api = Api(app,title='API',doc='/docs')
+api = Api(app,title='API',doc='/api/docs')
 
 init_routes(api)
 
