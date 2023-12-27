@@ -5,7 +5,6 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt, current_user
 from werkzeug.security import check_password_hash
 from app.models.user import User
-from app import db
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.engine.scraper import *
 from pdfminer.high_level import extract_text
@@ -69,7 +68,6 @@ def init_ad(api,esknn):
             "last_name" : fields.String( description= 'Last Name'),
             "username" : fields.String(description='Username'),
             "email" : fields.String(description='Email address'),
-            "password":fields.String(description="Password"),
         }
     
     )              
@@ -77,22 +75,26 @@ def init_ad(api,esknn):
     
     @admin_ns.route('/my_profile')
     class AdminResource (Resource):
-        
+       
+        @admin_ns.marshal_with(all_moderators_model, code=200)
+        @admin_ns.doc(description='To display info of the profile  .',
+             security=[{"Bearer Token": []}])
         @jwt_required()
-        def get(self):#display info of the profile
+        def get(self):#display info of the profile          
             
-            return jsonify({
-                "first name" : current_user.first_name,
-                "last name" : current_user.last_name,
-                "username":current_user.username,
-                "email" : current_user.email           
-            })
+            return current_user,200
             
+            
+        
         @jwt_required()
         @admin_ns.expect(password_change_model)
-        
-        def post(self):#change the password
-            
+         
+        @admin_ns.doc(description='To change the password.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(params={'old_password': {'description': 'The old password', 'required': True, 'type': 'string'},'new_password': {'description': 'The new password', 'required': True, 'type': 'string'}})
+        @admin_ns.doc(responses={200: 'Updated', 400: 'old password is wrong', 401: 'Unauthorized'})
+        def post(self):
+                        
             old_password=request.get_json().get('old_password')
             
             current_user_password=current_user.password
@@ -104,30 +106,35 @@ def init_ad(api,esknn):
                 
                 return {'message':'Password updated successfully'},200
             else:
-                return {'message':'The old password is wrong'},401
+                return {'message':'The old password is wrong'},400
             
-        
         
     @admin_ns.route('/all_moderators')
     class ModeratorsResource (Resource):
 
-        @admin_ns.expect(all_moderators_model)
         @admin_ns.marshal_with(all_moderators_model)
         @jwt_required()
-        
-        def get(self):#display all the moderators
+        @admin_ns.doc(description='To Get all the moderators.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(responses={200: 'Success', 403: 'Unauthorized'})
+        def get(self):
             claims = get_jwt()
             if claims.get('is_admin') == True :
                 moderators = User.query.filter_by(role='moderator').all()
                                         
-                return moderators
+                return moderators,200
             
-            return None
+            return {'error':'Unauthorized'},403
             
         
         @admin_ns.expect(delete_moderator_model)
         @jwt_required()
-        def delete(self): # delete a moderator
+        @admin_ns.doc(description='To delete a moderator.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(responses={200: 'Success', 403: 'Unauthorized', 400 :'user not found'})
+        @admin_ns.doc(params={'id': {'description': 'The id of the moderator', 'required': True, 'type': 'int'}})
+
+        def delete(self): 
             claims=get_jwt()
             if claims.get('is_admin')==True:
                 data = request.get_json()
@@ -139,7 +146,7 @@ def init_ad(api,esknn):
                     moderator_to_delete.delete()
                     return {'message':  'Moderator deleted'},200
                 else:
-                    return {'message': 'User not found'}, 404
+                    return {'message': 'User not found'}, 400
                 
             else:
                 return {'message': 'Permission denied'}, 403  
@@ -148,10 +155,13 @@ def init_ad(api,esknn):
     @admin_ns.route('/all_moderators/add_new_moderator')
     class AddNewModeratorResource (Resource):
               
-       
+        @admin_ns.doc(description='To add a new moderator.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(responses={201: 'Success', 403: 'Unauthorized', 400 :'user already exists'})
+        @admin_ns.doc(params={'first_name': {'description': 'The First Name', 'required': True, 'type': 'string'}, 'last_name': {'description': 'The last name', 'required': True, 'type': 'string'},'username': {'description': 'The username', 'required': True, 'type': 'string'},'email': {'description': 'The email', 'required': True, 'type': 'string'},'password': {'description': 'The Password', 'required': True, 'type': 'string'}})
         @admin_ns.expect(moderator_model) 
         @jwt_required()
-        def post(self): #to add a new moderator
+        def post(self):
             
             claims = get_jwt()
             if claims.get('is_admin') == True : 
@@ -189,7 +199,12 @@ def init_ad(api,esknn):
         @admin_ns.expect(change_moderator_model)
         @jwt_required()
         
-        def post(self,id): #to modify
+        @admin_ns.doc(description='To modify an existing moderator.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(responses={200: 'Success', 403: 'Unauthorized', 400 :'user already exists'})
+        @admin_ns.doc(params={'first_name': {'description': 'The First Name', 'required': False, 'type': 'string'}, 'last_name': {'description': 'The last name', 'required': False, 'type': 'string'},'username': {'description': 'The username', 'required': False, 'type': 'string'},'email': {'description': 'The email', 'required': False, 'type': 'string'}})
+        
+        def post(self,id):
             
             claims = get_jwt()
             if claims.get('is_admin') == True : 
@@ -208,7 +223,6 @@ def init_ad(api,esknn):
                 
                 first_name=data.get('first_name','')
                 last_name=data.get('last_name','')
-                password=data.get('password','')
                 
                 if len (first_name) > 0:
                     moderator_to_modify.update_first_name(first_name) 
@@ -218,9 +232,7 @@ def init_ad(api,esknn):
                     moderator_to_modify.update_username(username)
                 if len (email) > 0:
                     moderator_to_modify.update_email(email)
-                if len (password) > 0:
-                    moderator_to_modify.update_password(password)
-                    
+                
                 return make_response(jsonify({"message":"Moderator modified successfuly"}),200)
                 
             else:
@@ -232,6 +244,12 @@ def init_ad(api,esknn):
     class UploadResource(Resource):
         
         @jwt_required()
+        
+        @admin_ns.doc(description='To upload articles.',
+             security=[{"Bearer Token": []}])
+        @admin_ns.doc(responses={200: 'Success', 400 :'Failed to index the article', 403: ' check your internet connection', 401: 'Unauthorized', 404: 'Not a google drive folder'})
+        @admin_ns.doc(params={'url': {'description': 'The PDF Url', 'required': True, 'type': 'string'}})
+       
         def post(self):
             claims = get_jwt()
             if claims.get('is_admin') == True : 
@@ -289,12 +307,12 @@ def init_ad(api,esknn):
                                     return {'error':'Failed to index the article'},400
                                 
                             else:
-                                return {'error':'Failed to download the article from google drive, check your internet connection'},401
+                                return {'error':'Failed to download the article from google drive, check your internet connection'},403
                     
                 else:
-                    return {'error':'the provided url is not a google drive folder'}, 400
+                    return {'error':'the provided url is not a google drive folder'}, 404
             else:
-                return {'message': 'Permission denied'}, 403  
+                return {'message': 'Permission denied'}, 401
             
     
     api.add_namespace(admin_ns)
