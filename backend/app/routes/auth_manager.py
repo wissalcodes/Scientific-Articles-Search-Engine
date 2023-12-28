@@ -1,8 +1,9 @@
+from datetime import timedelta
 from flask import request,jsonify, make_response
 from flask_restx import  Namespace, Resource,fields
 from app.models.user import User 
 from werkzeug.security import generate_password_hash,check_password_hash
-from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required,get_jwt_identity
+from flask_jwt_extended import create_access_token,create_refresh_token, get_jwt,jwt_required,get_jwt_identity,current_user
     
 def init_auth_routes(api):
     
@@ -21,6 +22,20 @@ def init_auth_routes(api):
     
     )
     
+    user_model=api.model(
+    
+        'User',
+        {
+            "id" : fields.Integer(required=True, description='ID'),
+            "first_name" : fields.String(required=True, description='First Name'),
+            "last_name" : fields.String(required=True, description= 'Last Name'),
+            "username" : fields.String(required =True, description='Username'),
+            "email" : fields.String(required=True,description='Email address'),
+            "role":fields.String(required=True,description="Role"),
+        }
+    
+    )
+    
     login_model=api.model(
     
         'LogIn',
@@ -30,12 +45,16 @@ def init_auth_routes(api):
         }
     
     )
-    
+        
     @auth_ns.route('/signup')
     ##add decorator for logged out ppl
     class Signup(Resource):
         
-        @auth_ns.expect(signup_model)        
+        @auth_ns.expect(signup_model)      
+        @auth_ns.doc(description='To Sign up.')
+        @auth_ns.doc(params={'first_name': {'description': 'The First Name', 'required': True, 'type': 'string'}, 'last_name': {'description': 'The last name', 'required': True, 'type': 'string'},'username': {'description': 'The username', 'required': True, 'type': 'string'},'email': {'description': 'The email', 'required': True, 'type': 'string'},'password':{'description': 'The Password', 'required': True, 'type': 'string'}})
+        @auth_ns.doc(responses={201: 'Success', 400 :'user already exists'})
+
         def post(self):
             data =request.get_json()
             
@@ -65,7 +84,20 @@ def init_auth_routes(api):
     @auth_ns.route('/signin')
     class Signin(Resource):
         @auth_ns.expect(login_model)
+        @auth_ns.doc(description='To Sign in.')
+        @auth_ns.doc(params={'email': {'description': 'The email', 'required': True, 'type': 'string'},'password':{'description': 'The Password', 'required': True, 'type': 'string'}})
+        @auth_ns.doc(responses={201: 'Success', 401 :'Failed'})
+        
+        
         def post(self):
+            """
+            ---
+            
+            Return: {
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    }
+            """
             data = request.get_json()
 
             email = data.get('email')
@@ -77,7 +109,7 @@ def init_auth_routes(api):
                 
                 if check_password_hash(db_user.password, password):
                     
-                    access_token = create_access_token(identity=db_user.email)
+                    access_token = create_access_token(identity=db_user.email,expires_delta=timedelta(hours=24))
                     refresh_token = create_refresh_token(identity=db_user.email)
                     return make_response(
                         jsonify({
@@ -102,7 +134,35 @@ def init_auth_routes(api):
         def post(self):
             current_user = get_jwt_identity()
             new_access_token=create_access_token(identity=current_user)
-            return make_response(jsonify({"access token : ":new_access_token}),200)       
+            return make_response(jsonify({"access token : ":new_access_token}),200)      
+        
+    @auth_ns.route('/redirect')
+    class RedirectResource(Resource):
+        @jwt_required()
+        @auth_ns.marshal_with(user_model)
+        @auth_ns.doc(description='To get the current user s info.',
+             security=[{"Bearer Token": []}])
+        def get(self):
+            claims = get_jwt()
+            if claims.get('is_admin') == True : 
+                role = 'admin'
+            else:
+                role = current_user.role
+                
+            return jsonify({
+                "id": current_user.id,
+                "first name" : current_user.first_name,
+                "last name" : current_user.last_name,
+                "username":current_user.username,
+                "email" : current_user.email,
+                "role": role
+            }),200
+    
+    @auth_ns.route('/')
+
+    class RedirectResource(Resource):
+        def get(self):
+            return {'message':'hello world!'},200
         
    
     

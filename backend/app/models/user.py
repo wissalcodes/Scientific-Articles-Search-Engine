@@ -14,7 +14,7 @@ class User(db.Model):
     date_added =  db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.username
     
     def save(self):
         db.session.add(self)
@@ -26,5 +26,21 @@ class User(db.Model):
         
     def update_password(self,password):
         self.password = generate_password_hash(password)
+        db.session.commit()
+        
+    def update_first_name(self,first_name):
+        self.first_name = first_name
+        db.session.commit()
+    
+    def update_last_name(self,last_name):
+        self.last_name = last_name
+        db.session.commit()
+        
+    def update_username(self,username):
+        self.username = username
+        db.session.commit()
+        
+    def update_email(self,email):
+        self.email = email
         db.session.commit()
         

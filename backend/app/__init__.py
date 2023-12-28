@@ -8,7 +8,9 @@ from flask_mail import Mail
 from config import Config
 from .database import db
 from .models.user import User
-from .routes import init_routes,init_jwt,init_mail
+from .routes import init_routes,init_jwt,init_route_admin
+
+from .engine.es import ESKNN
 
 ##APP##
 app = Flask(__name__)
@@ -17,7 +19,7 @@ CORS(app, origins="http://localhost:5173")
 app.config.from_object(Config)
 
 ##API##
-api = Api(app,title='API',doc='/docs')
+api = Api(app,title='API',doc='/api/docs')
 
 init_routes(api)
 
@@ -33,7 +35,13 @@ init_jwt(jwt,api)
 ##Reset password##
 mail=Mail()
 mail.init_app(app)
-init_mail(api,mail)
+
+# Check the index
+esknn = ESKNN()
+result = esknn.create_index()
+
+init_route_admin(api,esknn) 
+
 
 #to add in our db
 @app.shell_context_processor
@@ -42,5 +50,4 @@ def make_shell_context():
         "db" : db,
         "User" : User
     }
-    
     
