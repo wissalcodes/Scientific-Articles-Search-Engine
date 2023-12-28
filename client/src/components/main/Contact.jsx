@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Contact = () => {
   return (
-    <div className=" h-full overflow-y-hidden px-[30px] text-[#black] lg:px-[70px] xl:px-[5%] w-full  md:grid py-[60px] md:grid-cols-2 xl:grid-cols-[45%,55%] justify-center items-center ">
+    <div className=" h-full overflow-y-hidden px-[20px] text-[#black] lg:px-[70px] xl:px-[5%] w-full  md:grid py-[60px] md:grid-cols-2 xl:grid-cols-[45%,55%] justify-center items-center ">
       <div className="w-full h-full flex flex-col lg:justify-start md:mt-[450px] items-center lg:items-start">
         <div className="lg:pr-[40px] w-full  grid-rows-[30%,70%] justify-center items-start">
           <div className=" lg:text-[40px] text-[24px] leading-[1] xl:text-[50px] font-bold w-full flex md:justify-start justify-center items-center ">
@@ -20,23 +20,23 @@ const Contact = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:flex  xl:text-[20px] text-[16px] w-full justify-center items-center ">
+      <div className="flex pt-[40px] font-merryweather xl:text-[20px] text-sm lg:text-[16px] w-full justify-center items-center ">
         <div className="drop-shadow w-[90%] rounded-[20px] bg-[#BEB9A1E5]  px-[5%] py-[40px] lg:py-[40px] h-full flex flex-col justify-center items-center">
-          <p className="py-[5px] w-full font-light text-start text-[16px] lg:text-[18px] xl:text-[18px]">
+          <p className="py-[5px] w-full font-light text-start  lg:text-[18px] xl:text-[18px]">
             E-MAIL
           </p>
           <input
             type="email"
             className="font-merryweather font-light rounded-[12px] drop-shadow focus:outline-none py-[10px] xl:py-[18px] w-full px-[40px]"
           />
-          <p className="py-[5px] w-full font-light text-start text-[16px] lg:text-[18px] xl:text-[18px]">
+          <p className="py-[5px] w-full font-light text-start  lg:text-[18px] xl:text-[18px]">
             OBJET
           </p>
           <input
             type="email"
             className="font-light font-merryweather rounded-[12px] drop-shadow focus:outline-none py-[10px] xl:py-[18px] w-full px-[40px]"
           />
-          <p className="py-[5px] w-full font-light text-start text-[16px] lg:text-[18px] xl:text-[18px]">
+          <p className="py-[5px] w-full font-light text-start  lg:text-[18px] xl:text-[18px]">
             MESSAGE
           </p>
           <textarea

@@ -2,7 +2,7 @@ import Typed from "react-typed";
 
 const Mission = () => {
   return (
-    <div className=" w-full lg:pt-[160px] pt-[70px] px-[30px] h-full flex-col justify-center items-center lg:px-[70px] xl:px-[108px]">
+    <div className=" w-full lg:pt-[160px] pt-[40px] px-[30px] h-full flex-col justify-center items-center lg:px-[70px] xl:px-[108px]">
       <div className="w-full justify-center items-start">
         <div className=" lg:text-[50px] text-[24px] leading-[1] xl:text-[60px] font-bold w-full flex  justify-center items-center">
           <h1 className="text-[#395143] text-center xl:text-[64px] lg:text-[40px] md:text-[30px] text-[24px] font-bold font-merryweather lg:pb-[8%] xl:pb-[4%] ">
