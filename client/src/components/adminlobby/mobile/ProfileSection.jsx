@@ -18,7 +18,7 @@ export const ProfileSection = ({ profile }) => {
 
   return (
     <div
-      className={`bg-[#F5EAAB] my-[10px] h-auto overflow-hidden w-full px-[30px] py-[20px] rounded-[20px] lg:hidden flex flex-col justify-center items-start ${
+      className={`bg-[#F5EAAB] my-[10px] h-auto overflow-hidden w-full px-[30px] py-[20px] rounded-[20px] lg:hidden flex flex-col justify-start items-start ${
         showCard ? "h-full" : ""
       }`}>
       <div className="w-full grid  items-center  grid-cols-[70%,30%] justify-center">
