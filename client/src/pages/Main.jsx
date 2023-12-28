@@ -3,7 +3,7 @@ import AboutUs from "../components/main/AboutUs";
 import History from "../components/main/History";
 import Mission from "../components/main/Mission";
 import Footer from "../components/layout/Footer";
-import Register from "../components/main/Register";
+import Contact from "../components/main/Contact";
 function Main() {
   // Website entry point
   return (
@@ -12,7 +12,7 @@ function Main() {
       <AboutUs />
       <History />
       <Mission />
-      <Register />
+      <Contact />
       <Footer />
     </div>
   );
