@@ -25,7 +25,7 @@ const AboutUs = () => {
           </p>
         </div>
       </div>
-      <div className=" md:pt-0 pt-[50px]  flex flex-col justify-center items-center w-[90%] md:h-[90%] h-[50%]">
+      <div className=" md:pt-0 pt-[50px] animate-slideToLeft flex flex-col justify-center items-center w-[90%] md:h-[90%] h-[50%]">
         <div ref={assetRef} className=" rounded-[15px] w-full">
           <img src={illustration} />
         </div>

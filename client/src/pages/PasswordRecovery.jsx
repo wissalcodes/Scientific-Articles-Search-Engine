@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import MDPOublie from "../../public/images/authentication/mdps-oublie.svg";
-import ErrorMessage from "../components/authentication/Error";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 export const PasswordRecovery = () => {
@@ -10,7 +9,6 @@ export const PasswordRecovery = () => {
   const handleResetMail = async () => {
     if (email != "") {
       navigate("/mail_sent");
-
       try {
         // call the POST api for password recovery
         const response = await axios.post(
@@ -40,25 +38,29 @@ export const PasswordRecovery = () => {
   };
 
   return (
-    <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[30%,70%] items-center justify-center">
-      <div className="absolute left-[20px] lg:translate-y-[25vh] xl:translate-y-[18vh] h-full w-0 lg:w-[500px] xl:w-[720px]">
-        <img src={MDPOublie} />
-      </div>
+    // main container, displays a grid in large screens and a flex in mobiles
+    <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[35%,65%] items-center justify-center">
       <div className="h-[55vh] lg:h-full w-full px-[50px] py-[40px] bg-[#395143] lg:rounded-b-[0px] rounded-b-[30px] flex flex-col">
+        {/* Website Logo */}
         <div className="flex items-center justify-start h-[10%] w-full">
           <div>Logo</div>
           <div>Websitename</div>
         </div>
-        <div className="flex h-full justify-center items-center flex-col">
-          <img className="w-[400px]" src={MDPOublie} />
+        <div className="flex h-full w-full justify-center items-center flex-col">
+          <img
+            className="lg:fixed left-0 top-1/2 lg:-translate-y-1/2 lg:w-[600px] xl:w-[650px] w-[400px]"
+            src={MDPOublie}
+          />
         </div>
       </div>
-      <div className="h-full w-full flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:px-[80px] xl:px-[220px] justify-start items-center bg-[#E7E4D5]">
-        <div className="w-full h-full z-80">
-          <h1 className="z-70 text-[#395143] font-bold hidden lg:flex text-start font-merryweather lg:pt-[40%] xl:pt-[20%] text-[42px] xl:text-[58px]">
+      {/* div conatining the e-mail input and button */}
+      <div className="h-full w-full flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:px-[80px] xl:px-[120px] justify-start lg:justify-center items-center bg-[#E7E4D5]">
+        <div className="w-full h-full lg:flex flex-col items-center justify-center z-80">
+          <h1 className="z-70 text-[#395143] font-bold hidden lg:flex text-start font-merryweather text-5xl xl:text-5xl">
             Vous avez oublié votre mot de passe ?
           </h1>
           <div className="flex w-full ">
+            {/* In large screens */}
             {window.innerWidth > 1023 ? (
               <p className="w-full flex text-[27px] pt-[5%] pb-[8%] xl:text-[32px]">
                 Entrez l'e-mail associé à ce compte.
@@ -73,9 +75,9 @@ export const PasswordRecovery = () => {
             <input
               className="w-full focus:outline-none focus:border-transparent  bg-[#EBEFEE]"
               type="text"
-              placeholder="E-mail..."
+              placeholder="Entrez l'adresse associee a ce compte"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)} //update the e-mail state variable
             />
           </div>
           <div className="lg:pt-[40px] pt-[20px] xl:pt-[54px] w-full flex items-end justify-end">

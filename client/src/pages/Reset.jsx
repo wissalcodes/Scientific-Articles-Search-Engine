@@ -8,6 +8,7 @@ export const Reset = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   var token;
+  // Integration function for resetting e-mail
   const handleResetMail = async () => {
     setErrorMsg("");
     if (newPassword !== newPasswordConfirm) {
@@ -43,6 +44,7 @@ export const Reset = () => {
   };
 
   return (
+    // main content grid
     <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[30%,70%] items-center justify-center">
       <div className="absolute left-[20px] lg:translate-y-[25vh] xl:translate-y-[18vh] h-full w-0 lg:w-[500px] xl:w-[720px]">
         <img src={MDPOublie} />
@@ -58,6 +60,7 @@ export const Reset = () => {
       </div>
       <div className="h-full w-full flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:px-[80px] xl:px-[330px] justify-start items-center bg-[#E7E4D5]">
         <div className="w-full h-full z-80">
+          {/* section title */}
           <h1 className="z-70 text-[#395143] font-bold hidden lg:flex text-start font-merryweather lg:pt-[40%] xl:pt-[20%] text-[42px] xl:text-[58px]">
             Reinitialiser le mot de passe
           </h1>
@@ -80,7 +83,7 @@ export const Reset = () => {
               type="text"
               placeholder="E-mail..."
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value)} // update the password state
             />
           </div>
           <div className="flex w-full ">
@@ -100,7 +103,7 @@ export const Reset = () => {
               type="text"
               placeholder="E-mail..."
               value={newPasswordConfirm}
-              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)} //update confirm password state
             />
           </div>
           <div className="lg:pt-[40px] pt-[20px] xl:pt-[54px] w-full flex items-end justify-end">

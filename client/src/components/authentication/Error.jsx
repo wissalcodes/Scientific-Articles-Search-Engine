@@ -1,9 +1,7 @@
-import React from "react";
-
-export default function ErrorMessage(props) {
+export default function ErrorMessage({ message }) {
   return (
     <p className="px-[10px] text-[red] text-[11px] text-start lg:text-[15px]">
-      {props.message}
+      {message}
     </p>
   );
 }

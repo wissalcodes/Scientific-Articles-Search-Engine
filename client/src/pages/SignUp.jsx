@@ -80,19 +80,19 @@ const SignIn = () => {
   };
 
   return (
-    <div className="w-screen h-screen relative bg-gradient-to-r from-[#395143] to-[#A79629] ">
+    <div className="w-screen lg:h-screen relative bg-[#E7E4D5] lg:bg-gradient-to-r lg:from-[#395143] lg:to-[#A79629] ">
       <RegisterNav />
-      <div className="w-screen h-screen flex flex-col lg:grid lg:grid-cols-2">
-        <div className="lg:h-full h-[70vh] w-full  flex flex-col items-center rounded-[20px] lg:rounded-[0px] justify-center">
+      <div className="w-screen text-sm lg:text-md xl:text-xl lg:h-screen flex flex-col lg:grid lg:grid-cols-[45%,55%] xl:grid-cols-2">
+        <div className="lg:h-full lg:bg-none bg-gradient-to-r from-[#395143] to-[#A79629] h-[40vh] w-full  flex flex-col items-center rounded-b-[20px] lg:rounded-[0px] justify-center">
           <img
             className="mt-[44px] sm:mt-[80px] lg:mt-0 w-[70%] h-[60%]"
             src={SignUpIllustration}
           />
         </div>
-        <div className="h-full pb-[30px] lg:py-0 w-full  items-start justify-center flex flex-col">
-          <div className="flex bg-[#E7E4D5] w-[90%] rounded-[15px] flex-col  xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
+        <div className="h-full pb-[30px] lg:py-0 w-full  items-center lg:items-start justify-center flex flex-col">
+          <div className="px-[20px] flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
             <div className="w-[90%] flex flex-col justify-start items-start">
-              <h1 className="text-[#152522] w-[50vw] text-start hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[40px] xl:text-[44px]">
+              <h1 className="text-[#152522] -translate-x-[30px] w-[150%] text-start hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[30px] xl:text-4xl">
                 Inscrivez-vous maintenant !
               </h1>
               <ErrorMessage message={lastNameerrorMsg} />
@@ -195,7 +195,7 @@ const SignIn = () => {
               </div>
               <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                 <input
-                  className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
+                  className="focus:outline-none  w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type={isConfirmPasswordVisible ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -210,7 +210,7 @@ const SignIn = () => {
                 <div className=" bg-[#395143] transform transition-transform duration-200 ease-in-out hover:scale-110 lg:w-[50%] w-full flex px-[20px] py-[5px] rounded-[10px]">
                   <button
                     onClick={handleSignUp}
-                    className="text-[24px] mx-auto font-lora text-[#F1D896] bg-transparent ">
+                    className="text-md lg:text-[24px] xl:text-xl py-[3px] xl:py-[4px] mx-auto font-lora text-[#F1D896] bg-transparent ">
                     S'INSCRIRE
                   </button>
                 </div>
