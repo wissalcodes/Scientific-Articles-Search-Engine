@@ -44,7 +44,7 @@ const Contact = () => {
             className="mb-[40px] font-merryweather font-light lg:h-[150px] xl:h-[200px] rounded-[12px] drop-shadow focus:outline-none py-[25px] w-full px-[40px]"
           />
           <div className="flex w-full h-full items-center justify-end">
-            <div className="transform transition-transform duration-200 ease-in-out hover:scale-105 drop-shadow-lg flex w-[35%] xl:w-[25%] items-center flex-col h-full justify-center lg:justify-center">
+            <div className="transform transition-transform duration-200 ease-in-out hover:scale-105 drop-shadow-lg flex sm:w-[35%] xl:w-[25%] items-center flex-col h-full justify-center lg:justify-center">
               <button className="font-light rounded-[12px]  bg-gradient-to-r from-[#395143] to-[#AF9A27] text-[#E7E4D5] py-[10px] xl:py-[12px] w-full px-[15px]">
                 ENVOYER
               </button>
