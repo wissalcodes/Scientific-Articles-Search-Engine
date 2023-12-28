@@ -67,7 +67,7 @@ def init_auth_routes(api):
             email=data.get('email')
             db_user=User.query.filter_by(email=email).first()
             if db_user is not None:
-                return make_response(jsonify({"error":f"User with email ({email}) already exists"}),400)
+                return make_response(jsonify({"error":f"User with email ({email}) already exists"}),401)
             
             new_user=User(
                 first_name = data.get('first_name'),

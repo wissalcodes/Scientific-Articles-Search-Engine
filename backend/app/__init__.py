@@ -14,6 +14,8 @@ from .engine.es import ESKNN
 
 ##APP##
 app = Flask(__name__)
+##Backend x client##
+CORS(app, origins="http://localhost:5173")
 app.config.from_object(Config)
 
 ##API##
@@ -29,8 +31,6 @@ migrate=Migrate(app,db)
 jwt = JWTManager(app)
 init_jwt(jwt,api)
 
-##Backend x client##
-CORS(app)
 
 ##Reset password##
 mail=Mail()
