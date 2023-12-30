@@ -5,8 +5,8 @@ import { Moderateur } from "../Moderateur";
 import Cookies from "js-cookie";
 import { AddModeratorPopout } from "../AddModeratorPopout";
 export const Moderateurs = ({ moderateurs }) => {
+  // add moderator popout state
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
-  const openModerateurPopout = () => {};
   const [displayFullReports, setDisplayFullReports] =
     window.innerWidth > 1023 ? useState(false) : useState(true);
 

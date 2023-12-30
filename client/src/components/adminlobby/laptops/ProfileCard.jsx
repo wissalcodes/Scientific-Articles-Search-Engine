@@ -19,7 +19,7 @@ export const ProfileCard = ({ profile }) => {
   };
   return (
     <div
-      className={`bg-[#F5EAAB] drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/3 fixed left-0  w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
+      className={`bg-[#F5EAAB] drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/4 fixed left-0  w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
         showCard ? "translate-x-0" : "-translate-x-[350px]"
       }`}>
       {" "}
