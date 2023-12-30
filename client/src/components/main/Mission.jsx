@@ -9,7 +9,7 @@ const Mission = () => {
             Notre Mission
           </h1>
         </div>
-        <div className="pt-[30px] w-full xl:text-[30px] text-sm lg:text-[20px] font-light flex justify-start font-lora items-center">
+        <div className="lg:leading-[130%] pt-[30px] w-full xl:text-[30px] text-sm lg:text-[20px] font-light flex justify-start font-lora items-center">
           <Typed
             className="font-light  w-full px-[7%] flex font-merryweather text-center"
             strings={[

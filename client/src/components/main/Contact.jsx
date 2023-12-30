@@ -10,8 +10,8 @@ const Contact = () => {
               Contactez-nous
             </h1>
           </div>
-          <div className="md:pt-[30px] pt-[20px] w-full xl:text-[30px] text-[16px] lg:text-[20px] font-semibold flex md:justify-start justify-center items-center">
-            <p className="font-merryweather pt-[30px] w-full xl:text-[30px] text-sm lg:text-[20px] font-light flex justify-start  items-center">
+          <div className="md:pt-[30px] pt-[20px] w-full text-[16px] lg:text-[20px] font-semibold flex md:justify-start justify-center items-center">
+            <p className="lg:leading-[120%] h-full font-merryweather pt-[30px] w-full xl:text-[30px] text-sm lg:text-[20px] font-light flex justify-start  items-center">
               Besoin d'aide ou avez-vous des questions ? Contactez-nous ! Notre
               équipe dédiée est là pour vous assister. Utilisez le formulaire
               ci-dessous pour nous faire part de vos préoccupations, et nous
