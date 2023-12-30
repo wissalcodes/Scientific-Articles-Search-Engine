@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import { ModerateArticlePopout } from "./ModerateArticlePopout";
 export const Article = ({ article }) => {
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
@@ -21,25 +22,24 @@ export const Article = ({ article }) => {
     };
   }, [isPopoutOpen]);
   return (
+    // When "Consulter" button is clicked, open the moderation panel to allow moderator to edit the fields
     <div className="px-[10px] xl:px-[20px] w-full py-[20px] font-merryweather h-full grid grid-cols-[70%,30%] lg:grid-cols-[70%,15%,15%] justify-start items-center gap-[4px] lg:gap-[10px]">
       {isPopoutOpen && (
         <ModerateArticlePopout article={article} onClose={togglePopout} />
       )}
+      {/* Article title */}
       <h1 className="text-start text-md lg:text-2xl xl:text-3xl ">
         {article.title}
       </h1>
-      <p className="text text-md lg:text-xl xl:text-2xl ">{article.date}</p>
-      <div className="hidden lg:flex flex-col items-center w-[80%] justify-center">
+      {/* Article release date */}
+      <p className="text  mt-[4px] lg:mt-0  text-md py-[10px] lg:py-0 lg:text-xl xl:text-2xl ">
+        {article.date}
+      </p>
+      {/* Consult article button */}
+      <div className="flex flex-col items-center w-[80%] justify-center">
         <button
           onClick={togglePopout}
           className="bg-[#395143] text-[#F1D896] py-[10px] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] h-[80%] w-full lg:w-[95%] xl:w-[85%]">
-          Consulter
-        </button>
-      </div>
-      <div className="flex lg:hidden items-center w-[80%] justify-start">
-        <button
-          onClick={togglePopout}
-          className="bg-[#395143] mt-[4px] text-[#F1D896] py-[7px] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] h-[80%] w-full max-w-[200px] lg:w-[95%] xl:w-[85%]">
           Consulter
         </button>
       </div>

@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
-import Footer from "./components/layout/Footer";
 import SignUp from "./pages/SignUp";
 import { PasswordRecovery } from "./pages/PasswordRecovery";
 import SignIn from "./pages/SignIn";
@@ -13,7 +12,7 @@ function App() {
     <div className="font-lora flex flex-col relative w-screen">
       <Router>
         <Routes>
-          <Route path="/" element={<Main />} />{" "}
+          <Route path="/" element={<Main />} />
           <Route path="/moderator" element={<ModeratorLobby />} />
           <Route path="/admin" element={<AdminLobby />} />
           <Route path="/sign_in" element={<SignIn />} />
