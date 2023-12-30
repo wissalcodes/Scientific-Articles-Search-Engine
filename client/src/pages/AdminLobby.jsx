@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/admin/url.svg";
 import upload from "../../public/images/admin/upload.svg";
@@ -8,16 +8,8 @@ import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import { ModeratorsSection } from "../components/adminlobby/mobile/ModeratorsSection";
 import LobbyNav from "../components/layout/LobbyNav";
 import { moderateurs } from "../data/data";
-
+import { profile } from "../data/data";
 export const AdminLobby = () => {
-  // current admin profile
-  const [profile, setProfile] = useState({
-    firstName: "meow",
-    lastName: "meow",
-    pseudo: "meow",
-    email: "meow@gmail.com",
-  });
-
   // the upload URL
   const [url, setUrl] = useState("");
 

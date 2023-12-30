@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import Edit from "../../../public/images/moderator/edit.svg";
 import x from "../../../public/images/admin/x.svg";
 import save from "../../../public/images/moderator/save.svg";
@@ -12,6 +14,9 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
   const [motscle, setMotscle] = useState(article.motscle);
   const [refs, setRefs] = useState(article.refs);
   const [text, setText] = useState(article.text);
+
+  // for displaying the article PDF
+  // const [url, setUrl] = useState(article.url);
 
   // State to track the editing mode for each section
   const [isEditing, setIsEditing] = useState({
@@ -66,27 +71,42 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
       [field]: false,
     }));
   };
+
+  const handleModerateArticle = async () => {
+    /* const response = axios.post(url, {
+    
+    } ) */
+  };
   return (
-    <div className="z-20 drop-shadow px-[20px] py-[20px] lg:py-[30px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+    <div className=" z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+      {/* Validate button, when clicked posts the data to the API endpoint */}
+      <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0  items-center w-[30%] justify-start">
+        <button
+          onClick={handleModerateArticle}
+          className="bg-gradient-to-r from-[#395143] to-[#AF9A27] mt-[4px] text-[#E7E4D5] py-[7px] lg:py-[10px] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] h-[80%] w-full max-w-[150px] lg:w-[95%] xl:w-[70%]">
+          Valider
+        </button>
+      </div>
+      {/* Delete button, when clicked deletes the articles, in case there's a lot of errors in the data extraction result */}
       <div className="text-[#E7E4D5] gap-[15px] text-xsm lg:text-lg xl:text-xl justify-end flex w-full">
         <button
           onClick={handleDeleteArticle}
           className="bg-[#DC7163A6] rounded-[8px] lg:rounded-[15px] px-[10px] lg:px-[20px] py-[8px]">
           Supprimer l'article
         </button>
+        {/* See PDF button, when clicked opens the PDF file for the article */}
         <button
           onClick={handleSeePDF}
           className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
           Voir le PDF
         </button>
-
         <div className="w-[3%] flex items-center justify-end">
           <img src={x} onClick={onClose} />
         </div>
       </div>
       {/* grid */}
       <div className="overflow-x-hidden px-[0px] gap-[20px] mt-[50px] flex flex-col w-full custom-scrollBar overflow-y-scroll relative text-xs  max-h-[80%]">
-        {/* article title */}
+        {/* article title section*/}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Titre</h1>
           {isEditing.title ? (
@@ -127,7 +147,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </>
           )}{" "}
         </div>
-        {/* article resume */}
+        {/* article resume section*/}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Résumé</h1>
           {isEditing.resume ? (
@@ -168,7 +188,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </>
           )}{" "}
         </div>
-        {/* article auteurs */}
+        {/* article auteurs section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Auteurs</h1>
           {isEditing.auteurs ? (
@@ -226,7 +246,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </button>
           )}
         </div>
-        {/* article Institutions */}
+        {/* article Institutions section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">
             Institutions
@@ -286,7 +306,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </button>
           )}
         </div>
-        {/* article keywords */}
+        {/* article keywords section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Mots cles</h1>
           {isEditing.motscle ? (
@@ -344,7 +364,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </button>
           )}
         </div>
-        {/* article references */}
+        {/* article references section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">
             Références bibliographique
@@ -404,7 +424,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </button>
           )}
         </div>
-        {/* article text */}
+        {/* article text section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Texte</h1>
           {isEditing.text ? (

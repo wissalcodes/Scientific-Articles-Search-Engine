@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import section from "../../../../public/images/admin/section.svg";
 
 export const ProfileSection = ({ profile }) => {
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [passwordOld, setPasswordOld] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
   const [showCard, setShowCard] = useState(false);
@@ -12,7 +13,7 @@ export const ProfileSection = ({ profile }) => {
   };
 
   const resetPassword = async () => {
-    const url = "/";
+    // const url = "/";
     // const response = axios.put()
   };
 
