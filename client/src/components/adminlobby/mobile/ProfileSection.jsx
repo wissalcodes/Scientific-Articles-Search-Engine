@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import section from "../../../../public/images/admin/section.svg";
 
 export const ProfileSection = ({ profile }) => {

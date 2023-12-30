@@ -161,24 +161,17 @@ export const ModeratorLobby = () => {
 
   // the upload URL
   const [url, setUrl] = useState("");
-
-  // integration function for Articles upload
-  const handleUpload = async () => {
-    // const response = await axios.post(url, {
-    //   url
-    // })
-    // if (response.status >= 200 && response.status < 300) {
-    //   // display success
-    //   alert("Vos articles ont ete uploade et sont en attente de moderation!");
-    // }
-  };
   return (
     // Background image if the screen is large, raw otherwise
-    <div className=" bg-[#E7E4D5] bg-none w-screen h-screen pt-[100px] lg:pt-[2%] flex flex-col items-center justify-center px-[30px] lg:px-[7%] xl:px-[8%]">
+    <div className=" bg-[#E7E4D5] bg-none w-screen h-screen lg:h-screen pt-[100px] lg:pt-[2%] flex flex-col items-center justify-center px-[20px] lg:px-[7%] xl:px-[8%]">
       {/* Navbar */}
       <LobbyNav />
       {/* main page content, to be blured when the add moderator popout is open */}
       <div className="w-full h-full flex items-start flex-col">
+        {/* if the screen if small, display 2 extensible sections of profile and moderators */}
+        <div className="sm:pt-[50px] md:pt-[100px] w-full flex flex-col lg:hidden">
+          <ProfileSection profile={profile} />
+        </div>
         <div className=" pt-[40px] flex items-start pb-[10px] border-[#56695C] border-b-[4px] ">
           <h1
             id="main-container"
@@ -186,14 +179,10 @@ export const ModeratorLobby = () => {
             Articles en attente
           </h1>
         </div>
-        <div className="mt-[50px] flex flex-col w-full custom-scrollBar overflow-y-scroll relative text-xs  max-h-[70vh]">
+        <div className="mt-[50px] flex flex-col w-full overflow-x-hidden custom-scrollBar overflow-y-scroll relative text-xs max-h-[50vh] lg:max-h-[70vh]">
           {articles.map((a) => (
             <Article article={a} />
           ))}
-        </div>
-        {/* if the screen if small, display 2 extensible sections of profile and moderators */}
-        <div className="sm:pt-[50px] md:pt-[100px] h-full w-full flex flex-col lg:hidden">
-          <ProfileSection profile={profile} />
         </div>
       </div>
       {/* if the screen is large, display the fixed animated sections  */}

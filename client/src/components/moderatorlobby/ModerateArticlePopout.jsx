@@ -67,16 +67,16 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     }));
   };
   return (
-    <div className="z-20 drop-shadow px-[20px] lg:py-[30px] lg:px-[60px] flex flex-col rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
-      <div className="text-[#E7E4D5] gap-[15px] text-sm lg:text-lg xl:text-xl justify-end flex w-full">
+    <div className="z-20 drop-shadow px-[20px] py-[20px] lg:py-[30px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+      <div className="text-[#E7E4D5] gap-[15px] text-xsm lg:text-lg xl:text-xl justify-end flex w-full">
         <button
           onClick={handleDeleteArticle}
-          className="bg-[#DC7163A6] rounded-[15px] px-[20px] py-[8px]">
+          className="bg-[#DC7163A6] rounded-[8px] lg:rounded-[15px] px-[10px] lg:px-[20px] py-[8px]">
           Supprimer l'article
         </button>
         <button
           onClick={handleSeePDF}
-          className="bg-[#395143] rounded-[15px] px-[20px] py-[8px]">
+          className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
           Voir le PDF
         </button>
 
@@ -84,11 +84,24 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           <img src={x} onClick={onClose} />
         </div>
       </div>
-      {/* grid of asset and inputs */}
-      <div className="overflow-x-hidden gap-[20px] mt-[50px] flex flex-col w-full custom-scrollBar overflow-y-scroll relative text-xs  max-h-[80%]">
+      {/* grid */}
+      <div className="overflow-x-hidden px-[0px] gap-[20px] mt-[50px] flex flex-col w-full custom-scrollBar overflow-y-scroll relative text-xs  max-h-[80%]">
         {/* article title */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Titre</h1>
+          {isEditing.title ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSave("title")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEdit("title")}
+            />
+          )}
           {isEditing.title ? (
             <>
               <input
@@ -97,7 +110,9 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 className=" text-center flex focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C]"
               />
-              <button onClick={() => handleSave("title")} className="w-[25px]">
+              <button
+                onClick={() => handleSave("title")}
+                className="hidden lg:block w-[15px] lg:w-[25px]">
                 <img src={save} />
               </button>
             </>
@@ -105,7 +120,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             <>
               <h1 className="text-start">{title}</h1>
               <img
-                className="w-[25px]"
+                className="hidden lg:block w-[15px] lg:w-[25px]"
                 src={Edit}
                 onClick={() => handleEdit("title")}
               />
@@ -113,8 +128,21 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}{" "}
         </div>
         {/* article resume */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Résumé</h1>
+          {isEditing.resume ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSave("resume")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEdit("resume")}
+            />
+          )}
           {isEditing.resume ? (
             <>
               <input
@@ -123,7 +151,9 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
                 onChange={(e) => setResume(e.target.value)}
                 className="text-start flex focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C] "
               />
-              <button onClick={() => handleSave("resume")} className="w-[25px]">
+              <button
+                onClick={() => handleSave("resume")}
+                className="hidden lg:block w-[15px] lg:w-[25px]">
                 <img src={save} />
               </button>
             </>
@@ -131,7 +161,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             <>
               <h1 className="text-start">{resume}</h1>
               <img
-                className="w-[25px]"
+                className="hidden lg:block w-[15px] lg:w-[25px]"
                 src={Edit}
                 onClick={() => handleEdit("resume")}
               />
@@ -139,8 +169,21 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}{" "}
         </div>
         {/* article auteurs */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Auteurs</h1>
+          {isEditing.auteurs ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSaveArrayElement("auteurs")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEditArrayElement("auteurs")}
+            />
+          )}
           {isEditing.auteurs ? (
             <div className="w-full flex">
               {auteurs.map((a, index) => (
@@ -171,23 +214,36 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
           {!isEditing.auteurs ? (
             <img
-              className="w-[25px]"
+              className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
               onClick={() => handleEditArrayElement("auteurs")}
             />
           ) : (
             <button
               onClick={() => handleSaveArrayElement("auteurs")}
-              className="w-[25px]">
+              className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
           )}
         </div>
         {/* article Institutions */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">
             Institutions
           </h1>
+          {isEditing.institutions ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSaveArrayElement("institutions")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEditArrayElement("institutions")}
+            />
+          )}
           {isEditing.institutions ? (
             <div className="w-full flex">
               {institutions.map((a, index) => (
@@ -218,21 +274,34 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
           {!isEditing.institutions ? (
             <img
-              className="w-[25px]"
+              className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
               onClick={() => handleEditArrayElement("institutions")}
             />
           ) : (
             <button
               onClick={() => handleSaveArrayElement("institutions")}
-              className="w-[25px]">
+              className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
           )}
         </div>
         {/* article keywords */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Mots cles</h1>
+          {isEditing.motscle ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSaveArrayElement("motscle")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEditArrayElement("motscle")}
+            />
+          )}
           {isEditing.motscle ? (
             <div className="w-full flex">
               {motscle.map((a, index) => (
@@ -243,7 +312,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
                     onChange={(e) => {
                       const updatedMotsCle = [...motscle];
                       updatedMotsCle[index] = e.target.value;
-                      setInstitutions(updatedMotsCle);
+                      setMotscle(updatedMotsCle);
                     }}
                     className="mr-[5px] text-center flex max-w-[180px] focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C] "
                   />
@@ -263,23 +332,36 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
           {!isEditing.motscle ? (
             <img
-              className="w-[25px]"
+              className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
               onClick={() => handleEditArrayElement("motscle")}
             />
           ) : (
             <button
               onClick={() => handleSaveArrayElement("motscle")}
-              className="w-[25px]">
+              className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
           )}
         </div>
         {/* article references */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">
             Références bibliographique
           </h1>
+          {isEditing.refs ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSaveArrayElement("refs")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEditArrayElement("refs")}
+            />
+          )}
           {isEditing.refs ? (
             <div className="w-full flex">
               {refs.map((a, index) => (
@@ -310,21 +392,34 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
           {!isEditing.refs ? (
             <img
-              className="w-[25px]"
+              className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
               onClick={() => handleEditArrayElement("refs")}
             />
           ) : (
             <button
               onClick={() => handleSaveArrayElement("refs")}
-              className="w-[25px]">
+              className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
           )}
         </div>
         {/* article text */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl grid grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Texte</h1>
+          {isEditing.text ? (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={save}
+              onClick={() => handleSave("text")}
+            />
+          ) : (
+            <img
+              className="lg:hidden w-[15px] lg:w-[25px]"
+              src={Edit}
+              onClick={() => handleEdit("text")}
+            />
+          )}
           {isEditing.text ? (
             <>
               <textarea
@@ -333,7 +428,9 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
                 onChange={(e) => setText(e.target.value)}
                 className=" flex  focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C]  h-[250px] px-[10px] text-start"
               />
-              <button onClick={() => handleSave("text")} className="w-[25px]">
+              <button
+                onClick={() => handleSave("text")}
+                className="hidden lg:block w-[15px] lg:w-[25px]">
                 <img src={save} />
               </button>
             </>
@@ -341,7 +438,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             <>
               <h1 className="text-start">{text}</h1>
               <img
-                className="w-[25px]"
+                className="hidden lg:block w-[15px] lg:w-[25px]"
                 src={Edit}
                 onClick={() => handleEdit("text")}
               />

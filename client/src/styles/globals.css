@@ -14,20 +14,19 @@
 
 @media (min-width: 992px) and (max-width: 1279px) {
   .custom-scrollBar::-webkit-scrollbar {
-    width: 15px;
+    width: 12px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
   .custom-scrollBar::-webkit-scrollbar {
-    width: 14px;
+    width: 10px;
   }
 }
 
 @media (max-width: 767px) {
   .custom-scrollBar::-webkit-scrollbar {
-    width: 0;
-    visibility: hidden;
+    width: 6px;
   }
 }
 
