@@ -35,12 +35,21 @@ def search_articles():
                 "must": [
                     {
                         "term": {
-                            "is_published": True
+                            "is_published": True  # Filter to include only published articles
                         }
                     }
-                ]
+                ],
+                "should": [],  # Optional matches
+                "minimum_should_match": 1  # At least one 'should' condition must be met
             }
-        }
+        },
+        "sort": [
+            {
+                "publication_date": {
+                    "order": "desc"
+                }
+            }
+        ]
     }
 
     # Define a list of filter fields
