@@ -1,10 +1,9 @@
 from flask import Blueprint, request, jsonify
 import requests
-from app.models.article import Article, Author, Institution
+from app.models.article import Article
 
 article_manager = Blueprint('article_manager', __name__)
 
-# Endpoint to index an article
 @article_manager.route('/index_article', methods=['POST'])
 def index_article():
     article_data = request.json
@@ -15,37 +14,52 @@ def index_article():
         abstract=article_data['abstract'],
         keywords=article_data['keywords'],
         full_text=article_data['full_text'],
+        references=article_data['references'],
         url=article_data['url'],
-        authors=[Author(
-            author_id=auth['author_id'],
-            name=auth['name'],
-            institutions=[Institution(
-                institution_id=inst['institution_id'],
-                institution_name=inst['institution_name']
-            ) for inst in auth.get('institutions', [])]
-        ) for auth in article_data.get('authors', [])]
+        authors=article_data['authors'],
+        institutions=article_data['institutions'],  # Add institutions field
+        is_published=article_data['is_published']
     )
-    response = requests.post('http://localhost:9200/articles_index/_doc/' + article_data['article_id'], json=article.to_dict())
+    response = requests.post('http://localhost:9200/articles_index/_doc/' + article.article_id, json=article.to_dict())
     return jsonify(response.json())
+
 @article_manager.route('/search_articles', methods=['POST'])
 def search_articles():
     search_data = request.json
     search_terms = search_data.get('search_terms', '')
+    filters = search_data.get('filters', {})
 
-    # Initialize the base query
     search_query = {
         "query": {
             "bool": {
-                "must": []
+                "must": [
+                    {
+                        "term": {
+                            "is_published": True
+                        }
+                    }
+                ]
             }
         }
     }
+
+    # Define a list of filter fields
+    filter_fields = ["title", "authors", "keywords", "article", "abstract", "references", "institutions"]
+
 
     # Check for title filter
     if search_data.get('title_filter'):
         search_query['query']['bool']['must'].append({
             "match": {
                 "title": search_terms
+            }
+        })
+    
+    # Check for institutions filter
+    if search_data.get('institutions_filter'):
+        search_query['query']['bool']['must'].append({
+            "match": {
+                "institutions": search_terms
             }
         })
 
@@ -55,21 +69,28 @@ def search_articles():
             "match": {
                 "authors.name": search_terms
             }
-        })
+        }) 
+    # Add filters based on the provided fields
+    for field in filter_fields:
+        apply_filter = filters.get(f'{field}_filter', False)
+        if apply_filter:
+            search_query['query']['bool']['must'].append({
+                "match": {
+                    field: search_terms
+                }
+            })
 
-    # Default search without specific filters
     if not search_query['query']['bool']['must']:
         search_query = {
             "query": {
                 "multi_match": {
                     "query": search_terms,
-                    "fields": ["title", "abstract", "full_text", "keywords", "authors.name", "authors.institutions.institution_name"]
+                    "fields": filter_fields
                 }
             }
         }
 
-    # Add sorting by publication_date in descending order (most recent first)
-    search_query["sort"] = [{"publication_date": {"order": "desc"}}]
+    search_query["sort"] = [{"date": {"order": "desc"}}]
 
     response = requests.get('http://localhost:9200/articles_index/_search', json=search_query)
     return jsonify(response.json())
