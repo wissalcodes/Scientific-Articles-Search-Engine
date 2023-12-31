@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import requests
 from app.models.article import Article
+from datetime import datetime
 
 article_manager = Blueprint('article_manager', __name__)
 
@@ -10,7 +11,7 @@ def index_article():
     article = Article(
         article_id=article_data['article_id'],
         title=article_data['title'],
-        publication_date=article_data['publication_date'],
+        date=article_data['date'],
         abstract=article_data['abstract'],
         keywords=article_data['keywords'],
         full_text=article_data['full_text'],
@@ -22,84 +23,62 @@ def index_article():
     )
     response = requests.post('http://localhost:9200/articles_index/_doc/' + article.article_id, json=article.to_dict())
     return jsonify(response.json())
-
+    
 @article_manager.route('/search_articles', methods=['POST'])
 def search_articles():
     search_data = request.json
     search_terms = search_data.get('search_terms', '')
     filters = search_data.get('filters', {})
 
+    # Constructing the Elasticsearch query
     search_query = {
         "query": {
             "bool": {
-                "must": [
-                    {
-                        "term": {
-                            "is_published": True  # Filter to include only published articles
-                        }
-                    }
-                ],
-                "should": [],  # Optional matches
-                "minimum_should_match": 1  # At least one 'should' condition must be met
+                "must": [],
+                "filter": [
+                    {"term": {"is_published": True}}
+                ]
             }
-        },
-        "sort": [
-            {
-                "publication_date": {
-                    "order": "desc"
-                }
-            }
-        ]
+        }
     }
 
-    # Define a list of filter fields
-    filter_fields = ["title", "authors", "keywords", "article", "abstract", "references", "institutions"]
+    # Check and apply filters if provided
+    if 'title_filter' in filters and filters['title_filter']:
+        search_query['query']['bool']['must'].append({"match": {"title": search_terms}})
+    if 'authors_filter' in filters and filters['authors_filter']:
+        search_query['query']['bool']['must'].append({"match": {"authors": search_terms}})
+    if 'institutions_filter' in filters and filters['institutions_filter']:
+        search_query['query']['bool']['must'].append({"match": {"institutions": search_terms}})
 
-
-    # Check for title filter
-    if search_data.get('title_filter'):
-        search_query['query']['bool']['must'].append({
-            "match": {
-                "title": search_terms
-            }
-        })
-    
-    # Check for institutions filter
-    if search_data.get('institutions_filter'):
-        search_query['query']['bool']['must'].append({
-            "match": {
-                "institutions": search_terms
-            }
-        })
-
-    # Check for author filter
-    if search_data.get('authors_filter'):
-        search_query['query']['bool']['must'].append({
-            "match": {
-                "authors.name": search_terms
-            }
-        }) 
-    # Add filters based on the provided fields
-    for field in filter_fields:
-        apply_filter = filters.get(f'{field}_filter', False)
-        if apply_filter:
-            search_query['query']['bool']['must'].append({
-                "match": {
-                    field: search_terms
-                }
-            })
-
+    # If no specific filters are provided, perform a broad search
     if not search_query['query']['bool']['must']:
-        search_query = {
-            "query": {
-                "multi_match": {
-                    "query": search_terms,
-                    "fields": filter_fields
+        search_query['query']['bool']['must'].append({
+            "multi_match": {
+                "query": search_terms,
+                "fields": ["title", "authors", "institutions", "abstract", "keywords", "full_text", "references", "url"]
+            }
+        })
+
+
+
+   # Add date filter if provided
+    if 'start_date' in filters and 'end_date' in filters:
+        start_date = filters['start_date']
+        end_date = filters['end_date']
+        date_filter = {
+            "range": {
+                "date": {
+                    "gte": datetime.strptime(start_date, '%Y-%m-%d').strftime('%Y-%m-%d'),
+                    "lte": datetime.strptime(end_date, '%Y-%m-%d').strftime('%Y-%m-%d')
                 }
             }
         }
+        search_query['query']['bool']['filter'].append(date_filter)
 
+
+    # Add sorting to the query
     search_query["sort"] = [{"date": {"order": "desc"}}]
 
-    response = requests.get('http://localhost:9200/articles_index/_search', json=search_query)
+    # Send the query to Elasticsearch
+    response = requests.post('http://localhost:9200/articles_index/_search', json=search_query)
     return jsonify(response.json())

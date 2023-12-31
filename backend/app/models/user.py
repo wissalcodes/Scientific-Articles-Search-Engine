@@ -5,6 +5,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash
 import re
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 class User(db.Model):
@@ -17,9 +18,12 @@ class User(db.Model):
     role = db.Column(db.String(10), default = 'user')
     date_added =  db.Column(db.DateTime, default=datetime.utcnow)
 
+
     def __repr__(self):
         return '<Name %r>' % self.name
     
+
+
     def save(self):
         db.session.add(self)
         db.session.commit()
