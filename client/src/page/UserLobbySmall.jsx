@@ -39,4 +39,4 @@ const UserLobbySmall = () => {
 }
  
 export default UserLobbySmall;
-//  <div className="w-full flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px]">
+
