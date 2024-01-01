@@ -44,23 +44,7 @@ const UserLobbySmall = () => {
               </div>
             </div>
           </div>
-           {/* Resultat de la recherche title and items */}
-        <div className="grid grid-cols-1 lg:grid-cols-[40%,60%] items-center justify-center w-full h-full">
-          {/* Title */}
-          <div className="pl-[30px] py-[55px]">
-            <h3 className="text-[40px] font-merriweather text-[#000]">Resultat de la recherche</h3>
-          </div>
-          {/* List of items */}
-          <div className="flex items-center justify-end">
-            <button
-              onClick={() => handleItemClick('motcle')}
-              className={`mx-[10px] text-[18px] font-lora text-${activeItem === 'motcle' ? '#395143' : '#BEB9A1'} border-2 border-${activeItem === 'motcle' ? '#395143' : 'rgba(57, 81, 67, 0.47)'} px-[15px] h-[40px]`}
-            >
-              1- Filtrer par espace
-            </button>
-            {/* Add similar buttons for other items */}
-          </div>
-        </div>
+         
           
           <div className="w-full h-full flex items-center justify-center pt-[5px] lg:hidden  ">
             <div className="w-[90%] md:w-[80%] lg:w-[85%] h-[262px] md:h-[40vh] lg:h-[40vh] bg-[#BEB9A1] my-[5%] mx-[5%] md:mx-[10%] lg:mx-0 flex items-center justify-center rounded-[10%] mt[100px]">
