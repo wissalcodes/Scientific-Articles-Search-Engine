@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import x from "../../../public/images/admin/x.svg";
 import SignUpIllustration from "../../../public/images/authentication/sign-in-illustration.svg";
-const handleAddModerator = () => {
-  console.log("add moderator");
-};
+import axios from "axios";
+import Cookies from "js-cookie";
+
 export const AddModeratorPopout = ({ onClose }) => {
+  //get the access token
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleAddModerator = async () => {
+    const token = Cookies.get("authToken");
+    try {
+      // fetch the admin's personal information
+      const response = await axios.post(
+        "http://127.0.0.1:5000/admin_dashboard/all_moderators/add_new_moderator",
+        {
+          first_name: prenom,
+          last_name: nom,
+          username: username,
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        console.log("Moderateur ajoute avec succes");
+      }
+    } catch (error) {
+      alert(
+        "Le mot d'utilisateur et l'adresse e-mail appartiennent a un compte deja existant."
+      );
+      console.log(error);
+    }
+  };
   return (
     <div className="z-20 drop-shadow px-[20px] lg:py-[30px] lg:px-[60px] flex flex-col rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%] h-[64%] bg-[#F5EAAB]">
       <div className="flex w-full">
@@ -29,10 +66,12 @@ export const AddModeratorPopout = ({ onClose }) => {
                     NOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
+                    value={nom}
+                    onChange={(e) => setNom(e.target.value)}
                   />
                 </div>
               </div>
@@ -42,10 +81,12 @@ export const AddModeratorPopout = ({ onClose }) => {
                     PRENOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
+                    value={prenom}
+                    onChange={(e) => setPrenom(e.target.value)}
                   />
                 </div>
               </div>
@@ -59,10 +100,12 @@ export const AddModeratorPopout = ({ onClose }) => {
                       E-MAIL
                     </h1>
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="e-mail"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
@@ -72,10 +115,12 @@ export const AddModeratorPopout = ({ onClose }) => {
                       USERNAME
                     </h1>
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
                 </div>
@@ -88,8 +133,13 @@ export const AddModeratorPopout = ({ onClose }) => {
                   MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
-                <input className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]" />
+              <div className="relative w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+                <input
+                  className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
+                  type="password"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
                 <div className="absolute right-[16px] lg:right-[16px]"></div>
               </div>
             </div>

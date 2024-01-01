@@ -6,7 +6,12 @@ import ErrorMessage from "../components/authentication/Error";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-const SignIn = () => {
+import { useJwt } from "react-jwt";
+import { useNavigate } from "react-router-dom";
+
+export default function SignIn() {
+  // for redirecting the user to his lobby based on the role field
+  const navigate = useNavigate();
   // state variables for the input fields
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -16,7 +21,8 @@ const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // user state variable
   const [user, setUser] = useState(null);
-
+  const [token, setToken] = useState("token");
+  const { decodedToken, isExpired } = useJwt(token);
   // Integration function for calling the Sign in API
   const handleSignIn = async () => {
     setErrorMsg("");
@@ -31,21 +37,39 @@ const SignIn = () => {
       });
       try {
         // call the POST api for sign in
-        const response = await axios.post("http://localhost:5000/auth/signin", {
+        const response = await axios.post("http://127.0.0.1:5000/auth/signin", {
           email,
           password,
         });
         if (response.status === 200) {
           const token = response.data.access_token;
+          const refreshToken = response.data.refresh_token;
 
-          // Set the token in a secure HTTP-only cookie
+          // Store tokens securely (e.g., in cookies or localStorage)
           Cookies.set("authToken", token, {
             expires: 7,
-            secure: true,
-            httpOnly: true,
           });
+          Cookies.set("refreshToken", refreshToken, {
+            expires: 7,
+          });
+          setToken();
 
-          console.log("Successful sign in ", response.data);
+          // get the user's information
+          const userResponse = await axios.get(
+            "http://127.0.0.1:5000/auth/redirect",
+            {
+              headers: {
+                Authorization: `Bearer ${response.data.access_token}`,
+              },
+            }
+          );
+          setUser(userResponse.data);
+          if (userResponse.data.username === "admin") {
+            navigate("/admin-dashboard");
+          } else {
+            // history.push("/user-dashboard"); // Redirect to user dashboard
+          }
+          console.log("Successful sign-in ", response.data);
         } else {
           console.log("Failed to log in user");
         }
@@ -53,12 +77,46 @@ const SignIn = () => {
         console.error("Error:", error);
         if (error.response) {
           console.error("Server Error Message:", error.response.data);
-          setErrorMsg(error.response.data.message || "Sign-in failed");
+          setErrorMsg(
+            error.response.data.message ||
+              "Les informations que vous avez entrees sont incorrectes!"
+          );
         } else {
           setErrorMsg("An error occurred during sign-in");
         }
       }
     }
+
+    // function to refresh access token
+    const refreshAccessToken = async () => {
+      try {
+        const refreshToken = Cookies.get("refreshToken");
+
+        if (refreshToken) {
+          const response = await axios.post(
+            "http://127.0.0.1:5000/auth/refresh"
+          );
+
+          if (response.status === 200) {
+            const newAccessToken = response.data.access_token;
+
+            // Update the stored access token
+            Cookies.set("authToken", newAccessToken, {
+              expires: 7,
+              secure: true,
+              httpOnly: true,
+            });
+
+            console.log("Access token refreshed successfully");
+          } else {
+            console.log("Failed to refresh access token");
+          }
+        }
+      } catch (error) {
+        console.error("Error refreshing access token:", error);
+        // Handle errors (e.g., redirect to login page)
+      }
+    };
   };
   return (
     <div className="w-screen h-screen pb-[10%] lg:mb-0 relative bg-[#E7E4D5] lg:bg-gradient-to-r from-[#395143] to-[#A79629] ">
@@ -132,6 +190,4 @@ const SignIn = () => {
       </div>
     </div>
   );
-};
-
-export default SignIn;
+}

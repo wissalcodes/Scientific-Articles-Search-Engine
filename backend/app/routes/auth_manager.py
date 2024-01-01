@@ -149,7 +149,7 @@ def init_auth_routes(api):
             else:
                 role = current_user.role
                 
-            return jsonify({
+            return ({
                 "id": current_user.id,
                 "first name" : current_user.first_name,
                 "last name" : current_user.last_name,

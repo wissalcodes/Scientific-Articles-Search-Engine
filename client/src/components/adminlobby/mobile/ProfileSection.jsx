@@ -42,15 +42,15 @@ export const ProfileSection = ({ profile }) => {
           </p>
           <div className="grid grid-cols-[40%,60%] w-full">
             <div className="flex">Prenom</div>
-            <div className="flex">{profile.firstName}</div>
+            <div className="flex">{profile.first_name}</div>
           </div>
           <div className="grid grid-cols-[40%,60%] w-full">
             <div className="flex">Nom</div>
-            <div className="flex">{profile.lastName}</div>
+            <div className="flex">{profile.last_name}</div>
           </div>
           <div className="grid grid-cols-[40%,60%] w-full">
             <div className="flex">Pseudo</div>
-            <div className="flex">{profile.pseudo}</div>
+            <div className="flex">{profile.username}</div>
           </div>
           <div className="grid grid-cols-[40%,60%] w-full">
             <div className="flex">E-mail</div>

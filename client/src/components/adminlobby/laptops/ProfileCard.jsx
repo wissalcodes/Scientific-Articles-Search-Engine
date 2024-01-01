@@ -2,20 +2,44 @@ import React, { useState, useEffect } from "react";
 import right from "../../../../public/images/admin/right.svg";
 import img from "../../../../public/images/admin/profile.svg";
 import ErrorMessage from "../../authentication/Error";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 export const ProfileCard = ({ profile }) => {
+  //get the access token
+  const token = Cookies.get("authToken");
+  // control the state of the input fields
   const [message, setMessage] = useState("");
   const [passwordOld, setPasswordOld] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
-
   const [showCard, setShowCard] = useState(false);
   const handleCardAnimation = () => {
     setShowCard((prevShowCard) => !prevShowCard);
   };
+  // function to POST passwords to the resetting password API endpoint
   const resetPassword = async () => {
-    const url = "/";
-    // const response = axios.put()
+    try {
+      // fetch the admin's personal information
+      const response = await axios.post(
+        "http://127.0.0.1:5000/admin_dashboard/my_profile",
+        {
+          old_password: passwordOld,
+          new_password: passwordNew,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        alert("mot de passe MAJ avec succes");
+      } else {
+        console.log("error updating password");
+      }
+    } catch (error) {
+      alert("Mot de passe incorrect!");
+    }
   };
   return (
     <div
@@ -32,15 +56,15 @@ export const ProfileCard = ({ profile }) => {
         </p>
         <div className="grid grid-cols-[40%,60%] w-full">
           <div className="flex">Prenom</div>
-          <div className="flex">{profile.firstName}</div>
+          <div className="flex">{profile.first_name}</div>
         </div>
         <div className="grid grid-cols-[40%,60%] w-full">
           <div className="flex">Nom</div>
-          <div className="flex">{profile.lastName}</div>
+          <div className="flex">{profile.last_name}</div>
         </div>
         <div className="grid grid-cols-[40%,60%] w-full">
           <div className="flex">Pseudo</div>
-          <div className="flex">{profile.pseudo}</div>
+          <div className="flex">{profile.username}</div>
         </div>
         <div className="grid grid-cols-[40%,60%] w-full">
           <div className="flex">E-mail</div>

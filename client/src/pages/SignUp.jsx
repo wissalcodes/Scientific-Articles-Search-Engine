@@ -49,7 +49,7 @@ const SignIn = () => {
       console.log(user);
       try {
         // call the POST api for sign up
-        const response = await axios.post("http://localhost:5000/auth/signup", {
+        const response = await axios.post("http://127.0.0.1:5000/auth/signup", {
           email: email,
           password: password,
           last_name: lastName,
