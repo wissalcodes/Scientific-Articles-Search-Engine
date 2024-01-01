@@ -65,9 +65,11 @@ export default function SignIn() {
           );
           setUser(userResponse.data);
           if (userResponse.data.username === "admin") {
-            navigate("/admin-dashboard");
+            navigate("/admin_dashboard");
           } else {
-            // history.push("/user-dashboard"); // Redirect to user dashboard
+            if (userResponse.data.role === "moderator") {
+              navigate("/moderator_dashboard");
+            }
           }
           console.log("Successful sign-in ", response.data);
         } else {

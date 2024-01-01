@@ -137,8 +137,8 @@ export const AddModeratorPopout = ({ onClose }) => {
                 <input
                   className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type="password"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="absolute right-[16px] lg:right-[16px]"></div>
               </div>
