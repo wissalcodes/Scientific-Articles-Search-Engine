@@ -10,6 +10,20 @@
 .drop-shadow {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+/* UserLobbySmall.css */
+
+/* Initially hide the button */
+.hidden-lg {
+  display: none;
+}
+
+/* Show the button for screens larger than lg (adjust the breakpoint as needed) */
+@media (min-width: 1024px) {
+  .hidden-lg {
+    display: inline-block;
+  }
+}
+
 .blurred {
   filter: blur(5px);
 }
