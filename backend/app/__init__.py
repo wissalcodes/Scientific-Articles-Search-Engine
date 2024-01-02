@@ -8,11 +8,16 @@ from flask_mail import Mail
 from config import Config
 from .database import db
 from .models.user import User
-from .routes import init_routes,init_jwt,init_route_admin
+from .routes import init_routes,init_jwt,init_mail,init_route_admin
+from .engine.es import ESKNN
 from .routes.users_manager import users_bp
 from .routes.article_manager import article_manager
+=========
 
 from .engine.es import ESKNN
+from app.routes.favori_manager import favori_bp
+
+
 ##APP##
 app = Flask(__name__)
 ##Backend x client##
@@ -21,9 +26,8 @@ app.config.from_object(Config)
 
 ## Register  users Blueprint
 app.register_blueprint(users_bp, url_prefix='/users') 
- ## Register  users Blueprint
-
-app.register_blueprint(article_manager)
+# Register the favori_bp blueprint
+app.register_blueprint(favori_bp, url_prefix='/favori_manager')
 
 ##API##
 api = Api(app,title='API',doc='/api/docs')
@@ -49,6 +53,7 @@ result = esknn.create_index()
 
 init_route_admin(api,esknn) 
 
+
 # to add in our db
 @app.shell_context_processor
 def make_shell_context():
@@ -56,3 +61,4 @@ def make_shell_context():
         "db" : db,
         "User" : User
     }
+    

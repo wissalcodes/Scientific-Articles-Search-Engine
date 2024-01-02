@@ -7,6 +7,15 @@ import re
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 
+class FavoriteArticle(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    article_identifier = db.Column(db.String(255), nullable=False)
+    added_on = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<FavoriteArticle {self.article_identifier}>'
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key =True)  
@@ -17,11 +26,31 @@ class User(db.Model):
     password = db.Column(db.String(30),nullable = False)
     role = db.Column(db.String(10), default = 'user')
     date_added =  db.Column(db.DateTime, default=datetime.utcnow)
+    favorite_articles = db.relationship('FavoriteArticle', backref='user', lazy=True)
 
 
     def __repr__(self):
         return '<Name %r>' % self.name
+    # Method to add an article to favorites
+    def add_favorite_article(self, article):
+        if article not in self.favorite_articles:
+            self.favorite_articles.append(article)
+            db.session.commit()
     
+        # Method to remove an article from favorites
+    def remove_favorite_article(self, article):
+        if article in self.favorite_articles:
+            self.favorite_articles.remove(article)
+            db.session.commit()
+
+    # Method to get all favorite articles
+    def get_favorite_articles(self):
+         favorite_articles = FavoriteArticle.query.filter_by(user_id=self.id).all()
+         return favorite_articles
+
+
+
+
     def save(self):
         db.session.add(self)
         db.session.commit()
