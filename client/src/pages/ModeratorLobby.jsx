@@ -15,10 +15,10 @@ export const ModeratorLobby = () => {
   // fetch moderator data after login
   const [profile, setProfile] = useState({});
   useEffect(() => {
-    const fetchData = async () => {
+    let fetchData = async () => {
       try {
         // fetch the moderator's personal information
-        const response = await axios.get(
+        let response = await axios.get(
           "http://127.0.0.1:5000/moderator_dashboard/my_profile",
           {
             headers: {
@@ -31,20 +31,20 @@ export const ModeratorLobby = () => {
           console.log(response.data);
         }
         // fetch all the articles that haven't been moderated yet
-        //   const response = await axios.get(
-        //   "http://127.0.0.1:5000/moderator_dashboard/articles",
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   }
-        // );
-        // if (response.status >= 200 && response.status < 300) {
-        //   // setArticles(response.data);
-        //   console.log(response.data);
-        // } else {
-        //   console.log("error fetching articles data");
-        // }
+        response = await axios.get(
+          "http://127.0.0.1:5000/moderator_dashboard/articles",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          setArticles(response.data);
+          console.log(response.data);
+        } else {
+          console.log("error fetching articles data");
+        }
       } catch (error) {
         console.log(error);
       }
