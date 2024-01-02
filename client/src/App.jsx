@@ -7,14 +7,15 @@ import { MailSent } from "./pages/MailSent";
 import "./App.css";
 import { AdminLobby } from "./pages/AdminLobby";
 import { ModeratorLobby } from "./pages/ModeratorLobby";
+
 function App() {
   return (
     <div className="font-lora flex flex-col relative w-screen">
       <Router>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/moderator" element={<ModeratorLobby />} />
-          <Route path="/admin" element={<AdminLobby />} />
+          <Route path="/moderator_dashboard" element={<ModeratorLobby />} />
+          <Route path="/admin_dashboard" element={<AdminLobby />} />
           <Route path="/sign_in" element={<SignIn />} />
           <Route path="/sign_up" element={<SignUp />} />
           <Route path="/reset_password" element={<PasswordRecovery />} />

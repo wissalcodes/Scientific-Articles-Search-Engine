@@ -1,17 +1,62 @@
+import { useEffect, useState } from "react";
 import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
 import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import LobbyNav from "../components/layout/LobbyNav";
 import { Article } from "../components/moderatorlobby/Article";
-import { articles } from "../data/data";
-import { profile } from "../data/data";
+import axios from "axios";
+import Cookies from "js-cookie";
 import "../styles/globals.css";
+
 export const ModeratorLobby = () => {
+  // retrieve access token
+  const token = Cookies.get("authToken");
+  // fetch all the articles
+  const [articles, setArticles] = useState([]);
+  // fetch moderator data after login
+  const [profile, setProfile] = useState({});
+  useEffect(() => {
+    let fetchData = async () => {
+      try {
+        // fetch the moderator's personal information
+        let response = await axios.get(
+          "http://127.0.0.1:5000/moderator_dashboard/my_profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          setProfile(response.data);
+          console.log(response.data);
+        }
+        // fetch all the articles that haven't been moderated yet
+        response = await axios.get(
+          "http://127.0.0.1:5000/moderator_dashboard/articles",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          setArticles(response.data);
+          console.log(response.data);
+        } else {
+          console.log("error fetching articles data");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className=" bg-[#E7E4D5] bg-none w-screen h-screen lg:h-screen pt-[100px] lg:pt-[2%] flex flex-col items-center justify-center px-[20px] lg:px-[7%] xl:px-[8%]">
       {/* Navbar */}
       <LobbyNav />
       <div className="w-full h-full flex items-start flex-col">
-        {/* profule card if the screen is small */}
+        {/* profile card if the screen is small */}
         <div className="sm:pt-[50px] md:pt-[100px] w-full flex flex-col lg:hidden">
           <ProfileSection profile={profile} />
         </div>

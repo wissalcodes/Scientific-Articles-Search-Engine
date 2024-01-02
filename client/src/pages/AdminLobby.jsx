@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/admin/url.svg";
 import upload from "../../public/images/admin/upload.svg";
@@ -7,21 +7,81 @@ import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
 import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import { ModeratorsSection } from "../components/adminlobby/mobile/ModeratorsSection";
 import LobbyNav from "../components/layout/LobbyNav";
-import { moderateurs } from "../data/data";
-import { profile } from "../data/data";
+import axios from "axios";
+import Cookies from "js-cookie";
 export const AdminLobby = () => {
+  // fetch admin data after login
+  const [profile, setProfile] = useState({});
+  // all the moderators
+  const [moderateurs, setModerateurs] = useState([]);
+  //get the access token
+  const token = Cookies.get("authToken");
   // the upload URL
   const [url, setUrl] = useState("");
-
-  // integration function for Articles upload
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // fetch the admin's personal information
+        const response = await axios.get(
+          "http://127.0.0.1:5000/admin_dashboard/my_profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          setProfile(response.data);
+          // fetch the moderators
+          const moderatorsResponse = await axios.get(
+            "http://127.0.0.1:5000/admin_dashboard/all_moderators",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(moderatorsResponse.data);
+          if (
+            moderatorsResponse.status >= 200 &&
+            moderatorsResponse.status < 300
+          ) {
+            setModerateurs(moderatorsResponse.data);
+          } else {
+            console.log("error fetching all moderators");
+          }
+        } else {
+          console.log("error fetching admin data");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+  // function to upload the articles to articles search
   const handleUpload = async () => {
-    // const response = await axios.post(url, {
-    //   url
-    // })
-    // if (response.status >= 200 && response.status < 300) {
-    //   // display success
-    //   alert("Vos articles ont ete uploade et sont en attente de moderation!");
-    // }
+    try {
+      // fetch the admin's personal information
+      const response = await axios.post(
+        "http://127.0.0.1:5000/admin_dashboard/upload_articles",
+        {
+          url: url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        console.log("Articles uploades avec succes");
+      } else {
+        console.log("error uploading articles");
+      }
+    } catch (error) {
+      alert(error.response.data.error);
+    }
   };
   return (
     // Background image if the screen is large, raw otherwise
