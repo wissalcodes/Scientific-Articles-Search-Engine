@@ -31,7 +31,6 @@ class User(db.Model):
 
     def __repr__(self):
         return '<Name %r>' % self.name
-    
     # Method to add an article to favorites
     def add_favorite_article(self, article):
         if article not in self.favorite_articles:

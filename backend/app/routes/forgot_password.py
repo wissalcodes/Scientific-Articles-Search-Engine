@@ -6,7 +6,7 @@ import requests
 
 # to do: replace the keys by the env var
 
-def init_forg_pass(api,mail):
+def init_auth_routes(api):
     forgot_ns=Namespace('forgot_password', description= 'forgot password operations')
     api.add_namespace(forgot_ns)
     
@@ -28,6 +28,9 @@ def init_forg_pass(api,mail):
     class ResetPasswordRessource(Resource):
         
         @forgot_ns.expect(forgot_password_model)
+        @forgot_ns.doc(description='To send the reset password link.')
+        @forgot_ns.doc(params={'email': {'description': 'The email', 'required': True, 'type': 'string'}})
+        @forgot_ns.doc(responses={200: 'Success', 404 :'User not found'})
         def post (self):
             data = request.get_json()
             email = data.get('email')
@@ -92,10 +95,12 @@ def init_forg_pass(api,mail):
         print(response.text)
 
         
-    
     @forgot_ns.route('/reset_password_verified/<token>')
     class ResetPasswordVerifiedResource(Resource):
         @forgot_ns.expect(confirm_reset_model)
+        
+        @forgot_ns.doc(description='the user will be directed to this endpoint when he clicks on the reset link sent to the his email address.')
+        @forgot_ns.doc(responses={200: 'Success', 401 :'link expired'})
         
         def get(self,token):
             email = confirm_token(token)
@@ -103,6 +108,11 @@ def init_forg_pass(api,mail):
                 return {'message':'the link has expired'},401
             else:
                 return {'message':'valid link'},200
+        
+        
+        @forgot_ns.doc(description='To Set the new password.')
+        @forgot_ns.doc(params={'password':{'description': 'The Password', 'required': True, 'type': 'string'}})
+        @forgot_ns.doc(responses={200: 'Success', 404 :'Failed'})
         
         def post(self,token):
             
