@@ -71,12 +71,12 @@ const UserLobbySmall = () => {
     
   
     return (
-      <div className='bg-[#E7E4D5] w-full min-h-[100vh] pt-[80px] lg:pt-[2%] flex flex-col items-center justify-center px-[30px] lg:px-[10%] '>
+      <div className='bg-[#E7E4D5] w-full min-h-[100vh] pt-[2px] lg:pt-[2%] flex flex-col items-center justify-center px-[30px] lg:px-[10%] '>
          {/* Navbar */}
          <LobbyNavb />
-         <div id="main-container" className="w-full h-full flex flex-col">
+         <div id="main-container" className="w-full h-full mb-0 lg:mb-8 flex mt-0 flex-col">
              {/* Rechercher input field */}
-            <div className="w-full flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ">
+            <div className="w-full flex flex-col lg:flex-row h-[50px] justify-center items-center my-[20px] lg:my-[40px] ">
              <div className="pl-[20px] drop-shadow flex w-full h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px]">
               <input
                 placeholder='chercher un article '
@@ -97,7 +97,7 @@ const UserLobbySmall = () => {
              </div>
           </div>
            {/* Resultat de la recherche title and items */}
-         <div className=" lg:mr-[7rem]  lg:bg-transparent bg-[#BEB9A1] ">
+         <div className=" lg:mr-[7rem] rounded-[1rem] my-[1rem] lg:mt-0 lg:bg-transparent bg-[#BEB9A1] ">
           <div className="flex flex-col lg:flex-row items-center h-full lg:mx-[3rem] lg:items-start w-full">
            {/* Title */}
              <div className="flex items-center w-full   lg:w-[60%]">
@@ -126,7 +126,7 @@ const UserLobbySmall = () => {
        </div>
        </div>   
         {/* List of articles */}
-       <div className="  overflow-y-auto  px-[1rem] lg:px-[2rem] mt-[2rem] mx-[0.25rem] max-h-[50dvh] font-lora text-xl font-normal text-left lg:mt-[4rem] lg:mr-0 ">
+       <div className="  overflow-y-auto  px-[1rem] lg:px-[2rem] mt-[2rem]  mx-[0.25rem] max-h-[20dvh] lg:max-h-[50dvh] font-lora text-xl font-normal text-left lg:mt-[5rem] lg:mr-0 ">
       {favoriteArticles.map((article) => (
       <div key={article.id} className="flex items-center mb-4">
         {/* Article Icon */}
@@ -171,7 +171,7 @@ const UserLobbySmall = () => {
 
 </div>
     </div>
-         <div className="sm:mb-[50px] md:pt-[20px] mt-[10px] h-full w-full flex flex-col md:hidden lg:hidden ">
+         <div className="sm:mb-[50px] md:pt-[20px] mt-[2px] mb-[3rem] h-full w-full flex flex-col md:hidden lg:hidden ">
           <UserProfile profile={profile} />
           <MesFavoris />
          </div>
