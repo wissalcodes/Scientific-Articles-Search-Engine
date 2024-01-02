@@ -68,10 +68,7 @@ const UserLobbySmall = () => {
       // Handle the search button click
       // ...
     };
-    const [ setShowCard] = useState(false);
-    const handleCardAnimation = () => {
-      setShowCard((prevShowCard) => !prevShowCard);
-    };
+    
   
     return (
       <div className='bg-[#E7E4D5] w-full min-h-[100vh] pt-[80px] lg:pt-[2%] flex flex-col items-center justify-center px-[30px] lg:px-[10%] '>
