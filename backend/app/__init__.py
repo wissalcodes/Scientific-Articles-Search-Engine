@@ -10,11 +10,14 @@ from config import Config
 from .database import db
 from .models.user import User
 from .routes.users_manager import users_bp
-from .routes import init_routes, init_jwt, init_mail
+from .routes import init_routes,init_jwt,init_route_admin
 from .routes.article_manager import article_manager
 
+from .engine.es import ESKNN
 ##APP##
 app = Flask(__name__)
+##Backend x client##
+CORS(app, origins="http://localhost:5173")
 app.config.from_object(Config)
 
 ## Register  users Blueprint
@@ -24,7 +27,8 @@ app.register_blueprint(users_bp, url_prefix='/users')
 app.register_blueprint(article_manager)
 
 ##API##
-api = Api(app, title='API', doc='/docs')
+api = Api(app,title='API',doc='/api/docs')
+
 
 init_routes(api)
 
@@ -36,18 +40,20 @@ migrate = Migrate(app, db)
 jwt = JWTManager(app)
 init_jwt(jwt, api)
 
-##Backend x client##
-CORS(app)
 
 ##Reset password##
 mail = Mail()
 mail.init_app(app)
-init_mail(api, mail)
+# Check the index
+esknn = ESKNN()
+result = esknn.create_index()
+
+init_route_admin(api,esknn) 
 
 # to add in our db
 @app.shell_context_processor
 def make_shell_context():
-    return {
-        "db": db,
-        "User": User
+    return{
+        "db" : db,
+        "User" : User
     }

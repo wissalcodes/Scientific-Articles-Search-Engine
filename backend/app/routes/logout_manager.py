@@ -34,14 +34,16 @@ def init_logout_routes(jwt,api):
     class LogoutResource(Resource):
         
         @jwt_required(verify_type=False)#==true :forced to access with only refresh tokens ==false both
+        @logout_ns.doc(description='TO log out the current user.',
+             security=[{"Bearer Token": []}])
+        @logout_ns.doc(responses={201: 'Success'})
+
         def get(self):
             jwt__=get_jwt()
             jti = jwt__['jti']
-            token_type = jwt__['type']
             token_block = TokenBlocklist(jti=jti)
             token_block.save_Token_to_db() #revoke the access
-            return make_response(jsonify({"message: ":"Logged out successfully",
-                                        "message:": f"{token_type} token revoked successfully"}),200)
+            return {"message: ":"Logged out successfully"},200
             
                 
             
