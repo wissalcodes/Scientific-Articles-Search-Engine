@@ -1,6 +1,3 @@
-# app/__init__.py
-from .routes import init_routes, init_jwt, init_mail
-
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restx import Api
@@ -12,6 +9,11 @@ from config import Config
 from .database import db
 from .models.user import User
 from .routes import init_routes,init_jwt,init_mail,init_route_admin
+from .engine.es import ESKNN
+from .routes.users_manager import users_bp
+from .routes.article_manager import article_manager
+=========
+
 from .engine.es import ESKNN
 from app.routes.favori_manager import favori_bp
 
@@ -30,6 +32,7 @@ app.register_blueprint(favori_bp, url_prefix='/favori_manager')
 ##API##
 api = Api(app,title='API',doc='/api/docs')
 
+
 init_routes(api)
 
 ##DATABASE##
@@ -44,7 +47,6 @@ init_jwt(jwt, api)
 ##Reset password##
 mail = Mail()
 mail.init_app(app)
-
 # Check the index
 esknn = ESKNN()
 result = esknn.create_index()
@@ -55,8 +57,8 @@ init_route_admin(api,esknn)
 # to add in our db
 @app.shell_context_processor
 def make_shell_context():
-    return {
-        "db": db,
-        "User": User
+    return{
+        "db" : db,
+        "User" : User
     }
     
