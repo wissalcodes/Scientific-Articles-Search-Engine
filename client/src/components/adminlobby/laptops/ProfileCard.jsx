@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import right from "../../../../public/images/admin/right.svg";
+import rightSmall from "../../../../public/images/user/right-small-yellow.svg";
+
 import img from "../../../../public/images/admin/profile.svg";
 import ErrorMessage from "../../authentication/Error";
 import Edit from "../../../../public/images/moderator/edit2.svg";
@@ -134,12 +136,14 @@ export const ProfileCard = ({ profile }) => {
   }, [profile]);
   return (
     <div
-      className={`bg-[#F5EAAB] drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/4 fixed left-0  w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
-        showCard ? "translate-x-0" : "-translate-x-[350px]"
+      className={`bg-[#F5EAAB] z-10 drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
+        showCard
+          ? "translate-x-0"
+          : "-translate-x-[300px] lg:-translate-x-[350px]"
       }`}>
       {" "}
       <div className="px-[20px] flex flex-col  items-start h-full w-full">
-        <h1 className="text-[32px] pt-[10px] font-bold font-merryweather">
+        <h1 className="z-30 text-[32px] pt-[10px] font-bold font-merryweather">
           Mon Profile
         </h1>
         <p className="py-[10px] font-merryweather text-md lg:text-lg font-bold">
@@ -319,10 +323,13 @@ export const ProfileCard = ({ profile }) => {
           </button>
         </div>
       </div>
-      <div className="top-0 flex flex-col absolute h-full right-0 translate-x-[45px]">
-        <img src={right} />
+      <div className="top-0 flex flex-col absolute h-full right-[0px] translate-x-[35px] lg:translate-x-[45px]">
+        <img src={window.innerWidth > 1023 ? right : rightSmall} />
         <button onClick={handleCardAnimation}>
-          <img className="fixed right-[7px] top-[20px] w-[40px]" src={img} />
+          <img
+            className="fixed right-[10px] lg:right-[9px] top-[15px] lg:top-[20px] w-[23px] lg:w-[35px]"
+            src={img}
+          />
         </button>
       </div>
     </div>

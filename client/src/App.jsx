@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn";
 import { MailSent } from "./pages/MailSent";
 import "./App.css";
 import { AdminLobby } from "./pages/AdminLobby";
+import { UserLobby } from "./pages/UserLobby";
 import { ModeratorLobby } from "./pages/ModeratorLobby";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/moderator_dashboard" element={<ModeratorLobby />} />
           <Route path="/admin_dashboard" element={<AdminLobby />} />
+          <Route path="/user_lobby" element={<UserLobby />} />
           <Route path="/sign_in" element={<SignIn />} />
           <Route path="/sign_up" element={<SignUp />} />
           <Route path="/reset_password" element={<PasswordRecovery />} />
