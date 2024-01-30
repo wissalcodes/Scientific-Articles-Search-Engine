@@ -29,6 +29,8 @@ app.register_blueprint(users_bp, url_prefix='/users')
 # Register the favori_bp blueprint
 app.register_blueprint(favori_bp, url_prefix='/favori_manager')
 
+app.register_blueprint(article_manager, url_prefix='/article_manager')
+
 ##API##
 api = Api(app,title='API',doc='/api/docs')
 
@@ -49,7 +51,7 @@ mail = Mail()
 mail.init_app(app)
 # Check the index
 esknn = ESKNN()
-# result = esknn.create_index()
+result = esknn.create_index()
 
 init_route_admin(api,esknn) 
 

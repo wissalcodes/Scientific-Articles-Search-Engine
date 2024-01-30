@@ -40,8 +40,8 @@ export const ModeratorLobby = () => {
           }
         );
         if (response.status >= 200 && response.status < 300) {
-          setArticles(response.data);
-          console.log(response.data);
+          setArticles(response.data.results);
+          console.log("Articles fetched successfully", response.data.results);
         } else {
           console.log("error fetching articles data");
         }

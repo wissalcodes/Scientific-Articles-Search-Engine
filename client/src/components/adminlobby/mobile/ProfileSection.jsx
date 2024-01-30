@@ -286,7 +286,10 @@ export const ProfileSection = ({ profile }) => {
               )
             )}
           </div>
-          <p className="pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold">
+          <p
+            className={`pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold ${
+              profile.role !== "moderator" && `hidden`
+            }`}>
             Parametres du compte
           </p>
           <div className="grid grid-cols-[60%,40%] w-full">

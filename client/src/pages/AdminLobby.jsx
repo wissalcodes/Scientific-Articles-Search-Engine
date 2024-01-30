@@ -41,7 +41,6 @@ export const AdminLobby = () => {
               },
             }
           );
-          console.log(moderatorsResponse.data);
           if (
             moderatorsResponse.status >= 200 &&
             moderatorsResponse.status < 300
@@ -75,7 +74,7 @@ export const AdminLobby = () => {
         }
       );
       if (response.status >= 200 && response.status < 300) {
-        console.log("Articles uploades avec succes");
+        alert("Articles uploades avec succes");
       } else {
         console.log("error uploading articles");
       }
@@ -118,7 +117,7 @@ export const AdminLobby = () => {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)} //update the URL state variable as the input changes in value
-              className="text-[#E7E4D5] lg:py-0 py-[10px] pl-[15px] text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent "
+              className="lg:py-0 py-[10px] pl-[15px] text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent "
             />
           </div>
           <div className="flex justify-end lg:justify-center w-full lg:w-[30%] ">

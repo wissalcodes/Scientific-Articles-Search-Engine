@@ -33,7 +33,7 @@ export const AddModeratorPopout = ({ onClose }) => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        console.log("Moderateur ajoute avec succes");
+        alert("Moderateur ajoute avec succes");
       }
     } catch (error) {
       alert(

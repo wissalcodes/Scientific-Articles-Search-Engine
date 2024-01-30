@@ -67,7 +67,7 @@ def article_details(article_identifier):
         return jsonify({"message": f"Error occurred: {e}", "status": "failure"}), 500
     
     
-@favori_bp.route('/favorite_articles/<int:user_id>')
+@favori_bp.route('/favorite_articles/<int:user_id>', methods=['GET'])
 def favorite_articles(user_id):
     user = User.query.get(user_id)
     if not user:

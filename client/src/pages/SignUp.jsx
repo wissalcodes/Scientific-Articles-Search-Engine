@@ -4,15 +4,21 @@ import SignUpIllustration from "../../public/images/authentication/sign-up-illus
 import { EyeController } from "../components/authentication/EyeController";
 import ErrorMessage from "../components/authentication/Error";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+
 const SignIn = () => {
+  //auth token
+  const [token, setToken] = useState("token");
+
+  // fields variables
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [rememberUser, setRememberUser] = useState(false);
+  // error messages states
   const [mailerrorMsg, setmailErrorMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [lastNameerrorMsg, setLastNameErrorMsg] = useState("");
@@ -22,8 +28,13 @@ const SignIn = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
+  // user object
   const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
+
   const handleSignUp = async () => {
+    // clean up the error messages variables
     setErrorMsg("");
     setmailErrorMsg("");
     setLastNameErrorMsg("");
@@ -57,7 +68,55 @@ const SignIn = () => {
           username: username,
         });
         if (response.status === 201) {
-          console.log("Successful sign up ", response.data);
+          try {
+            // call the POST api for sign in
+            const response = await axios.post(
+              "http://127.0.0.1:5000/auth/signin",
+              {
+                email,
+                password,
+              }
+            );
+            if (response.status === 200) {
+              const token = response.data.access_token;
+              const refreshToken = response.data.refresh_token;
+
+              // Store tokens securely (e.g., in cookies or localStorage)
+              Cookies.set("authToken", token, {
+                expires: 7,
+              });
+              Cookies.set("refreshToken", refreshToken, {
+                expires: 7,
+              });
+              setToken();
+
+              // get the user's information
+              const userResponse = await axios.get(
+                "http://127.0.0.1:5000/auth/redirect",
+                {
+                  headers: {
+                    Authorization: `Bearer ${response.data.access_token}`,
+                  },
+                }
+              );
+              setUser(userResponse.data);
+              console.log("Successful sign-in ", response.data);
+            } else {
+              console.log("Failed to log in user");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            if (error.response) {
+              console.error("Server Error Message:", error.response.data);
+              setErrorMsg(
+                error.response.data.message ||
+                  "Les informations que vous avez entrees sont incorrectes!"
+              );
+            } else {
+              setErrorMsg("An error occurred during sign-in");
+            }
+          }
+          navigate("/user_lobby");
         }
       } catch (error) {
         console.error("Error:", error);

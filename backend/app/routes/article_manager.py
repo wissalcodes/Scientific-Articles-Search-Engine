@@ -21,7 +21,7 @@ def index_article():
         institutions=article_data['institutions'],  # Add institutions field
         is_published=article_data['is_published']
     )
-    response = requests.post('http://localhost:9200/articles_index/_doc/' + article.article_id, json=article.to_dict())
+    response = requests.post('http://localhost:9200/articles/_doc/' + article.article_id, json=article.to_dict())
     return jsonify(response.json())
     
 @article_manager.route('/search_articles', methods=['POST'])
@@ -80,5 +80,5 @@ def search_articles():
     search_query["sort"] = [{"date": {"order": "desc"}}]
 
     # Send the query to Elasticsearch
-    response = requests.post('http://localhost:9200/articles_index/_search', json=search_query)
+    response = requests.post('http://localhost:9200/articles/_search', json=search_query)
     return jsonify(response.json())

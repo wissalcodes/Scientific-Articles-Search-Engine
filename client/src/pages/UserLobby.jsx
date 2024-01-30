@@ -3,79 +3,64 @@ import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/main/welcome.svg";
 import searchAsset from "../../public/images/user/search.svg";
 import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
-import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Favoris } from "../components/userlobby/Favoris";
 import { Article } from "../components/userlobby/Article";
+import { useJwt } from "react-jwt";
+
 export const UserLobby = () => {
-  const [favorites, setFavorites] = useState([
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-  ]);
+  // get the access token
+  const token = Cookies.get("authToken");
+
+  const [favorites, setFavorites] = useState([]);
   // to control displaying the search results or the input field
   const [search, setSearch] = useState(false);
-  // fetch admin data after login
+  // fetch user profile data after login
   const [profile, setProfile] = useState({});
-  //get the access token
-  const token = Cookies.get("authToken");
-  // the search URL
-  const [url, setUrl] = useState("");
+  // search result
+  const [searchResult, setSearchResult] = useState([]);
+  // the search input
+  const [searchTerms, setSearchTerms] = useState("");
   // track the filtering buttons state
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [authorClicked, setAuthorClicked] = useState(false);
   const [institutionClicked, setInstitutionClicked] = useState(false);
   const [keywordsClicked, setKeywordsClicked] = useState(false);
+  const [filters, setFilters] = useState([]);
+
+  const initFilters = () => {
+    // Copy the current state of filters
+    const updatedFilters = [...filters];
+    // Authors filter
+    // Check if authorClicked is true and 'authors_filter' is not already in filters
+    if (authorClicked && !updatedFilters.includes("authors_filter")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("authors_filter");
+    }
+
+    // Institutions filter
+    // Check if authorClicked is true and 'institutions_filter' is not already in filters
+    if (institutionClicked && !updatedFilters.includes("institutions_filter")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("institutions_filter");
+    }
+
+    // Date filters
+    if (startDate && !updatedFilters.includes("start_date")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("start_date");
+    }
+    if (endDate && !updatedFilters.includes("end_date")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("end_date");
+    }
+
+    // Update the state with the new filters
+    setFilters(updatedFilters);
+  };
 
   // Function to handle author button click
   const handleAuthorClick = () => {
@@ -102,10 +87,38 @@ export const UserLobby = () => {
     setEndDate(e.target.value);
   };
   useEffect(() => {
+    // Copy the current state of filters
+    const updatedFilters = [...filters];
+    // Authors filter
+    // Check if authorClicked is true and 'authors_filter' is not already in filters
+    if (authorClicked && !updatedFilters.includes("authors_filter")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("authors_filter");
+    }
+
+    // Institutions filter
+    // Check if authorClicked is true and 'institutions_filter' is not already in filters
+    if (institutionClicked && !updatedFilters.includes("institutions_filter")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("institutions_filter");
+    }
+
+    // Date filters
+    if (startDate && !updatedFilters.includes("start_date")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("start_date");
+    }
+    if (endDate && !updatedFilters.includes("end_date")) {
+      // Add 'authors_filter' to updatedFilters
+      updatedFilters.push("end_date");
+    }
+
+    // Update the state with the new filters
+    setFilters(updatedFilters);
     const fetchData = async () => {
       try {
-        // fetch the admin's personal information
-        const response = await axios.get(
+        // fetch the user's personal information
+        const userResponse = await axios.get(
           "http://127.0.0.1:5000/admin_dashboard/my_profile",
           {
             headers: {
@@ -113,10 +126,16 @@ export const UserLobby = () => {
             },
           }
         );
-        if (response.status >= 200 && response.status < 300) {
-          setProfile(response.data);
+        if (userResponse.status >= 200 && userResponse.status < 300) {
+          setProfile(userResponse.data);
+          // fetch the user's favourite articles
+          // const response = await axios.get(
+          //   `http://127.0.0.1:5000/favori/favorite_articles/${userResponse.data.id}`
+          // );
+          // console.log(response.data);
+          // setFavorites(response.data);
         } else {
-          console.log("error fetching admin data");
+          console.log("error fetching data");
         }
       } catch (error) {
         console.log(error);
@@ -124,29 +143,30 @@ export const UserLobby = () => {
     };
     fetchData();
   }, []);
+
   // function to search the articles to articles search
   const handleSearch = async () => {
     setSearch(true);
+    initFilters();
+    console.log(filters);
+    // fetch the admin's personal information
     try {
-      // fetch the admin's personal information
       const response = await axios.post(
-        "http://127.0.0.1:5000/admin_dashboard/search_articles",
+        "http://localhost:5000/article_manager/search_articles",
         {
-          url: url,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          search_terms: searchTerms, // Pass the user's search input
         }
       );
       if (response.status >= 200 && response.status < 300) {
-        console.log("Articles searches avec succes");
+        console.log("successful search");
+        console.log(response.data.hits.hits);
+        const articles = response.data.hits.hits.map((entry) => entry._source);
+        setSearchResult(articles);
       } else {
         console.log("error searching articles");
       }
     } catch (error) {
-      alert(error.response.data.error);
+      console.log(error);
     }
   };
   return (
@@ -187,8 +207,8 @@ export const UserLobby = () => {
             <input
               placeholder="Entrez l'URL des articles a searcher.."
               type="text"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)} //update the URL state variable as the input changes in value
+              value={searchTerms}
+              onChange={(e) => setSearchTerms(e.target.value)} //update the URL state variable as the input changes in value
               className="text-[black] lg:py-0 py-[10px] pl-[15px] text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent "
             />
           </div>
@@ -260,7 +280,7 @@ export const UserLobby = () => {
             Résultats de la recherche
           </p>
           <div className="h-[50vh] md:h-[0vh] lg:h-[50vh] w-full custom-scrollBar overflow-y-scroll ">
-            {favorites.map((f, index) => (
+            {searchResult.map((f, index) => (
               <Article key={index} article={f} />
             ))}
           </div>

@@ -52,7 +52,7 @@ export default function SignIn() {
           Cookies.set("refreshToken", refreshToken, {
             expires: 7,
           });
-          setToken();
+          setToken(token);
 
           // get the user's information
           const userResponse = await axios.get(
@@ -69,6 +69,8 @@ export default function SignIn() {
           } else {
             if (userResponse.data.role === "moderator") {
               navigate("/moderator_dashboard");
+            } else {
+              navigate("/user_lobby");
             }
           }
           console.log("Successful sign-in ", response.data);
