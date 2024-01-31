@@ -17,40 +17,27 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 // Create new plugin instance
 
-export const ArticlePopout = ({ onClose, article, profile }) => {
+export const ArticlePopout = ({ onClose, article }) => {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   // retrieve access token
   const token = Cookies.get("authToken");
   // State for each section
-  const title = article.source.title;
-  const text = article.source.article;
+  const title = article._source.title;
+  const text = article._source.article;
 
   // for displaying the article PDF
-  const url = article.source.url;
-
-  // Create new plugin instance for the PDF package
-
+  const url = article._source.url;
   const handleSeePDF = () => {
     alert(url);
   };
 
-  const addToFavs = async () => {
-    const favsUrl = `http://localhost:5000/favori/add_favorite/${profile.id}/${article.id}`;
-    const response = await axios.post(favsUrl);
-    console.log(response.data);
-  };
-
   return (
-    <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[40px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+    <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[40px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] lg:w-[87%] xl:w-[100vw] h-[80vh] bg-[#BEB9A1]">
       <div className="text-[#E7E4D5] items-center justify-center gap-[15px] text-xsm lg:text-lg xl:text-lg  flex w-full">
-        <div className="w-[60%] text-start font-bold text-black font-merryweather text-sm lg:text-2xl xl:text-3xl flex flex-wrap  gap-[15px]">
+        <div className="w-[70%] text-start font-bold text-black font-merryweather text-sm lg:text-2xl xl:text-3xl flex flex-wrap  gap-[15px]">
           {title}
         </div>
-        <button
-          onClick={addToFavs}
-          className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px] lg:px-[20px] py-[8px]">
-          Ajouter aux favoris
-        </button>
+
         {/* See PDF button, when clicked opens the PDF file for the article */}
         <button
           onClick={handleSeePDF}

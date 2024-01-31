@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/main/welcome.svg";
 import searchAsset from "../../public/images/user/search.svg";
+import noresult from "../../public/images/user/noresult.svg";
+
 import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
@@ -155,6 +157,15 @@ export const UserLobby = () => {
         "http://localhost:5000/article_manager/search_articles",
         {
           search_terms: searchTerms, // Pass the user's search input
+          filters: {
+            institutions_filter: institutionClicked ? true : false,
+            authors_filter: authorClicked ? true : false,
+            title_filter: keywordsClicked ? true : false,
+            date_range: {
+              start_date: startDate,
+              end_date: endDate,
+            },
+          },
         }
       );
       if (response.status >= 200 && response.status < 300) {
@@ -186,7 +197,7 @@ export const UserLobby = () => {
         <Favoris favorites={favorites} profile={profile} />
       </div>
 
-      <div id="main-container" className="w-full h-full flex flex-col">
+      <div id="main-container" className="w-full flex flex-col">
         {!search && (
           <div className="pt-[4%] w-full h-full hidden lg:grid lg:grid-cols-[50%,50%]">
             <div className="hidden lg:flex w-[100%] flex-col items-center justify-center">
@@ -201,11 +212,14 @@ export const UserLobby = () => {
           </div>
         )}
         {/* URL input field */}
-        <div className="md:mt-[190px] lg:mt-0 w-full flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px]">
+        <div
+          className={`md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ${
+            search ? `` : ""
+          }`}>
           <div className="pl-[20px] drop-shadow flex w-full h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px]">
             <img className="lg:block hidden w-[25px]" src={searchAsset} />
             <input
-              placeholder="Entrez l'URL des articles a searcher.."
+              placeholder="Rechercher des articles..."
               type="text"
               value={searchTerms}
               onChange={(e) => setSearchTerms(e.target.value)} //update the URL state variable as the input changes in value
@@ -222,7 +236,8 @@ export const UserLobby = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex gap-[10px] flex-wrap h-[100px] lg:grid lg:grid-cols-[0.75fr,1fr,1fr,1fr,1fr,1fr] xl:grid-cols-[1fr,1fr,1fr,1fr,1.5fr,1.5fr] lg:flex-row lg:h-[50px] text-sm lg:text-lg xl:text-xl  lg:justify-center items-center mb-[40px]">
+        <div
+          className={`"pt-[80px] w-full flex gap-[10px] flex-wrap h-[100px] lg:grid lg:grid-cols-[0.75fr,1fr,1fr,1fr,1fr,1fr] xl:grid-cols-[1fr,1fr,1fr,1fr,1.5fr,1.5fr] lg:flex-row lg:h-[50px] text-sm lg:text-lg xl:text-xl  lg:justify-center items-center mb-[40px]"`}>
           <p className="font-merryweather text-start font-bold">Filtrer Par</p>
           <button
             className={`${
@@ -275,22 +290,32 @@ export const UserLobby = () => {
       </div>
       {/* To be displayed once the user clicks on the search button */}
       {search && favorites && (
-        <div className="w-full h-full ">
-          <p className=" font-merryweather text-md lg:text-[40px] xl:text-[50px] text-start font-bold">
-            Résultats de la recherche
+        <div className="w-full ">
+          <p className=" font-merryweather text-md lg:text-[40px] xl:text-[50px] text-start font-bold py-[10px]">
+            {searchResult.length > 0
+              ? "Résultats de la recherche"
+              : "Pas de résultats.."}
           </p>
-          {searchResult.map((article, index) => {
-            const isFavorite = favorites.some((fav) => fav._id === article._id);
-            console.log(isFavorite);
-            return (
-              <Article
-                key={index}
-                article={article}
-                profile={profile}
-                type={isFavorite ? "fav" : ""}
-              />
-            );
-          })}
+          <div className=" h-[50vh] flex flex-col items-center custom-scrollBar overflow-y-scroll">
+            {searchResult.length > 0 ? (
+              searchResult.map((article, index) => {
+                const isFavorite = favorites.some(
+                  (fav) => fav._id === article._id
+                );
+                console.log(isFavorite);
+                return (
+                  <Article
+                    key={index}
+                    article={article}
+                    profile={profile}
+                    type={isFavorite ? "fav" : ""}
+                  />
+                );
+              })
+            ) : (
+              <img src={noresult} className="h-[80%]" />
+            )}
+          </div>
         </div>
       )}
 

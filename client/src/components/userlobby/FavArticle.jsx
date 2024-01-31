@@ -4,8 +4,27 @@ import artAsset from "../../../public/images/user/article.svg";
 import artAssetDark from "../../../public/images/user/article-dark.svg";
 import heart from "../../../public/images/user/e-heart.svg";
 import bin from "../../../public/images/user/bin.svg";
-
+import { ArticlePopout } from "../moderatorlobby/ArticlePopout";
 export const FavArticle = ({ article, type, profile }) => {
+  const [isPopoutOpen, setIsPopoutOpen] = useState(false);
+  const togglePopout = () => {
+    setIsPopoutOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const container = document.getElementById("main-container");
+    // Add or remove 'blurred' class on body based on popout state
+    if (isPopoutOpen) {
+      container.classList.add("blurred");
+    } else {
+      container.classList.remove("blurred");
+    }
+
+    // Cleanup effect
+    return () => {
+      container.classList.remove("blurred");
+    };
+  }, [isPopoutOpen]);
   const handleRemoveFav = async () => {
     try {
       const favsUrl = `http://localhost:5000/favori_manager/remove_favorite/${profile.id}/${article._id}`;
@@ -41,8 +60,13 @@ export const FavArticle = ({ article, type, profile }) => {
         className="hidden lg:block w-[40px]"
         src={type === "fav" ? artAsset : artAssetDark}
       />
+      {isPopoutOpen && (
+        <ArticlePopout article={article} onClose={togglePopout} />
+      )}
       {/* Article title */}
-      <h1 className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
+      <h1
+        onClick={togglePopout}
+        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
         {type === "fav" ? article._source.title : article._source.title}
       </h1>
       {/* Article release date */}

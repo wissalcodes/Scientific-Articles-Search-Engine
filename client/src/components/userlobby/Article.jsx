@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import artAssetDark from "../../../public/images/user/article-dark.svg";
 import heart from "../../../public/images/user/e-heart.svg";
 import filledheart from "../../../public/images/user/filledheart.svg";
+import { ArticlePopout } from "../moderatorlobby/ArticlePopout";
 
 export const Article = ({ article, type, profile }) => {
   const [isFavorited, setIsFavorited] = useState(type);
   const toggleIsFavorited = () => setIsFavorited(!isFavorited);
+  const [isPopoutOpen, setIsPopoutOpen] = useState(false);
+  const togglePopout = () => {
+    setIsPopoutOpen((prev) => !prev);
+  };
 
+  useEffect(() => {
+    const container = document.getElementById("main-container");
+    // Add or remove 'blurred' class on body based on popout state
+    if (isPopoutOpen) {
+      container.classList.add("blurred");
+    } else {
+      container.classList.remove("blurred");
+    }
+
+    // Cleanup effect
+    return () => {
+      container.classList.remove("blurred");
+    };
+  }, [isPopoutOpen]);
   const handleRemoveFav = async () => {
     toggleIsFavorited();
 
@@ -45,13 +64,18 @@ export const Article = ({ article, type, profile }) => {
     <div
       key={isFavorited}
       className="text-black lg:py-[10px] xl:py-[20px] font-merryweather flex flex-wrap  w-full lg:grid lg:grid-cols-[5%,70%,15%,10%]">
+      {isPopoutOpen && (
+        <ArticlePopout article={article} onClose={togglePopout} />
+      )}
       <img
         className="hidden lg:block w-[40px]"
         src={artAssetDark}
         alt="Article Asset"
       />
       {/* Article title */}
-      <h1 className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
+      <h1
+        onClick={togglePopout}
+        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
         {article._source?.title || "Title Not Available"}
       </h1>
       {/* Article release date */}

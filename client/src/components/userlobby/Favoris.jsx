@@ -17,7 +17,7 @@ export const Favoris = ({ favorites, profile }) => {
 
   return (
     <div
-      className={`bg-[#395143] z-10 text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:-translate-y-[15vh] xl:-translate-y-[20vh] top-1/4 -translate-y-[10vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[70vw] h-[60vh] transform transition-transform duration-300 ease-in-out ${
+      className={`bg-[#395143] z-10 text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:-translate-y-[15vh] xl:-translate-y-[20vh] top-1/4 -translate-y-[10vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[70vw] h-[60vh] transform transition-transform duration-500 ease-in-out ${
         showCard
           ? "translate-x-0"
           : "-translate-x-[80vw] lg:-translate-x-[70vw]"
