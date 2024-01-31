@@ -226,11 +226,4 @@ def extract_full_text(input_text):
     text = '\n'.join(text_lines).strip()
     text = text.replace("\n"," ")
     
-    output_file_path = 'output.txt'
-
-        # Open the file in write mode and write the text
-    with open(output_file_path, 'w', encoding='utf-8') as file:
-        file.write(text)
-
-
     return text

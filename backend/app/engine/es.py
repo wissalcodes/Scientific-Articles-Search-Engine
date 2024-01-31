@@ -1,6 +1,5 @@
 from config import Config
 from elasticsearch import Elasticsearch
-from typing import Dict
 import warnings
 
 warnings.filterwarnings(action='ignore')
