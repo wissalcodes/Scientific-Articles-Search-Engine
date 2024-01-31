@@ -21,7 +21,7 @@ from app.routes.favori_manager import favori_bp
 ##APP##
 app = Flask(__name__)
 ##Backend x client##
-CORS(app, origins="http://localhost:5173")
+CORS(app, origins="http://localhost:5173",methods=["GET", "POST", "PUT", "DELETE"])
 app.config.from_object(Config)
 
 ## Register  users Blueprint

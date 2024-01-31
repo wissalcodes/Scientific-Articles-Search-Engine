@@ -129,11 +129,11 @@ export const UserLobby = () => {
         if (userResponse.status >= 200 && userResponse.status < 300) {
           setProfile(userResponse.data);
           // fetch the user's favourite articles
-          // const response = await axios.get(
-          //   `http://127.0.0.1:5000/favori/favorite_articles/${userResponse.data.id}`
-          // );
-          // console.log(response.data);
-          // setFavorites(response.data);
+          const response = await axios.get(
+            `http://127.0.0.1:5000/favori_manager/favorite_articles/${userResponse.data.id}`
+          );
+          console.log(response.data.articles);
+          setFavorites(response.data.articles);
         } else {
           console.log("error fetching data");
         }
@@ -160,7 +160,7 @@ export const UserLobby = () => {
       if (response.status >= 200 && response.status < 300) {
         console.log("successful search");
         console.log(response.data.hits.hits);
-        const articles = response.data.hits.hits.map((entry) => entry._source);
+        const articles = response.data.hits.hits;
         setSearchResult(articles);
       } else {
         console.log("error searching articles");
@@ -183,7 +183,7 @@ export const UserLobby = () => {
       {/* if the screen if small, display 2 extensible sections of profile and favorites */}
       <div className="h-[30vh] lg:hidden">
         <ProfileCard profile={profile} />
-        <Favoris profile={profile} />
+        <Favoris favorites={favorites} profile={profile} />
       </div>
 
       <div id="main-container" className="w-full h-full flex flex-col">
@@ -274,23 +274,30 @@ export const UserLobby = () => {
         </div>
       </div>
       {/* To be displayed once the user clicks on the search button */}
-      {search && (
+      {search && favorites && (
         <div className="w-full h-full ">
           <p className=" font-merryweather text-md lg:text-[40px] xl:text-[50px] text-start font-bold">
             Résultats de la recherche
           </p>
-          <div className="h-[50vh] md:h-[0vh] lg:h-[50vh] w-full custom-scrollBar overflow-y-scroll ">
-            {searchResult.map((f, index) => (
-              <Article key={index} article={f} />
-            ))}
-          </div>
+          {searchResult.map((article, index) => {
+            const isFavorite = favorites.some((fav) => fav._id === article._id);
+            console.log(isFavorite);
+            return (
+              <Article
+                key={index}
+                article={article}
+                profile={profile}
+                type={isFavorite ? "fav" : ""}
+              />
+            );
+          })}
         </div>
       )}
 
       {/* if the screen is large, display the fixed animated sections  */}
       <div className="lg:block hidden w-full">
         <ProfileCard profile={profile} />
-        <Favoris profile={profile} />
+        <Favoris favorites={favorites} profile={profile} />
       </div>
     </div>
   );

@@ -4,66 +4,12 @@ import rightSmall from "../../../public/images/user/right-small.svg";
 
 import img from "../../../public/images/user/heart.svg";
 import ErrorMessage from "../authentication/Error";
-import { Article } from "./Article";
+import { FavArticle } from "./FavArticle";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export const Favoris = ({ profile }) => {
-  //get the access token
-  const token = Cookies.get("authToken");
+export const Favoris = ({ favorites, profile }) => {
   // when the fields are being edited
-  const [favorites, setFavorites] = useState([
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-    {
-      title:
-        "Nicotinamide mononucleotide (NMN) as an anti-aging health product – Promises and safety concerns",
-      date: "12/10/2023",
-    },
-  ]);
   const [showCard, setShowCard] = useState(false);
   const handleCardAnimation = () => {
     setShowCard((prevShowCard) => !prevShowCard);
@@ -83,7 +29,7 @@ export const Favoris = ({ profile }) => {
         </h1>
         <div className="w-full z-50 h-[40vh] custom-scrollBar overflow-y-scroll">
           {favorites.map((f, index) => (
-            <Article type="fav" key={index} article={f} />
+            <FavArticle type="fav" key={index} article={f} profile={profile} />
           ))}
         </div>
         <div className="top-0 flex flex-col absolute h-full right-[0px] translate-x-[35px] lg:translate-x-[45px]">
