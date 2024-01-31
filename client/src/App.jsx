@@ -1,31 +1,28 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Sample } from "./components/sample/Sample";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Main from "./pages/Main";
+import SignUp from "./pages/SignUp";
+import { PasswordRecovery } from "./pages/PasswordRecovery";
+import SignIn from "./pages/SignIn";
+import { MailSent } from "./pages/MailSent";
 import "./App.css";
+import { AdminLobby } from "./pages/AdminLobby";
+import { ModeratorLobby } from "./pages/ModeratorLobby";
+
 function App() {
   return (
-    <div className="flex flex-col h-screen w-screen">
-      <BrowserRouter>
+    <div className="font-lora flex flex-col relative w-screen">
+      <Router>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="flex font-bold flex-col h-screen w-screen bg-slate-500 justify-center items-center text-[50px]">
-                Welcome!
-                <div className="font-light text-[30px]">
-                  * in the link, add /members to view running flask server
-                </div>
-                <div className="font-light text-[30px]">
-                  * in the link, add /teammembers to view rendering of API
-                  response
-                </div>
-              </div>
-            }
-          />
-          <Route path="teammembers" element={<Sample />} />
+          <Route path="/" element={<Main />} />
+          <Route path="/moderator_dashboard" element={<ModeratorLobby />} />
+          <Route path="/admin_dashboard" element={<AdminLobby />} />
+          <Route path="/sign_in" element={<SignIn />} />
+          <Route path="/sign_up" element={<SignUp />} />
+          <Route path="/reset_password" element={<PasswordRecovery />} />
+          <Route path="/mail_sent" element={<MailSent />} />
+          {/* Add other routes as needed */}
         </Routes>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
