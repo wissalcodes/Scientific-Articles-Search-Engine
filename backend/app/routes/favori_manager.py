@@ -1,13 +1,12 @@
 from xml.dom import NotFoundErr
-from flask import Blueprint, flash, jsonify, redirect, render_template, url_for
+from flask import Blueprint, jsonify
 from app.database import db
 from elasticsearch import Elasticsearch
-from app.models.user import User, FavoriteArticle  # Assuming these are your model import paths
+from app.models.user import User, FavoriteArticle  
 
 favori_bp = Blueprint('favori_manager', __name__)
-es = Elasticsearch(['http://localhost:9200'])  # Ensure this matches your Elasticsearch configuration
+es = Elasticsearch(['http://localhost:9200'])  
 
-from flask import jsonify  # Make sure to import jsonify
 
 @favori_bp.route('/add_favorite/<int:user_id>/<article_identifier>', methods=['POST'])
 def add_favorite(user_id, article_identifier):

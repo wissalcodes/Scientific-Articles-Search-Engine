@@ -15,8 +15,9 @@ def init_jwt(jwt,api):
    
 def init_route_admin(api,esknn):
     
-    from . import admin_dashboard_manager, moderator_dashboard_manager
+    from . import admin_dashboard_manager, moderator_dashboard_manager, user_dashboard_manager
     
     admin_dashboard_manager.init_ad(api,esknn)
     moderator_dashboard_manager.init_ad(api,esknn)
+    user_dashboard_manager.init_ad(api,esknn)
     
