@@ -51,7 +51,7 @@ mail = Mail()
 mail.init_app(app)
 # Check the index
 esknn = ESKNN()
-result = esknn.create_index()
+# result = esknn.create_index()
 
 init_route_admin(api,esknn) 
 

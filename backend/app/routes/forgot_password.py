@@ -48,26 +48,30 @@ def init_auth_routes(api):
     def generate_reset_token(user_email):
         from itsdangerous import URLSafeTimedSerializer
 
-        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7')
+        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7', salt='some_salt')
 
-        # Create the reset token
-        reset_token = serializer.dumps(user_email)
+        # Create the reset token and replace '.' with '_'
+        reset_token = serializer.dumps(user_email).replace('.', '_')
 
         return reset_token
-    
-    def confirm_token(token, expiration=3600):#if the token is still valid or not
+
+    def confirm_token(token, expiration=3600):
         from itsdangerous import URLSafeTimedSerializer
-        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7')
+
+        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7', salt='some_salt')
+
+        # Replace '_' with '.' before loading the token
+        token = token.replace('_', '.')
+
         try:
             email = serializer.loads(token, max_age=expiration)
             return email
         except Exception:
             return None
-
-
+        
     def send_reset_email(email, token):
         
-        reset_url = url_for('forgot_password_reset_password_verified_resource', token=token, _external=True)
+        reset_url = f'http://localhost:5173/reset_password/{token}'
 
         
         subject = 'Réinitialisation du mot de passe'
@@ -95,7 +99,7 @@ def init_auth_routes(api):
         print(response.text)
 
         
-    @forgot_ns.route('/reset_password_verified/<token>')
+    @forgot_ns.route('/reset_password/<token>')
     class ResetPasswordVerifiedResource(Resource):
         @forgot_ns.expect(confirm_reset_model)
         
@@ -103,6 +107,7 @@ def init_auth_routes(api):
         @forgot_ns.doc(responses={200: 'Success', 401 :'link expired'})
         
         def get(self,token):
+            print(token)
             email = confirm_token(token)
             if not email:
                 return {'message':'the link has expired'},401

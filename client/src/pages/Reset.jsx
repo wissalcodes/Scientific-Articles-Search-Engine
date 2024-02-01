@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import MDPOublie from "../../public/images/authentication/mdps-oublie.svg";
 import ErrorMessage from "../components/authentication/Error";
+import AuthNavbar from "../components/layout/AuthNavbar";
 import axios from "axios";
 
 export const Reset = () => {
@@ -10,20 +10,20 @@ export const Reset = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const { token } = useParams();
+  console.log(token);
 
   const handleResetPassword = async () => {
     try {
       // Call the API to reset the password with the new password
       const response = await axios.post(
-        `http://localhost:5000/forgot_password/reset_password_verified/${token}`,
+        `http://127.0.0.1:5000/forgot_password/reset_password/${token}`,
         {
-          newPassword,
+          password: newPassword,
         }
       );
-
-      if (response.status === 200) {
+      console.log(response.data);
+      if (response.status >= 200 && response.status < 300) {
         console.log("Password reset successful");
-        // setResetSuccess(true);
       } else {
         console.log("Failed to reset password");
       }
@@ -34,14 +34,11 @@ export const Reset = () => {
   return (
     // main content grid
     <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[30%,70%] items-center justify-center">
+      <AuthNavbar />
       <div className="absolute left-[20px] lg:translate-y-[25vh] xl:translate-y-[18vh] h-full w-0 lg:w-[500px] xl:w-[720px]">
         <img src={MDPOublie} />
       </div>
       <div className="h-[55vh] lg:h-full w-full px-[50px] py-[40px] bg-[#BEB9A1] lg:rounded-b-[0px] rounded-b-[30px] flex flex-col">
-        <div className="flex items-center justify-start h-[10%] w-full">
-          <div>Logo</div>
-          <div>Websitename</div>
-        </div>
         <div className="flex h-full justify-center items-center flex-col">
           <img className="w-[400px]" src={MDPOublie} />
         </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import MDPOublie from "../../public/images/authentication/mdps-oublie.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import AuthNavbar from "../components/layout/AuthNavbar";
 export const PasswordRecovery = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -40,15 +41,11 @@ export const PasswordRecovery = () => {
   return (
     // main container, displays a grid in large screens and a flex in mobiles
     <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[35%,65%] items-center justify-center">
+      <AuthNavbar />
       <div className="h-[55vh] lg:h-full w-full px-[50px] py-[40px] bg-[#395143] lg:rounded-b-[0px] rounded-b-[30px] flex flex-col">
-        {/* Website Logo */}
-        <div className="flex items-center justify-start h-[10%] w-full">
-          <div>Logo</div>
-          <div>Websitename</div>
-        </div>
         <div className="flex h-full w-full justify-center items-center flex-col">
           <img
-            className="lg:fixed left-0 top-1/2 lg:-translate-y-1/2 lg:w-[600px] xl:w-[650px] w-[400px]"
+            className="lg:fixed left-0 top-1/2 lg:-translate-y-1/2 lg:w-[500px] xl:w-[650px] w-[400px]"
             src={MDPOublie}
           />
         </div>
@@ -56,13 +53,13 @@ export const PasswordRecovery = () => {
       {/* div conatining the e-mail input and button */}
       <div className="h-full w-full flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:px-[80px] xl:px-[120px] justify-start lg:justify-center items-center bg-[#E7E4D5]">
         <div className="w-full h-full lg:flex flex-col items-center justify-center z-80">
-          <h1 className="z-70 text-[#395143] font-bold hidden lg:flex text-start font-merryweather text-5xl xl:text-5xl">
+          <h1 className="z-70 text-[#395143] font-bold hidden lg:flex text-start font-merryweather text-4xl xl:text-5xl">
             Vous avez oublié votre mot de passe ?
           </h1>
           <div className="flex w-full ">
             {/* In large screens */}
             {window.innerWidth > 1023 ? (
-              <p className="w-full flex text-[27px] pt-[5%] pb-[8%] xl:text-[32px]">
+              <p className="w-full flex text-[20px] pt-[5%] pb-[8%] xl:text-[32px]">
                 Entrez l'e-mail associé à ce compte.
               </p>
             ) : (

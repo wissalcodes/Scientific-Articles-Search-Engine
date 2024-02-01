@@ -60,26 +60,28 @@ export const AdminLobby = () => {
   }, []);
   // function to upload the articles to articles search
   const handleUpload = async () => {
-    try {
-      // fetch the admin's personal information
-      const response = await axios.post(
-        "http://127.0.0.1:5000/admin_dashboard/upload_articles",
-        {
-          url: url,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+    if (url) {
+      try {
+        // fetch the admin's personal information
+        const response = await axios.post(
+          "http://127.0.0.1:5000/admin_dashboard/upload_articles",
+          {
+            url: url,
           },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          alert("Articles uploades avec succes");
         }
-      );
-      if (response.status >= 200 && response.status < 300) {
-        alert("Articles uploades avec succes");
-      } else {
-        console.log("error uploading articles");
+      } catch (error) {
+        alert(error.response.data.error);
       }
-    } catch (error) {
-      alert(error.response.data.error);
+    } else {
+      alert("Veuillez introduire un lien");
     }
   };
   return (
@@ -109,11 +111,11 @@ export const AdminLobby = () => {
           Upload des articles
         </p>
         {/* URL input field */}
-        <div className="w-full flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px]">
+        <div className="w-full flex flex-col lg:flex-row h-[60px] justify-center items-center  my-[40px]">
           <div className="pl-[20px] drop-shadow flex w-full h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px]">
             <img className="lg:block hidden w-[25px]" src={upload} />
             <input
-              placeholder="Entrez l'URL des articles a uploader.."
+              placeholder="..."
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)} //update the URL state variable as the input changes in value
@@ -124,7 +126,7 @@ export const AdminLobby = () => {
             <div className="lg:mt-0 mt-[10px] transform h-full transition-transform duration-200 ease-in-out hover:scale-110 w-[40%] lg:w-[90%] drop-shadow flex bg-gradient-to-r from-[#395143] to-[#AF9A27] px-[10px] lg:px-[20px]  rounded-[10px]  ">
               <button
                 onClick={handleUpload}
-                className="text-[18px] lg:py-[10px] flex flex-col justify-center items-center lg:text-[20px] xl:text-[24px] mx-auto font-lora text-[#E7E4D5] bg-transparent px-[10px]">
+                className="text-[18px] lg:py-[5px] flex flex-col justify-center items-center lg:text-[20px] xl:text-[20px] mx-auto font-lora text-[#E7E4D5] bg-transparent px-[10px]">
                 Confirmer
               </button>
             </div>

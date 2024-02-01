@@ -18,10 +18,10 @@ def index_article():
         references=article_data['references'],
         url=article_data['url'],
         authors=article_data['authors'],
-        institutions=article_data['institutions'],  # Add institutions field
+        institutions=article_data['institutions'],  
         is_published=article_data['is_published']
     )
-    response = requests.post('http://localhost:9200/articles/_doc/' + article.article_id, json=article.to_dict())
+    response = requests.post('http://localhost:9200/articles_index/_doc/' + article.article_id, json=article.to_dict())
     return jsonify(response.json())
     
 @article_manager.route('/search_articles', methods=['POST'])
@@ -30,7 +30,7 @@ def search_articles():
     search_terms = search_data.get('search_terms', '')
     filters = search_data.get('filters', {})
 
-    # Constructing the Elasticsearch query
+     # Base structure of the Elasticsearch query
     search_query = {
         "query": {
             "bool": {
@@ -42,13 +42,48 @@ def search_articles():
         }
     }
 
+  
+
     # Check and apply filters if provided
-    if 'keywords_filter' in filters and filters['keywords_filter']:
-        search_query['query']['bool']['must'].append({"match": {"keywords": search_terms}})
+    if 'title_filter' in filters and filters['title_filter']:
+        search_query['query']['bool']['must'].append({"match": {"title": search_terms}})
     if 'authors_filter' in filters and filters['authors_filter']:
         search_query['query']['bool']['must'].append({"match": {"authors": search_terms}})
     if 'institutions_filter' in filters and filters['institutions_filter']:
         search_query['query']['bool']['must'].append({"match": {"institutions": search_terms}})
+    if 'keywords_filter' in filters and filters['keywords_filter']:
+        search_query['query']['bool']['must'].append({"match": {"keywords": search_terms}})
+
+
+
+
+
+   # Add date filter if provided
+    if 'start_date' in filters and 'end_date' in filters:
+      start_date = filters['start_date']
+      end_date = filters['end_date']
+      date_filter = {
+        "range": {
+            "date": {
+                "gte": datetime.strptime(start_date, '%Y-%m-%d').strftime('%Y-%m-%d'),
+                "lte": datetime.strptime(end_date, '%Y-%m-%d').strftime('%Y-%m-%d')
+            }
+        }
+      }
+      search_query['query']['bool']['filter'].append(date_filter)
+
+     # If search terms are introduced within the date filter condition
+      if search_terms:
+         search_query['query']['bool']['must'].append({
+            "multi_match": {
+                "query": search_terms,
+                "fields": [
+                    "title", "authors", "institutions", "abstract", 
+                    "keywords", "full_text", "references", "url"
+                ]
+            }
+         })
+
 
     # If no specific filters are provided, perform a broad search
     if not search_query['query']['bool']['must']:
@@ -58,23 +93,6 @@ def search_articles():
                 "fields": ["title", "authors", "institutions", "abstract", "keywords", "full_text", "references", "url"]
             }
         })
-
-
-
-   # Add date filter if provided
-    if 'start_date' in filters and 'end_date' in filters:
-        start_date = filters['start_date']
-        end_date = filters['end_date']
-        date_filter = {
-            "range": {
-                "date": {
-                    "gte": datetime.strptime(start_date, '%Y-%m-%d').strftime('%Y-%m-%d'),
-                    "lte": datetime.strptime(end_date, '%Y-%m-%d').strftime('%Y-%m-%d')
-                }
-            }
-        }
-        search_query['query']['bool']['filter'].append(date_filter)
-
 
     # Add sorting to the query
     search_query["sort"] = [{"date": {"order": "desc"}}]
