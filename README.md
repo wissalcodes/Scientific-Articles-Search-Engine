@@ -1,19 +1,8 @@
 # Scientific Articles Search Engine
 
-## Contribution guidelines
-
-  ### - create a branch for each section
-  ### - branches will follow the naming convention ```<member name>/<feature or section name> ```
-        example: wissal/authentication
-  ### - try to provide meaningfull commit messages 
-        example: added an api route for user credentials
-  ### - open a Pull Request after finishing a section or feature
-
-  ## *!!! NEVER PUSH TO MAIN OR AUTOMATICALLY MERGE YOUR BRANCH TO MAIN, EVEN IF YOUR BRANCH CAN BE AUTOMATICALLY MERGED !!!*
-
 ## Description
-
 This project is a web application designed to search scientific articles using a set of keywords
+
 ## Table of Contents
 
 1. [Technologies](#technologies)
@@ -51,11 +40,16 @@ This project is a web application designed to search scientific articles using a
 ### Backend:
 - backend/
   - app/
+    - enigne/        (contains the elastic search instance and manipulation)
     - models/        (contains the data models)
     - routes/        (the main page route, main components will be called here)
-    - static/        (client-side resources like images, CSS...)
-  - run.py            (app entry point)
+    - test/          (contains the required unit test)
+  - instance/      (constains the instance of the database)
   - config.py         (environment configurations)
+  - doceker-compose.yaml (elastic search cluster)
+  - output.json      (contains the text file of the articles uploaded to the elastic search server)
+  - run.py            (app entry point)
+
 
 ### Frontend:
 - client/
@@ -88,21 +82,15 @@ This project is a web application designed to search scientific articles using a
   - If you don't have Python installed, navigate to (https://www.python.org/downloads/) and download the last release then install it.
   - Navigate to the backend folder
      ``` cd backend ```
-  - Install Flask and flask_sqlalchemy by typing the command
-     ``` pip install Flask flask-sqlalchemy ```
+  - Install the required dependecies by typing the command
+     ``` pip install -r requirements.txt ```
   - Start the flask server by running
      ``` python run.py ```
-    
-#### Starting the database
-  - Open a terminal and make sure you are at the backend folder
-  - Start a python shell by typing
-    ```python```
-  - Inside the python shell, enter the  following 2 commands
-    ```python
-    from app import app, db
-    ```
-    ```python
-    with app.app_context(): 
-      db.create_all()
-    ```
-    this will create an SQLite database file with the specified name in config.py containing all the database tables defined in models 
+
+### staring the elastic search cluster
+  - Navigate to the backend folder
+  - Run the following command 
+    ```docker compose up --remove-orphans -d```
+- A container will be created in the docker desktop application
+- When launching the container, the engine will run on (localhost:9200)
+  
