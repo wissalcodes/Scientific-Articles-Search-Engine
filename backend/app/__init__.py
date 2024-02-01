@@ -10,7 +10,6 @@ from .database import db
 from .models.user import User
 from .routes import init_routes,init_jwt,init_route_admin
 from .engine.es import ESKNN
-from .routes.users_manager import users_bp
 from .routes.article_manager import article_manager
 
 
@@ -24,8 +23,6 @@ app = Flask(__name__)
 CORS(app, origins="http://localhost:5173",methods=["GET", "POST", "PUT", "DELETE"])
 app.config.from_object(Config)
 
-## Register  users Blueprint
-app.register_blueprint(users_bp, url_prefix='/users') 
 # Register the favori_bp blueprint
 app.register_blueprint(favori_bp, url_prefix='/favori_manager')
 
@@ -51,7 +48,6 @@ mail = Mail()
 mail.init_app(app)
 # Check the index
 esknn = ESKNN()
-# result = esknn.create_index()
 
 init_route_admin(api,esknn) 
 

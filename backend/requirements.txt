@@ -1,0 +1,13 @@
+Flask==2.3.3
+SQLAlchemy==2.0.23
+PyJWT==2.8.0
+Werkzeug==2.3.8
+flask-restx==1.2.0
+Flask-JWT-Extended==4.5.3
+elasticsearch==8.11.1
+pdfminer
+itsdangerous==2.1.2
+Flask-Mail==0.9.1
+Flask-Cors==4.0.0
+Flask-Migrate==4.0.5
+alembic==1.13.0

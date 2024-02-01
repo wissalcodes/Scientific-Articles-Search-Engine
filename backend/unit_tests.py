@@ -6,6 +6,7 @@ from app.models.user import User
 class APITestCase(unittest.TestCase):
     #declare the variables in our test
     def setUp(self):
+        
         app.config.from_object(TestConfig)
         self.app=app
         
@@ -13,10 +14,10 @@ class APITestCase(unittest.TestCase):
         self.client=self.app.test_client(self)
 
         with self.app.app_context():
-            # db.init_app(self.app)
-
             db.create_all()
+            
 
+    # First unit test : Test the root page
     def test_hello_world(self):
         hello_world_response=self.client.get('/auth/')
         
@@ -24,7 +25,7 @@ class APITestCase(unittest.TestCase):
         
         self.assertEqual(json,{'message':'hello world!'})
     
-    
+    # Second unit test : testing the signing up feature
     def test_sign_up(self):
         signup_response=self.client.post('/auth/signup',
             json={
@@ -37,9 +38,11 @@ class APITestCase(unittest.TestCase):
         )
         status_code=signup_response.status_code
         self.assertEqual(status_code,201)  
-        
+
+    # Third unit test : testing the signing in feature 
+
     def test_sign_in(self):
-        signup_response=self.client.post('/auth/signup',
+        self.client.post('/auth/signup',
             json={
                 "first_name" : 'test',
                 "last_name" : 'test',
@@ -56,8 +59,8 @@ class APITestCase(unittest.TestCase):
         )
         status_code=signin_response.status_code
         self.assertEqual(status_code,200)  
-        
-        
+    
+    
     # delete the inserted user after testing the signup
     def tearDown(self):
         with self.app.app_context():
@@ -67,6 +70,7 @@ class APITestCase(unittest.TestCase):
             if test_user:
                 db.session.delete(test_user)
                 db.session.commit()
+            
         
 
 if __name__ == "__main__":
