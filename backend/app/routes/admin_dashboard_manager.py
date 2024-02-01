@@ -119,7 +119,7 @@ def init_ad(api,esknn):
         @admin_ns.doc(responses={200: 'Success', 403: 'Unauthorized'})
         def get(self):
             claims = get_jwt()
-            if claims.get('is_admin') == False :
+            if claims.get('is_admin') != False :
                 moderators = User.query.filter_by(role='moderator').all()
                                         
                 return moderators,200
@@ -136,7 +136,7 @@ def init_ad(api,esknn):
 
         def delete(self): 
             claims=get_jwt()
-            if claims.get('is_admin')==False:
+            if claims.get('is_admin') != False:
                 data = request.get_json()
                 id_to_delete = data.get('id')
                 
@@ -164,7 +164,7 @@ def init_ad(api,esknn):
         def post(self):
             
             claims = get_jwt()
-            if claims.get('is_admin') == False : 
+            if claims.get('is_admin') != False : 
                 data = request.get_json()
                 
                 username=data.get('username')
@@ -207,7 +207,7 @@ def init_ad(api,esknn):
         def post(self,id):
             
             claims = get_jwt()
-            if claims.get('is_admin') == False : 
+            if claims.get('is_admin') != False : 
                 data = request.get_json()
                 
                 moderator_to_modify = User.query.filter_by(id=id).first()
@@ -252,7 +252,7 @@ def init_ad(api,esknn):
        
         def post(self):
             claims = get_jwt()
-            if claims.get('is_admin') == False : 
+            if claims.get('is_admin') != False : 
                 data = request.get_json().get('url')
                 
                 parsed_url = urlparse(data)
@@ -302,7 +302,7 @@ def init_ad(api,esknn):
                                 
                                 if response != 0:
                                     i=+1
-                                    return {'message':f'The article n° {i} has been uploaded to elastic search successfully'}, 200
+                                    print (f"The article n°, {i} has been uploaded to elastic search successfully")
                                 else:
                                     return {'error':'Failed to index the article'},400
                                 
@@ -314,6 +314,8 @@ def init_ad(api,esknn):
             else:
                 return {'message': 'Permission denied'}, 401
             
+            if(i>0):
+                return {"number of articles added successfully":i},200
     
     api.add_namespace(admin_ns)
 

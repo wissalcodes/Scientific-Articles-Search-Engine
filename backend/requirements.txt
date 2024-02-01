@@ -6,3 +6,4 @@ flask-restx==1.2.0
 Flask-JWT-Extended==4.5.3
 elasticsearch==8.11.1
 pdfminer
+itsdangerous==2.1.2

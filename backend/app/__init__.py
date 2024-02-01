@@ -8,7 +8,7 @@ from flask_mail import Mail
 from config import Config
 from .database import db
 from .models.user import User
-from .routes import init_routes,init_jwt,init_mail,init_route_admin
+from .routes import init_routes,init_jwt,init_route_admin
 from .engine.es import ESKNN
 from .routes.users_manager import users_bp
 from .routes.article_manager import article_manager
