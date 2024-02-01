@@ -23,8 +23,6 @@ app = Flask(__name__)
 CORS(app, origins="http://localhost:5173",methods=["GET", "POST", "PUT", "DELETE"])
 app.config.from_object(Config)
 
-# Register the favori_bp blueprint
-app.register_blueprint(favori_bp, url_prefix='/favori_manager')
 
 app.register_blueprint(article_manager, url_prefix='/article_manager')
 
