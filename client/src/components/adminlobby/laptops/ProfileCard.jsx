@@ -204,7 +204,9 @@ export const ProfileCard = ({ profile }) => {
   }, [profile]);
   return (
     <div
-      className={`bg-[#F5EAAB] z-10 drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
+      className={`bg-[#F5EAAB] z-20 drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/3 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] ${
+        profile.role !== "moderator" ? `h-[300px]` : `h-[400px]`
+      } transform transition-transform duration-500 ease-in-out ${
         showCard
           ? "translate-x-0"
           : "-translate-x-[300px] lg:-translate-x-[350px]"

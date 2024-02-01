@@ -8,6 +8,7 @@ import "./App.css";
 import { AdminLobby } from "./pages/AdminLobby";
 import { UserLobby } from "./pages/UserLobby";
 import { ModeratorLobby } from "./pages/ModeratorLobby";
+import { Reset } from "./pages/Reset";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
           <Route path="/user_lobby" element={<UserLobby />} />
           <Route path="/sign_in" element={<SignIn />} />
           <Route path="/sign_up" element={<SignUp />} />
-          <Route path="/reset_password" element={<PasswordRecovery />} />
+          <Route path="/recover_password" element={<PasswordRecovery />} />
+          <Route path="/reset_password/:token" element={<Reset />} />
           <Route path="/mail_sent" element={<MailSent />} />
           {/* Add other routes as needed */}
         </Routes>

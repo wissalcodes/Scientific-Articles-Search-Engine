@@ -149,7 +149,7 @@ const SignIn = () => {
           />
         </div>
         <div className="h-full pb-[30px] lg:py-0 w-full  items-center lg:items-start justify-center flex flex-col">
-          <div className="px-[20px] flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
+          <div className="px-[20px]  flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
             <div className="w-[90%] flex flex-col justify-start items-start">
               <h1 className="text-[#152522] -translate-x-[30px] w-[150%] text-start hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[30px] xl:text-4xl">
                 Inscrivez-vous maintenant !
@@ -163,7 +163,7 @@ const SignIn = () => {
                     NOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full drop-shadow flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -179,7 +179,7 @@ const SignIn = () => {
                   </h1>
                   <ErrorMessage message={firstNameerrorMsg} />
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full drop-shadow flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -199,7 +199,7 @@ const SignIn = () => {
                     </h1>
                     <ErrorMessage message={mailerrorMsg} />
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex drop-shadow bg-[white] px-[20px] py-[9px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="e-mail"
@@ -215,7 +215,7 @@ const SignIn = () => {
                     </h1>
                     <ErrorMessage message={usernameerrorMsg} />
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex drop-shadow bg-[white] px-[20px] py-[9px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="text"
@@ -234,7 +234,7 @@ const SignIn = () => {
                 </h1>
                 <ErrorMessage message={errorMsg} />
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+              <div className="relative drop-shadow w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                 <input
                   className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type={isPasswordVisible ? "text" : "password"}
@@ -252,7 +252,7 @@ const SignIn = () => {
                   CONFIRMATION MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+              <div className="relative drop-shadow w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                 <input
                   className="focus:outline-none  w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type={isConfirmPasswordVisible ? "text" : "password"}

@@ -3,19 +3,16 @@ import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/main/welcome.svg";
 import searchAsset from "../../public/images/user/search.svg";
 import noresult from "../../public/images/user/noresult.svg";
-
 import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Favoris } from "../components/userlobby/Favoris";
 import { Article } from "../components/userlobby/Article";
-import { useJwt } from "react-jwt";
 
 export const UserLobby = () => {
   // get the access token
   const token = Cookies.get("authToken");
-
   const [favorites, setFavorites] = useState([]);
   // to control displaying the search results or the input field
   const [search, setSearch] = useState(false);
@@ -32,37 +29,6 @@ export const UserLobby = () => {
   const [institutionClicked, setInstitutionClicked] = useState(false);
   const [keywordsClicked, setKeywordsClicked] = useState(false);
   const [filters, setFilters] = useState([]);
-
-  const initFilters = () => {
-    // Copy the current state of filters
-    const updatedFilters = [...filters];
-    // Authors filter
-    // Check if authorClicked is true and 'authors_filter' is not already in filters
-    if (authorClicked && !updatedFilters.includes("authors_filter")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("authors_filter");
-    }
-
-    // Institutions filter
-    // Check if authorClicked is true and 'institutions_filter' is not already in filters
-    if (institutionClicked && !updatedFilters.includes("institutions_filter")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("institutions_filter");
-    }
-
-    // Date filters
-    if (startDate && !updatedFilters.includes("start_date")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("start_date");
-    }
-    if (endDate && !updatedFilters.includes("end_date")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("end_date");
-    }
-
-    // Update the state with the new filters
-    setFilters(updatedFilters);
-  };
 
   // Function to handle author button click
   const handleAuthorClick = () => {
@@ -89,34 +55,6 @@ export const UserLobby = () => {
     setEndDate(e.target.value);
   };
   useEffect(() => {
-    // Copy the current state of filters
-    const updatedFilters = [...filters];
-    // Authors filter
-    // Check if authorClicked is true and 'authors_filter' is not already in filters
-    if (authorClicked && !updatedFilters.includes("authors_filter")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("authors_filter");
-    }
-
-    // Institutions filter
-    // Check if authorClicked is true and 'institutions_filter' is not already in filters
-    if (institutionClicked && !updatedFilters.includes("institutions_filter")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("institutions_filter");
-    }
-
-    // Date filters
-    if (startDate && !updatedFilters.includes("start_date")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("start_date");
-    }
-    if (endDate && !updatedFilters.includes("end_date")) {
-      // Add 'authors_filter' to updatedFilters
-      updatedFilters.push("end_date");
-    }
-
-    // Update the state with the new filters
-    setFilters(updatedFilters);
     const fetchData = async () => {
       try {
         // fetch the user's personal information
@@ -149,9 +87,8 @@ export const UserLobby = () => {
   // function to search the articles to articles search
   const handleSearch = async () => {
     setSearch(true);
-    initFilters();
-    console.log(filters);
-    // fetch the admin's personal information
+    setSearchResult([]);
+
     try {
       const response = await axios.post(
         "http://localhost:5000/article_manager/search_articles",
@@ -160,7 +97,7 @@ export const UserLobby = () => {
           filters: {
             institutions_filter: institutionClicked ? true : false,
             authors_filter: authorClicked ? true : false,
-            title_filter: keywordsClicked ? true : false,
+            keywords_filter: keywordsClicked ? true : false,
             date_range: {
               start_date: startDate,
               end_date: endDate,
@@ -188,11 +125,11 @@ export const UserLobby = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      className=" bg-[#E7E4D5] bg-none w-screen h-screen pt-[50px] md:pt-[8%] lg:pt-[2%] flex flex-col items-center justify-center px-[40px] lg:px-[8%] xl:px-[10%] md:px-[10%]">
+      className=" bg-[#E7E4D5] z-0 bg-none w-screen h-screen pt-[50px] md:pt-[8%] lg:pt-[2%] flex flex-col items-center justify-center px-[40px] md:px-[30px] lg:px-[8%] xl:px-[10%] ">
       {/* Navbar */}
       <LobbyNav />
       {/* if the screen if small, display 2 extensible sections of profile and favorites */}
-      <div className="h-[30vh] lg:hidden">
+      <div className="lg:h-[30vh] lg:hidden">
         <ProfileCard profile={profile} />
         <Favoris favorites={favorites} profile={profile} />
       </div>
@@ -213,7 +150,7 @@ export const UserLobby = () => {
         )}
         {/* URL input field */}
         <div
-          className={`md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ${
+          className={`z-0 md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ${
             search ? `` : ""
           }`}>
           <div className="pl-[20px] drop-shadow flex w-full h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px]">
@@ -237,14 +174,14 @@ export const UserLobby = () => {
           </div>
         </div>
         <div
-          className={`"pt-[80px] w-full flex gap-[10px] flex-wrap h-[100px] lg:grid lg:grid-cols-[0.75fr,1fr,1fr,1fr,1fr,1fr] xl:grid-cols-[1fr,1fr,1fr,1fr,1.5fr,1.5fr] lg:flex-row lg:h-[50px] text-sm lg:text-lg xl:text-xl  lg:justify-center items-center mb-[40px]"`}>
+          className={`"pt-[80px] w-full flex gap-[10px] flex-wrap h-[100px] md:grid md:grid-cols-[0.75fr,1fr,1fr,1fr,1fr,1fr] xl:grid-cols-[2fr,1fr,1fr,1fr,1.5fr,1.5fr] lg:flex-row lg:h-[50px] text-sm lg:text-lg  lg:justify-center items-center mb-[40px]"`}>
           <p className="font-merryweather text-start font-bold">Filtrer Par</p>
           <button
             className={`${
               authorClicked
                 ? `bg-[#BEB9A1] text-[#395143]`
                 : ` bg-[#395143] text-[#BEB9A1]`
-            } px-[5px] xl:w-[80%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
+            } px-[5px]  lg:px-[10px] xl:w-[90%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
             onClick={handleAuthorClick}>
             Auteurs
           </button>
@@ -253,7 +190,7 @@ export const UserLobby = () => {
               institutionClicked
                 ? `bg-[#BEB9A1] text-[#395143]`
                 : ` bg-[#395143] text-[#BEB9A1]`
-            } px-[5px] xl:w-[80%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
+            } px-[5px] lg:px-[10px] xl:w-[90%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
             onClick={handleInstitutionClick}>
             Institutions
           </button>
@@ -262,13 +199,13 @@ export const UserLobby = () => {
               keywordsClicked
                 ? `bg-[#BEB9A1] text-[#395143]`
                 : ` bg-[#395143] text-[#BEB9A1]`
-            } px-[5px] xl:w-[80%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
+            } px-[5px] lg:px-[10px] xl:w-[90%] lg:w-[90%] py-[4px] lg:rounded-[15px] rounded-[7px] border-[#395143] border-[1px] `}
             onClick={handleKeywordsClick}>
             Mots Clés
           </button>
           {/* Date inputs */}
           <div className="w-full text-sm xl:text-md font-merryweather flex lg:justify-center items-center ">
-            <p>Date de debut</p>
+            <p>Date debut</p>
             <input
               type="date"
               value={startDate}
@@ -277,7 +214,7 @@ export const UserLobby = () => {
             />
           </div>
           <div className="w-full text-sm xl:text-md font-merryweather flex lg:justify-center items-center ">
-            <p>Date de fin</p>
+            <p>Date fin</p>
             <input
               type="date"
               placeholder="Date de fin"
@@ -291,7 +228,7 @@ export const UserLobby = () => {
       {/* To be displayed once the user clicks on the search button */}
       {search && favorites && (
         <div className="w-full ">
-          <p className=" font-merryweather text-md lg:text-[40px] xl:text-[50px] text-start font-bold py-[10px]">
+          <p className=" font-merryweather text-md lg:text-[40px] xl:text-[40px] text-start font-bold py-[10px]">
             {searchResult.length > 0
               ? "Résultats de la recherche"
               : "Pas de résultats.."}

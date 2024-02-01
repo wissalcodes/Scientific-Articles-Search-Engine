@@ -118,7 +118,6 @@ export default function SignIn() {
         }
       } catch (error) {
         console.error("Error refreshing access token:", error);
-        // Handle errors (e.g., redirect to login page)
       }
     };
   };
@@ -179,13 +178,13 @@ export default function SignIn() {
                 <div className="transform transition-transform duration-200 ease-in-out hover:scale-110 lg:w-[60%] xl:w-[60%] w-full drop-shadow flex bg-[#395143] px-[20px] py-[10px] lg:py-[10px] rounded-[10px] lg:mb-[10px] ">
                   <button
                     onClick={handleSignIn}
-                    className="text-md lg:text-lg xl:text-xl xl:py-[4px] mx-auto font-lora text-[#F1D896] bg-transparent ">
+                    className="text-md lg:text-lg xl:text-xl  mx-auto font-lora text-[#F1D896] bg-transparent ">
                     SE CONNECTER
                   </button>
                 </div>
                 <p className="font-lora text-[#395143] font-semibold pt-[15px] ">
                   <span className="text-[#8C876F]">Mot de passe oublié ? </span>
-                  <Link to="/reset_password"> Récupérez-le maintenant !</Link>
+                  <Link to="/recover_password"> Récupérez-le maintenant !</Link>
                 </p>
               </div>
             </div>

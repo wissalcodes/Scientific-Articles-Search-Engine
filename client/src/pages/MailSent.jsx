@@ -1,9 +1,49 @@
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import MailSentPic from "../../public/images/authentication/mail-envoye.svg";
 import MailSentMobile from "../../public/images/authentication/mailbox.svg";
-import Navbar from "../components/layout/Navbar";
 import Typed from "react-typed";
+import axios from "axios";
+import Cookies from "js-cookie";
+
 export const MailSent = () => {
+  const navigate = useNavigate();
+  const authToken = Cookies.get("authToken");
+  const { token } = useParams(); // Use useParams to get the token from the URL
+
+  useEffect(() => {
+    const validateToken = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/forgot_password/reset_password_verified/${token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("Valid reset link");
+          // Redirect to the ResetPassword component with the token
+          // navigate(`/reset_password/${token}`);
+        } else {
+          console.log("Invalid reset link");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    if (token) {
+      // If token exists, validate it
+      validateToken();
+    } else {
+      console.error("Token not found in the URL");
+      // Handle the case when the token is not found
+    }
+  }, [authToken, token]);
+
   return (
     <div className="bg-gradient-to-r from-[#395143] to-[#A79629] relative w-screen overflow-hidden h-screen flex flex-col items-center lg:justify-center lg:grid lg:grid-cols-[60%,40%]">
       <div className="h-full w-full hidden lg:flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:pl-[10%] xl:px-[70px] xl:pl-[90px] justify-start items-center ">

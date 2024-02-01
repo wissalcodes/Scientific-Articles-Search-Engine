@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useRef } from "react";
 import illustration from "../../../public/images/main/welcome.svg";
 import Typed from "react-typed";
 
@@ -16,12 +15,14 @@ const AboutUs = () => {
             typeSpeed={55}
           />
         </div>
-        <div className="pt-[30px] lg:pr-[50px] w-full xl:text-[30px] text-[16px] lg:text-[20px] font-light flex justify-start items-center">
+        <div className="pt-[30px] lg:pr-[50px] w-full xl:text-[27px] text-[16px] lg:text-[20px] font-light flex justify-start items-center">
           <p className="font-lora flex text-center md:text-start">
-            Bienvenue sur [Nom de votre site], votre passerelle vers une
-            exploration scientifique approfondie. Découvrez une plateforme où
-            passion pour la science et technologie de pointe se rencontrent pour
-            enrichir votre expérience de recherche.
+            Bienvenue sur NUCLEUS, votre passerelle vers une exploration
+            scientifique approfondie.
+            <br />
+            Découvrez une plateforme oùa la passion pour la science et la
+            technologie de pointe se rencontrent pour enrichir votre expérience
+            de recherche.
           </p>
         </div>
       </div>

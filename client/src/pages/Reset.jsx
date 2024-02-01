@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import MDPOublie from "../../public/images/authentication/mdps-oublie.svg";
 import ErrorMessage from "../components/authentication/Error";
 import axios from "axios";
@@ -7,42 +9,28 @@ export const Reset = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  var token;
-  // Integration function for resetting e-mail
-  const handleResetMail = async () => {
-    setErrorMsg("");
-    if (newPassword !== newPasswordConfirm) {
-      setErrorMsg("Les mots de passes ne se conviennent pas.");
-    } else if (newPassword === "") {
-      setErrorMsg("Password field cannot be empty.");
-    } else {
-      try {
-        alert();
-        // call the POST api for password recovery
-        const response = await axios.post(
-          `http://localhost:5000/forgot_password/reset_password_verified/${token}`,
-          {
-            newPassword,
-          }
-        );
+  const { token } = useParams();
 
-        if (response.status === 200) {
-          console.log("Successfully sent the new password ", response.data);
-        } else {
-          console.log("Failed sent the new password");
+  const handleResetPassword = async () => {
+    try {
+      // Call the API to reset the password with the new password
+      const response = await axios.post(
+        `http://localhost:5000/forgot_password/reset_password_verified/${token}`,
+        {
+          newPassword,
         }
-      } catch (error) {
-        console.error("Error:", error);
-        if (error.response) {
-          console.error("Server Error Message:", error.response.data);
-          setErrorMsg(error.response.data.message || "Reset password failed");
-        } else {
-          setErrorMsg("An error occurred during password reset");
-        }
+      );
+
+      if (response.status === 200) {
+        console.log("Password reset successful");
+        // setResetSuccess(true);
+      } else {
+        console.log("Failed to reset password");
       }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
-
   return (
     // main content grid
     <div className="bg-[#E7E4D5] relative w-screen overflow-hidden h-screen lg:grid lg:grid-cols-[40%,60%] xl:grid-cols-[30%,70%] items-center justify-center">
@@ -109,7 +97,7 @@ export const Reset = () => {
           <div className="lg:pt-[40px] pt-[20px] xl:pt-[54px] w-full flex items-end justify-end">
             <div className="lg:w-[30%] w-full flex bg-[#395143] px-[20px] py-[5px] rounded-[10px] ">
               <button
-                onClick={handleResetMail}
+                onClick={handleResetPassword}
                 className="lg:text-[28px] text-[24px] mx-auto font-lora text-[#F1D896] bg-transparent ">
                 Envoyer
               </button>

@@ -43,8 +43,8 @@ def search_articles():
     }
 
     # Check and apply filters if provided
-    if 'title_filter' in filters and filters['title_filter']:
-        search_query['query']['bool']['must'].append({"match": {"title": search_terms}})
+    if 'keywords_filter' in filters and filters['keywords_filter']:
+        search_query['query']['bool']['must'].append({"match": {"keywords": search_terms}})
     if 'authors_filter' in filters and filters['authors_filter']:
         search_query['query']['bool']['must'].append({"match": {"authors": search_terms}})
     if 'institutions_filter' in filters and filters['institutions_filter']:

@@ -63,30 +63,30 @@ export const Article = ({ article, type, profile }) => {
   return (
     <div
       key={isFavorited}
-      className="text-black lg:py-[10px] xl:py-[20px] font-merryweather flex flex-wrap  w-full lg:grid lg:grid-cols-[5%,70%,15%,10%]">
+      className="text-black md:px-[20px] lg:px-0 justify-center items-center lg:py-[10px] xl:py-[20px] font-merryweather flex flex-wrap  w-full md:grid md:grid-cols-[80%,15%,5%] lg:grid-cols-[5%,65%,20%,10%]">
       {isPopoutOpen && (
         <ArticlePopout article={article} onClose={togglePopout} />
       )}
       <img
-        className="hidden lg:block w-[40px]"
+        className="hidden lg:block w-[30px]"
         src={artAssetDark}
         alt="Article Asset"
       />
       {/* Article title */}
       <h1
         onClick={togglePopout}
-        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
+        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-xl">
         {article._source?.title || "Title Not Available"}
       </h1>
       {/* Article release date */}
-      <p className="text mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-2xl flex justify-center items-center lg:px-[10px]">
+      <p className="text mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-xl flex justify-center items-center lg:px-[10px]">
         {article._source?.date || "Date Not Available"}
       </p>
       <button
-        className="pl-[10px] lg:pl-0"
+        className="flex flex-col items-center justify-center pl-[10px] lg:pl-0"
         onClick={isFavorited ? handleRemoveFav : handleAddFav}>
         <img
-          className="w-[20px] lg:w-[30px] xl:w-[40px]"
+          className="w-[20px] lg:w-[30px] xl:w-[30px]"
           src={isFavorited ? filledheart : heart}
           alt={isFavorited ? "Remove from favorites" : "Add to favorites"}
         />

@@ -8,7 +8,6 @@ export const PasswordRecovery = () => {
 
   const handleResetMail = async () => {
     if (email != "") {
-      navigate("/mail_sent");
       try {
         // call the POST api for password recovery
         const response = await axios.post(
@@ -22,6 +21,7 @@ export const PasswordRecovery = () => {
             "Successfully sent request to reset pass ",
             response.data
           );
+          navigate("/mail_sent");
         } else {
           console.log("Failed to request reset link");
         }

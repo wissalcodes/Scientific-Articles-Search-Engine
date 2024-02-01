@@ -36,7 +36,6 @@ export const ProfileSection = ({ profile }) => {
     });
 
     // Handle saving edited profile information
-    console.log("Saving changes:", editedFields);
     setEditing(false);
 
     // Call updateInfo with the edited fields
@@ -288,7 +287,9 @@ export const ProfileSection = ({ profile }) => {
           </div>
           <p
             className={`pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold ${
-              profile.role !== "moderator" && `hidden`
+              profile.role !== "moderator" &&
+              profile.username !== "admin" &&
+              `hidden`
             }`}>
             Parametres du compte
           </p>

@@ -61,10 +61,10 @@ export const ModeratorLobby = () => {
           <ProfileSection profile={profile} />
         </div>
         {/* pending articles section */}
-        <div className="pt-[40px] flex items-start pb-[10px] border-[#56695C] border-b-[4px] ">
+        <div className="pt-[40px] lg:pt-[80px] flex items-start pb-[10px] border-[#56695C] border-b-[4px] ">
           <h1
             id="main-container"
-            className="text-md lg:text-4xl xl:text-5xl font-merryweather font-semibold">
+            className="text-md lg:text-4xl xl:text-4xl font-merryweather font-semibold">
             Articles en attente
           </h1>
         </div>

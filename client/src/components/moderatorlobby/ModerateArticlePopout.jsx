@@ -6,29 +6,10 @@ import x from "../../../public/images/admin/x.svg";
 import save from "../../../public/images/moderator/save.svg";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { pdfjs } from "react-pdf";
-// Core viewer
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import { Document, Page } from "react-pdf";
-
-// Plugins
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-
-// Import styles
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 export const ModerateArticlePopout = ({ onClose, article }) => {
   // retrieve access token
   const token = Cookies.get("authToken");
-
-  // for PDF viewer
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
-  };
   // State for each section
   const [title, setTitle] = useState(article.source.title);
   const [resume, setResume] = useState(article.source.abstract);
@@ -39,7 +20,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
   const [text, setText] = useState(article.source.article);
 
   // for displaying the article PDF
-  const [url, setUrl] = useState(article.source.url);
+  const url = article.source.url;
 
   // State to track the editing mode for each section
   const [isEditing, setIsEditing] = useState({
@@ -74,11 +55,12 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     alert("delete article");
   };
 
-  // Create new plugin instance for the PDF package
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const openPdfInNewTab = () => {
+    const googleDriveViewerUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
+      url
+    )}`;
 
-  const handleSeePDF = () => {
-    alert(url);
+    window.open(googleDriveViewerUrl, "_blank");
   };
 
   const handleEdit = (field) => {
@@ -134,9 +116,10 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
       );
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
-        console.log("article moderated successfully");
+        alert("L'article a été publié");
+        onClose();
       } else {
-        console.log("failed to moderate article");
+        alert("failed to moderate article");
       }
     } catch (error) {
       console.log(error);
@@ -144,11 +127,8 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
   };
   return (
     <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
-      <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
-      </Document>
       {/* Validate button, when clicked posts the data to the API endpoint */}
-      <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0  items-center w-[30%] justify-start">
+      <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0 items-center w-[30%] justify-start">
         <button
           onClick={handleModerateArticle}
           className="bg-gradient-to-r from-[#395143] to-[#AF9A27] mt-[4px] text-[#E7E4D5] py-[7px] lg:py-[10px] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] h-[80%] w-full max-w-[150px] lg:w-[95%] xl:w-[70%]">
@@ -164,7 +144,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
         </button>
         {/* See PDF button, when clicked opens the PDF file for the article */}
         <button
-          onClick={handleSeePDF}
+          onClick={openPdfInNewTab}
           className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
           Voir le PDF
         </button>

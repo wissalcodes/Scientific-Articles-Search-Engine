@@ -55,9 +55,9 @@ export const FavArticle = ({ article, type, profile }) => {
     }
   };
   return (
-    <div className="lg:py-[10px] xl:py-[20px] font-merryweather flex flex-wrap  w-full lg:grid lg:grid-cols-[5%,70%,15%,10%]">
+    <div className="text-[#E7E4D5] justify-center items-center lg:py-[10px] xl:py-[20px] font-merryweather flex flex-wrap  w-full lg:grid lg:grid-cols-[5%,65%,20%,10%]">
       <img
-        className="hidden lg:block w-[40px]"
+        className="hidden lg:block w-[30px]"
         src={type === "fav" ? artAsset : artAssetDark}
       />
       {isPopoutOpen && (
@@ -66,18 +66,18 @@ export const FavArticle = ({ article, type, profile }) => {
       {/* Article title */}
       <h1
         onClick={togglePopout}
-        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-2xl">
+        className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-xl">
         {type === "fav" ? article._source.title : article._source.title}
       </h1>
       {/* Article release date */}
-      <p className="text  mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-2xl flex justify-center items-center lg:px-[10px]">
+      <p className="text  mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-xl flex justify-center items-center lg:px-[10px]">
         {type === "fav" ? article._source.date : article._source.date}
       </p>
       <button
         className="pl-[10px] lg:pl-0"
         onClick={type === "fav" ? handleRemoveFav : handleAddFav}>
         <img
-          className="w-[20px] lg:w-[30px] xl:w-[40px]"
+          className="w-[20px] lg:w-[30px] xl:w-[30px]"
           src={type === "fav" ? bin : heart}
         />
       </button>

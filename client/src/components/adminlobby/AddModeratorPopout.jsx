@@ -49,7 +49,7 @@ export const AddModeratorPopout = ({ onClose }) => {
           Ajouter un moderateur
         </h1>
         <div className="w-[30%] flex items-center justify-end">
-          <img src={x} onClick={onClose} />
+          <img src={x} className="w-[20px]" onClick={onClose} />
         </div>
       </div>
       {/* grid of asset and inputs */}
@@ -66,7 +66,7 @@ export const AddModeratorPopout = ({ onClose }) => {
                     NOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+                <div className="w-full flex bg-white drop-shadow px-[20px] py-[5px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -81,7 +81,7 @@ export const AddModeratorPopout = ({ onClose }) => {
                     PRENOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+                <div className="w-full flex bg-white drop-shadow px-[20px] py-[5px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -100,7 +100,7 @@ export const AddModeratorPopout = ({ onClose }) => {
                       E-MAIL
                     </h1>
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+                  <div className="w-full flex bg-white drop-shadow px-[20px] py-[5px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="e-mail"
@@ -115,7 +115,7 @@ export const AddModeratorPopout = ({ onClose }) => {
                       USERNAME
                     </h1>
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+                  <div className="w-full flex bg-white drop-shadow px-[20px] py-[5px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="text"
@@ -133,7 +133,7 @@ export const AddModeratorPopout = ({ onClose }) => {
                   MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[5px] rounded-[10px]">
+              <div className="relative w-full flex bg-white drop-shadow px-[20px] py-[5px] rounded-[10px]">
                 <input
                   className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type="password"
