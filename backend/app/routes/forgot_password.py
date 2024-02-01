@@ -1,12 +1,13 @@
 import json
 from flask_restx import Namespace,Resource,fields
-from flask import request, url_for
+from flask import request
 from app.models.user import User
 import requests
-
-# to do: replace the keys by the env var
+from itsdangerous import URLSafeTimedSerializer
+from config import Config
 
 def init_auth_routes(api):
+    
     forgot_ns=Namespace('forgot_password', description= 'forgot password operations')
     api.add_namespace(forgot_ns)
     
@@ -23,6 +24,41 @@ def init_auth_routes(api):
             "password" : fields.String(required=True,description='Password'),
         }
     )
+    
+    
+    def generate_reset_token(user_email):
+
+        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7')
+
+        reset_token = serializer.dumps(user_email).replace('.', '$')
+        return reset_token
+    
+    
+    def send_reset_email(email, token):
+        
+        reset_url = f'http://localhost:5173/reset_password/{token}'
+
+        
+        subject = 'Réinitialisation du mot de passe'
+        body = f'Cliquez sur ce lien pour réinitialiser votre mot de passe: {reset_url}'
+                        
+        # Send email using SendGrid's API endpoint
+        url = "https://api.sendgrid.com/v3/mail/send"
+        headers = {
+            "Authorization": f"Bearer {Config.MAIL_PASSWORD}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "personalizations": [{"to": [{"email": email}]}],
+            "from": {"email": "elabed.aminaaa@gmail.com"},
+            "subject": subject,
+            "content": [{"type": "text/plain", "value": body}]
+        }
+
+        requests.post(url, headers=headers, data=json.dumps(payload))
+
+
     
     @forgot_ns.route('/')
     class ResetPasswordRessource(Resource):
@@ -42,62 +78,16 @@ def init_auth_routes(api):
             else:
                 return {'message': 'User not found'}, 404
             
-  
-        
-
-    def generate_reset_token(user_email):
-        from itsdangerous import URLSafeTimedSerializer
-
-        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7', salt='some_salt')
-
-        # Create the reset token and replace '.' with '_'
-        reset_token = serializer.dumps(user_email).replace('.', '_')
-
-        return reset_token
 
     def confirm_token(token, expiration=3600):
-        from itsdangerous import URLSafeTimedSerializer
 
-        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7', salt='some_salt')
-
-        # Replace '_' with '.' before loading the token
-        token = token.replace('_', '.')
+        serializer = URLSafeTimedSerializer('4f0280d43e2b66fe2b651f32440955c7')
 
         try:
             email = serializer.loads(token, max_age=expiration)
             return email
         except Exception:
             return None
-        
-    def send_reset_email(email, token):
-        
-        reset_url = f'http://localhost:5173/reset_password/{token}'
-
-        
-        subject = 'Réinitialisation du mot de passe'
-        body = f'Cliquez sur ce lien pour réinitialiser votre mot de passe: {reset_url}'
-        print(reset_url)
-                
-        sendgrid_api_key ='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'
-        
-        # Send email using SendGrid's API endpoint
-        url = "https://api.sendgrid.com/v3/mail/send"
-        headers = {
-            "Authorization": f"Bearer {sendgrid_api_key}",
-            "Content-Type": "application/json"
-        }
-
-        payload = {
-            "personalizations": [{"to": [{"email": email}]}],
-            "from": {"email": "elabed.aminaaa@gmail.com"},
-            "subject": subject,
-            "content": [{"type": "text/plain", "value": body}]
-        }
-
-        response = requests.post(url, headers=headers, data=json.dumps(payload))
-        print(response.status_code)
-        print(response.text)
-
         
     @forgot_ns.route('/reset_password/<token>')
     class ResetPasswordVerifiedResource(Resource):
@@ -107,7 +97,7 @@ def init_auth_routes(api):
         @forgot_ns.doc(responses={200: 'Success', 401 :'link expired'})
         
         def get(self,token):
-            print(token)
+
             email = confirm_token(token)
             if not email:
                 return {'message':'the link has expired'},401
@@ -121,7 +111,10 @@ def init_auth_routes(api):
         
         def post(self,token):
             
+            token = token.replace('$', '.')
             email = confirm_token(token)
+            print("email>>>>>>>>>>>",email)
+
                         
             user=User.query.filter_by(email=email).first()
             if user:
