@@ -1,10 +1,13 @@
 
 def init_routes(api):
     
-    from . import auth_manager,forgot_password
+    from . import auth_manager,forgot_password, user_dashboard_manager, favori_manager
     
-    auth_manager.init_auth_routes( api)
+    auth_manager.init_auth_routes(api)
     forgot_password.init_auth_routes (api)
+    user_dashboard_manager.init_auth_routes(api)
+    favori_manager.init_auth_routes(api)
+
     
 def init_jwt(jwt,api):
     
@@ -15,9 +18,8 @@ def init_jwt(jwt,api):
    
 def init_route_admin(api,esknn):
     
-    from . import admin_dashboard_manager, moderator_dashboard_manager, user_dashboard_manager
+    from . import admin_dashboard_manager, moderator_dashboard_manager
     
     admin_dashboard_manager.init_ad(api,esknn)
     moderator_dashboard_manager.init_ad(api,esknn)
-    user_dashboard_manager.init_ad(api,esknn)
     

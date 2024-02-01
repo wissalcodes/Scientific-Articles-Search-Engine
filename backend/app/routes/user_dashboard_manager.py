@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 from app.models.user import User
 from werkzeug.security import check_password_hash
 
-def init_ad(api,esknn):
+def init_auth_routes(api):
     
     user_ns = Namespace('user_dashboard',description='user operations')
           
