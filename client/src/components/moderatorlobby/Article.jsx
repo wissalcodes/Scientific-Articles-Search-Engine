@@ -29,11 +29,11 @@ export const Article = ({ article }) => {
       )}
       {/* Article title */}
       <h1 className="text-start text-md lg:text-2xl xl:text-3xl ">
-        {article.title}
+        {article.source.title}
       </h1>
       {/* Article release date */}
       <p className="text  mt-[4px] lg:mt-0  text-md py-[10px] lg:py-0 lg:text-xl xl:text-2xl ">
-        {article.date}
+        {article.source.date}
       </p>
       {/* Consult article button */}
       <div className="flex flex-col items-center w-[80%] justify-center">

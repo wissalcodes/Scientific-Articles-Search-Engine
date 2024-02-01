@@ -4,15 +4,21 @@ import SignUpIllustration from "../../public/images/authentication/sign-up-illus
 import { EyeController } from "../components/authentication/EyeController";
 import ErrorMessage from "../components/authentication/Error";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+
 const SignIn = () => {
+  //auth token
+  const [token, setToken] = useState("token");
+
+  // fields variables
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [rememberUser, setRememberUser] = useState(false);
+  // error messages states
   const [mailerrorMsg, setmailErrorMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [lastNameerrorMsg, setLastNameErrorMsg] = useState("");
@@ -22,8 +28,13 @@ const SignIn = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
+  // user object
   const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
+
   const handleSignUp = async () => {
+    // clean up the error messages variables
     setErrorMsg("");
     setmailErrorMsg("");
     setLastNameErrorMsg("");
@@ -57,7 +68,55 @@ const SignIn = () => {
           username: username,
         });
         if (response.status === 201) {
-          console.log("Successful sign up ", response.data);
+          try {
+            // call the POST api for sign in
+            const response = await axios.post(
+              "http://127.0.0.1:5000/auth/signin",
+              {
+                email,
+                password,
+              }
+            );
+            if (response.status === 200) {
+              const token = response.data.access_token;
+              const refreshToken = response.data.refresh_token;
+
+              // Store tokens securely (e.g., in cookies or localStorage)
+              Cookies.set("authToken", token, {
+                expires: 7,
+              });
+              Cookies.set("refreshToken", refreshToken, {
+                expires: 7,
+              });
+              setToken();
+
+              // get the user's information
+              const userResponse = await axios.get(
+                "http://127.0.0.1:5000/auth/redirect",
+                {
+                  headers: {
+                    Authorization: `Bearer ${response.data.access_token}`,
+                  },
+                }
+              );
+              setUser(userResponse.data);
+              console.log("Successful sign-in ", response.data);
+            } else {
+              console.log("Failed to log in user");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            if (error.response) {
+              console.error("Server Error Message:", error.response.data);
+              setErrorMsg(
+                error.response.data.message ||
+                  "Les informations que vous avez entrees sont incorrectes!"
+              );
+            } else {
+              setErrorMsg("An error occurred during sign-in");
+            }
+          }
+          navigate("/user_lobby");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -90,7 +149,7 @@ const SignIn = () => {
           />
         </div>
         <div className="h-full pb-[30px] lg:py-0 w-full  items-center lg:items-start justify-center flex flex-col">
-          <div className="px-[20px] flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
+          <div className="px-[20px]  flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:py-[5%] justify-center items-center">
             <div className="w-[90%] flex flex-col justify-start items-start">
               <h1 className="text-[#152522] -translate-x-[30px] w-[150%] text-start hidden lg:block font-semibold font-merryweather text-[24px] lg:text-[30px] xl:text-4xl">
                 Inscrivez-vous maintenant !
@@ -104,7 +163,7 @@ const SignIn = () => {
                     NOM
                   </h1>
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full drop-shadow flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -120,7 +179,7 @@ const SignIn = () => {
                   </h1>
                   <ErrorMessage message={firstNameerrorMsg} />
                 </div>
-                <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                <div className="w-full drop-shadow flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                   <input
                     className="font-lora w-[90%] focus:outline-none focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                     type="text"
@@ -140,7 +199,7 @@ const SignIn = () => {
                     </h1>
                     <ErrorMessage message={mailerrorMsg} />
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex drop-shadow bg-[white] px-[20px] py-[9px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="e-mail"
@@ -156,7 +215,7 @@ const SignIn = () => {
                     </h1>
                     <ErrorMessage message={usernameerrorMsg} />
                   </div>
-                  <div className="w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+                  <div className="w-full flex drop-shadow bg-[white] px-[20px] py-[9px] rounded-[10px]">
                     <input
                       className="font-lora w-[90%] text-[16px] focus:outline-none focus:border-transparent  bg-transparent pr-[10px]"
                       type="text"
@@ -175,7 +234,7 @@ const SignIn = () => {
                 </h1>
                 <ErrorMessage message={errorMsg} />
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+              <div className="relative drop-shadow w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                 <input
                   className="focus:outline-none w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type={isPasswordVisible ? "text" : "password"}
@@ -193,7 +252,7 @@ const SignIn = () => {
                   CONFIRMATION MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
+              <div className="relative drop-shadow w-full flex bg-[white] px-[20px] py-[9px] rounded-[10px]">
                 <input
                   className="focus:outline-none  w-[90%] focus:border-transparent text-[20px] bg-transparent pr-[10px]"
                   type={isConfirmPasswordVisible ? "text" : "password"}

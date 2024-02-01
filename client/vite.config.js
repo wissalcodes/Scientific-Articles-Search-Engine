@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/auth/signup": "http://localhost:5000", // Proxy API requests to another server
+      "/forgot_password/reset_password_verified": "http://localhost:5000", // Proxy API requests to another server
     },
   },
   plugins: [react()],

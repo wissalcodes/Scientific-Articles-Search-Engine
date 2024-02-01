@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import logo from "../../../public/images/dark-logo.svg";
 
 const LobbyNav = () => {
   //get the access token
@@ -23,8 +23,12 @@ const LobbyNav = () => {
     }
   };
   return (
-    <div className="z-20 grid px-[10%] py-[20px] w-full grid-cols-2 justify-center fixed top-0">
-      <div className="flex items-start">0</div>
+    <div className="z-20 grid px-[7%] py-[20px] w-full grid-cols-2 justify-center fixed top-0">
+      <div className="w-[150px] lg:w-[200px] flex items-center h-full flex-col justify-center ">
+        <Link to="/">
+          <img src={logo} />
+        </Link>
+      </div>
       <div className=" lg:flex flex-col items-end h-full justify-center">
         <p className="text-end font-merryweather font-bold text-[#F4F2E6]">
           <Link

@@ -153,7 +153,7 @@ export const Moderateur = ({ moderateur }) => {
           </button>
         ) : (
           <button
-            className="bg-[#E7E4D5]  text-[#395143] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px] xl:px-[40px] py-[5px] lg:py-[10px] max-w-[120px] lg:max-w-[800px]"
+            className="bg-[#E7E4D5] text-[#395143] transform transition-transform lg:w-[90%] duration-200 ease-in-out w-[80%] hover:scale-105 rounded-[10px]  lg:px-[10px] xl:px-[40px] py-[5px] lg:py-[10px] max-w-[120px] lg:max-w-[800px]"
             onClick={handleEditClick}>
             Modifier
           </button>

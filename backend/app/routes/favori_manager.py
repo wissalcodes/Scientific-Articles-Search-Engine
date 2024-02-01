@@ -18,7 +18,7 @@ def add_favorite(user_id, article_identifier):
 
     # Check if the article exists in Elasticsearch
     try:
-        response = es.get(index="pending_articles", id=article_identifier)
+        response = es.get(index="articles", id=article_identifier)
         if not response['found']:
             return jsonify({"message": "Article not found in Elasticsearch", "status": "failure"}), 404
     except NotFoundErr:  # Corrected exception class name here
@@ -54,7 +54,7 @@ def remove_favorite(user_id, article_identifier):
 @favori_bp.route('/article_details/<article_identifier>', methods=['GET'])
 def article_details(article_identifier):
     try:
-        response = es.get(index="pending_articles", id=article_identifier)
+        response = es.get(index="articles", id=article_identifier)
         article_data = response['_source']
         
         # Returning article data as plain text
@@ -66,8 +66,7 @@ def article_details(article_identifier):
         # Generic error handling
         return jsonify({"message": f"Error occurred: {e}", "status": "failure"}), 500
     
-    
-@favori_bp.route('/favorite_articles/<int:user_id>')
+@favori_bp.route('/favorite_articles/<int:user_id>', methods=['GET'])
 def favorite_articles(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -77,9 +76,10 @@ def favorite_articles(user_id):
     articles_data = []
     for fav_article in favorite_articles:
         try:
-            response = es.get(index="pending_articles", id=fav_article.article_identifier)
+            response = es.get(index="articles", id=fav_article.article_identifier)
             if response['found']:
-                articles_data.append(response['_source'])
+                # Include both _id and _source in the response
+                articles_data.append({"_id": response['_id'], "_source": response['_source']})
         except Exception as e:
             continue 
 

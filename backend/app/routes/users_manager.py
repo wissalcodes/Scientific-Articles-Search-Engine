@@ -45,7 +45,7 @@ def update_username(user_id):
         update_result, success = user.update_username(new_username)
         db.session.commit()
         if not success:
-            return jsonify({'error': update_result}), 400
+            return jsonify({'message': 'not success'}), 400
         return jsonify({'message': 'Username updated successfully'}), 200
     else:
         return jsonify({'error': 'New username not provided'}), 400

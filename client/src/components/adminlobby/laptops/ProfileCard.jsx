@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import right from "../../../../public/images/admin/right.svg";
+import rightSmall from "../../../../public/images/user/right-small-yellow.svg";
+
 import img from "../../../../public/images/admin/profile.svg";
 import ErrorMessage from "../../authentication/Error";
 import Edit from "../../../../public/images/moderator/edit2.svg";
@@ -17,6 +19,75 @@ export const ProfileCard = ({ profile }) => {
     username: profile.username,
     email: profile.email,
   });
+
+  const updateFirstNameUrl = `http://localhost:5000/users/update_name/${profile.id}`;
+  const updateLastNameUrl = `http://localhost:5000/users/update_family_name/${profile.id}`;
+  const updateUsernameUrl = `http://localhost:5000/users/update_username/${profile.id}`;
+  const updateEmailUrl = `http://localhost:5000/users/update_email/${profile.id}`;
+
+  // API call functions for user
+
+  const updateUserFirstname = async () => {
+    setEditing(false);
+
+    try {
+      const response = await axios.put(updateFirstNameUrl, {
+        new_name: editedValues.first_name,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        console.log("successful update", response.data);
+      }
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
+  const updateUserLastName = async () => {
+    setEditing(false);
+
+    try {
+      const response = await axios.put(updateLastNameUrl, {
+        new_family_name: editedValues.last_name,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        console.log("successful update");
+      }
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
+
+  const updateUserUsername = async () => {
+    setEditing(false);
+
+    try {
+      const response = await axios.put(updateUsernameUrl, {
+        new_username: editedValues.username,
+      });
+      console.log(response.status);
+      console.log(response.data);
+      if (response.status >= 200 && response.status < 300) {
+        console.log("successful update");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Ce nom d'utilisateur est deja utilise!");
+    }
+  };
+
+  const updateUserEmail = async () => {
+    setEditing(false);
+
+    try {
+      const response = await axios.put(updateEmailUrl, {
+        new_email: editedValues.email,
+      });
+      console.log("successful update");
+    } catch (error) {
+      console.log(error);
+      alert("Cette adresse est invalide!");
+    }
+  };
+
   const toggleEdit = () => {
     setEditing(!editing);
   };
@@ -38,7 +109,6 @@ export const ProfileCard = ({ profile }) => {
     });
 
     // Handle saving edited profile information
-    console.log("Saving changes:", editedFields);
     setEditing(false);
 
     // Call updateInfo with the edited fields
@@ -134,12 +204,15 @@ export const ProfileCard = ({ profile }) => {
   }, [profile]);
   return (
     <div
-      className={`bg-[#F5EAAB] drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/4 xl:top-1/4 fixed left-0  w-[350px] h-[400px] transform transition-transform duration-300 ease-in-out ${
-        showCard ? "translate-x-0" : "-translate-x-[350px]"
+      className={`bg-[#F5EAAB] z-20 drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/3 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] ${
+        profile.role !== "moderator" ? `h-[300px]` : `h-[400px]`
+      } transform transition-transform duration-500 ease-in-out ${
+        showCard
+          ? "translate-x-0"
+          : "-translate-x-[300px] lg:-translate-x-[350px]"
       }`}>
-      {" "}
       <div className="px-[20px] flex flex-col  items-start h-full w-full">
-        <h1 className="text-[32px] pt-[10px] font-bold font-merryweather">
+        <h1 className="z-30 text-[32px] pt-[10px] font-bold font-merryweather">
           Mon Profile
         </h1>
         <p className="py-[10px] font-merryweather text-md lg:text-lg font-bold">
@@ -163,7 +236,11 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={handleSaveClick}>
+              onClick={
+                profile.role === "moderator"
+                  ? handleSaveClick
+                  : updateUserFirstname
+              }>
               Save
             </button>
           ) : (
@@ -196,7 +273,11 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={handleSaveClick}>
+              onClick={
+                profile.role === "moderator"
+                  ? handleSaveClick
+                  : updateUserLastName
+              }>
               Save
             </button>
           ) : (
@@ -229,7 +310,11 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={handleSaveClick}>
+              onClick={
+                profile.role === "moderator"
+                  ? handleSaveClick
+                  : updateUserUsername
+              }>
               Save
             </button>
           ) : (
@@ -262,7 +347,9 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={handleSaveClick}>
+              onClick={
+                profile.role === "moderator" ? handleSaveClick : updateUserEmail
+              }>
               Save
             </button>
           ) : (
@@ -277,10 +364,16 @@ export const ProfileCard = ({ profile }) => {
             )
           )}
         </div>
-        <p className="pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold">
+        <p
+          className={`pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold ${
+            profile.role !== "moderator" ? "hidden" : ""
+          }`}>
           Parametres du compte
         </p>
-        <div className="grid grid-cols-[60%,40%] w-full">
+        <div
+          className={`grid grid-cols-[60%,40%] w-full  ${
+            profile.role !== "moderator" ? "hidden" : ""
+          }`}>
           <p className="text-start">Mot de passe</p>
           <div className="border-5 border-b-[1px] border-black flex w-full">
             <input
@@ -292,7 +385,11 @@ export const ProfileCard = ({ profile }) => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-[60%,40%] w-full pb-[10px] ">
+        <div
+          className={`grid grid-cols-[60%,40%] w-full  ${
+            profile.role !== "moderator" ? "hidden" : ""
+          }`}>
+          {" "}
           <p className="text-start">Nouveau Mot de passe</p>
           <div className="border-5 border-b-[1px] border-black flex w-full">
             <input
@@ -304,7 +401,10 @@ export const ProfileCard = ({ profile }) => {
             />
           </div>
         </div>
-        <div className=" w-full justify-end items-end flex">
+        <div
+          className={`mt-[50px]  w-full justify-end items-end flex ${
+            profile.role !== "moderator" ? `hidden` : ``
+          }`}>
           <ErrorMessage message={message} />
           <button
             onClick={
@@ -314,15 +414,18 @@ export const ProfileCard = ({ profile }) => {
                 ? resetPasswordModerator
                 : null
             }
-            className="bg-[#152522] text-[#F1D896] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px] xl:px-[40px] py-[5px]">
+            className="bg-[#152522] text-[#F1D896] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] px-[10px] xl:px-[40px] py-[5px]">
             Confirmer
           </button>
         </div>
       </div>
-      <div className="top-0 flex flex-col absolute h-full right-0 translate-x-[45px]">
-        <img src={right} />
+      <div className="top-0 flex flex-col absolute h-full right-[0px] translate-x-[35px] lg:translate-x-[45px]">
+        <img src={window.innerWidth > 1023 ? right : rightSmall} />
         <button onClick={handleCardAnimation}>
-          <img className="fixed right-[7px] top-[20px] w-[40px]" src={img} />
+          <img
+            className="fixed right-[10px] lg:right-[9px] top-[15px] lg:top-[20px] w-[23px] lg:w-[35px]"
+            src={img}
+          />
         </button>
       </div>
     </div>

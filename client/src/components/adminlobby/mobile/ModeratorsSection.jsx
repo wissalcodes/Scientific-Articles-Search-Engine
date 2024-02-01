@@ -1,21 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import section from "../../../../public/images/admin/section.svg";
 import { Moderateur } from "../Moderateur";
 export const ModeratorsSection = ({ moderateurs }) => {
-  const [message, setMessage] = useState("");
-  const [passwordOld, setPasswordOld] = useState("");
-  const [passwordNew, setPasswordNew] = useState("");
   const [showCard, setShowCard] = useState(false);
-
   const handleCardAnimation = () => {
     setShowCard((prevShowCard) => !prevShowCard);
   };
-
-  const resetPassword = async () => {
-    const url = "/";
-    // const response = axios.put()
-  };
-
   return (
     <div
       className={`bg-[#F5EAAB] my-[10px] h-auto overflow-hidden w-full px-[30px] py-[20px] rounded-[20px] lg:hidden flex flex-col justify-start items-start ${

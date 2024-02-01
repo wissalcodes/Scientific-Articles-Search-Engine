@@ -4,40 +4,63 @@ import { useState } from "react";
 import Edit from "../../../public/images/moderator/edit.svg";
 import x from "../../../public/images/admin/x.svg";
 import save from "../../../public/images/moderator/save.svg";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export const ModerateArticlePopout = ({ onClose, article }) => {
+  // retrieve access token
+  const token = Cookies.get("authToken");
   // State for each section
-  const [title, setTitle] = useState(article.title);
-  const [resume, setResume] = useState(article.resume);
-  const [auteurs, setAuteurs] = useState(article.auteurs);
-  const [institutions, setInstitutions] = useState(article.institutions);
-  const [motscle, setMotscle] = useState(article.motscle);
-  const [refs, setRefs] = useState(article.refs);
-  const [text, setText] = useState(article.text);
+  const [title, setTitle] = useState(article.source.title);
+  const [resume, setResume] = useState(article.source.abstract);
+  const [authors, setauthors] = useState(article.source.authors);
+  const [institutions, setInstitutions] = useState(article.source.institutions);
+  const [keywords, setkeywords] = useState(article.source.keywords);
+  const [references, setreferences] = useState(article.source.references);
+  const [text, setText] = useState(article.source.article);
 
   // for displaying the article PDF
-  // const [url, setUrl] = useState(article.url);
+  const url = article.source.url;
 
   // State to track the editing mode for each section
   const [isEditing, setIsEditing] = useState({
     title: false,
     resume: false,
-    auteurs: false,
+    authors: false,
     institutions: false,
-    motscle: false,
-    refs: false,
+    keywords: false,
+    references: false,
     text: false,
   });
 
   const handleDeleteArticle = async () => {
-    /* 
-  const response = await axios.delete(url, article)
-  */
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:5000/moderator_dashboard/articles/moderate/${article.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
+        console.log("article deleted successfully");
+      } else {
+        console.log("failed to delete article");
+      }
+    } catch (error) {
+      console.log(error);
+    }
     alert("delete article");
   };
 
-  const handleSeePDF = () => {
-    alert("See pdf");
+  const openPdfInNewTab = () => {
+    const googleDriveViewerUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
+      url
+    )}`;
+
+    window.open(googleDriveViewerUrl, "_blank");
   };
 
   const handleEdit = (field) => {
@@ -73,14 +96,39 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
   };
 
   const handleModerateArticle = async () => {
-    /* const response = axios.post(url, {
-    
-    } ) */
+    try {
+      const response = await axios.put(
+        `http://127.0.0.1:5000/moderator_dashboard/articles/moderate/${article.id}`,
+        {
+          title: title,
+          authors: authors,
+          institutions: institutions,
+          abstract: resume,
+          keywords: keywords,
+          text: article,
+          references: references,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
+        alert("L'article a été publié");
+        onClose();
+      } else {
+        alert("failed to moderate article");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
-    <div className=" z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+    <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
       {/* Validate button, when clicked posts the data to the API endpoint */}
-      <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0  items-center w-[30%] justify-start">
+      <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0 items-center w-[30%] justify-start">
         <button
           onClick={handleModerateArticle}
           className="bg-gradient-to-r from-[#395143] to-[#AF9A27] mt-[4px] text-[#E7E4D5] py-[7px] lg:py-[10px] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] h-[80%] w-full max-w-[150px] lg:w-[95%] xl:w-[70%]">
@@ -96,7 +144,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
         </button>
         {/* See PDF button, when clicked opens the PDF file for the article */}
         <button
-          onClick={handleSeePDF}
+          onClick={openPdfInNewTab}
           className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
           Voir le PDF
         </button>
@@ -188,33 +236,33 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </>
           )}{" "}
         </div>
-        {/* article auteurs section */}
+        {/* article authors section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">Auteurs</h1>
-          {isEditing.auteurs ? (
+          <h1 className="font-bold text-start font-merryweather">authors</h1>
+          {isEditing.authors ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={save}
-              onClick={() => handleSaveArrayElement("auteurs")}
+              onClick={() => handleSaveArrayElement("authors")}
             />
           ) : (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("auteurs")}
+              onClick={() => handleEditArrayElement("authors")}
             />
           )}
-          {isEditing.auteurs ? (
+          {isEditing.authors ? (
             <div className="w-full flex">
-              {auteurs.map((a, index) => (
+              {authors.map((a, index) => (
                 <div key={index}>
                   <input
                     type="text"
                     value={a}
                     onChange={(e) => {
-                      const updatedAuteurs = [...auteurs];
-                      updatedAuteurs[index] = e.target.value;
-                      setAuteurs(updatedAuteurs);
+                      const updatedauthors = [...authors];
+                      updatedauthors[index] = e.target.value;
+                      setauthors(updatedauthors);
                     }}
                     className="mr-[5px] text-center flex max-w-[180px] focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C] "
                   />
@@ -223,7 +271,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </div>
           ) : (
             <div className="flex flex-wrap w-full">
-              {auteurs.map((a, index) => (
+              {authors.map((a, index) => (
                 <h1 className="pr-[20px] text-start" key={index}>
                   <p key={index} className=" text-start">
                     {a},
@@ -232,15 +280,15 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
               ))}
             </div>
           )}
-          {!isEditing.auteurs ? (
+          {!isEditing.authors ? (
             <img
               className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("auteurs")}
+              onClick={() => handleEditArrayElement("authors")}
             />
           ) : (
             <button
-              onClick={() => handleSaveArrayElement("auteurs")}
+              onClick={() => handleSaveArrayElement("authors")}
               className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
@@ -309,30 +357,30 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
         {/* article keywords section */}
         <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Mots cles</h1>
-          {isEditing.motscle ? (
+          {isEditing.keywords ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={save}
-              onClick={() => handleSaveArrayElement("motscle")}
+              onClick={() => handleSaveArrayElement("keywords")}
             />
           ) : (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("motscle")}
+              onClick={() => handleEditArrayElement("keywords")}
             />
           )}
-          {isEditing.motscle ? (
+          {isEditing.keywords ? (
             <div className="w-full flex">
-              {motscle.map((a, index) => (
+              {keywords.map((a, index) => (
                 <div key={index}>
                   <input
                     type="text"
                     value={a}
                     onChange={(e) => {
-                      const updatedMotsCle = [...motscle];
-                      updatedMotsCle[index] = e.target.value;
-                      setMotscle(updatedMotsCle);
+                      const updatedkeywords = [...keywords];
+                      updatedkeywords[index] = e.target.value;
+                      setkeywords(updatedkeywords);
                     }}
                     className="mr-[5px] text-center flex max-w-[180px] focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C] "
                   />
@@ -341,7 +389,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </div>
           ) : (
             <div className="flex flex-wrap w-full">
-              {motscle.map((a, index) => (
+              {keywords.map((a, index) => (
                 <h1 className="pr-[20px] text-start" key={index}>
                   <p key={index} className=" text-start">
                     {a},
@@ -350,15 +398,15 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
               ))}
             </div>
           )}
-          {!isEditing.motscle ? (
+          {!isEditing.keywords ? (
             <img
               className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("motscle")}
+              onClick={() => handleEditArrayElement("keywords")}
             />
           ) : (
             <button
-              onClick={() => handleSaveArrayElement("motscle")}
+              onClick={() => handleSaveArrayElement("keywords")}
               className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>
@@ -369,30 +417,30 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           <h1 className="font-bold text-start font-merryweather">
             Références bibliographique
           </h1>
-          {isEditing.refs ? (
+          {isEditing.references ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={save}
-              onClick={() => handleSaveArrayElement("refs")}
+              onClick={() => handleSaveArrayElement("references")}
             />
           ) : (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("refs")}
+              onClick={() => handleEditArrayElement("references")}
             />
           )}
-          {isEditing.refs ? (
+          {isEditing.references ? (
             <div className="w-full flex">
-              {refs.map((a, index) => (
+              {references.map((a, index) => (
                 <div key={index}>
                   <input
                     type="text"
                     value={a}
                     onChange={(e) => {
-                      const updatedrefs = [...refs];
-                      updatedrefs[index] = e.target.value;
-                      setRefs(updatedrefs);
+                      const updatedreferences = [...references];
+                      updatedreferences[index] = e.target.value;
+                      setreferences(updatedreferences);
                     }}
                     className="mr-[5px] text-center flex max-w-[180px] focus:outline-none focus:border-transparent bg-[#E7E4D5] text-[#56695C] "
                   />
@@ -401,7 +449,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
             </div>
           ) : (
             <div className="flex flex-wrap w-full">
-              {refs.map((a, index) => (
+              {references.map((a, index) => (
                 <h1 className="pr-[20px] text-start" key={index}>
                   <p key={index} className=" text-start">
                     {a},
@@ -410,15 +458,15 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
               ))}
             </div>
           )}
-          {!isEditing.refs ? (
+          {!isEditing.references ? (
             <img
               className="hidden lg:block w-[15px] lg:w-[25px]"
               src={Edit}
-              onClick={() => handleEditArrayElement("refs")}
+              onClick={() => handleEditArrayElement("references")}
             />
           ) : (
             <button
-              onClick={() => handleSaveArrayElement("refs")}
+              onClick={() => handleSaveArrayElement("references")}
               className="hidden lg:block w-[15px] lg:w-[25px]">
               <img src={save} />
             </button>

@@ -36,7 +36,6 @@ export const ProfileSection = ({ profile }) => {
     });
 
     // Handle saving edited profile information
-    console.log("Saving changes:", editedFields);
     setEditing(false);
 
     // Call updateInfo with the edited fields
@@ -133,10 +132,10 @@ export const ProfileSection = ({ profile }) => {
 
   return (
     <div
-      className={`bg-[#F5EAAB] my-[10px] h-auto overflow-hidden w-full px-[30px] py-[20px] rounded-[20px] lg:hidden flex flex-col justify-start items-start ${
+      className={`bg-[#F5EAAB]  h-auto overflow-hidden w-full px-[30px] py-[20px] rounded-[20px] lg:hidden flex flex-col justify-start items-start ${
         showCard ? "h-full" : ""
       }`}>
-      <div className="w-full grid  items-center  grid-cols-[70%,30%] justify-center">
+      <div className="w-full grid items-center  grid-cols-[70%,30%] justify-center">
         <h1 className="text-start text-xl  font-bold font-merryweather">
           Mon Profile
         </h1>
@@ -286,7 +285,12 @@ export const ProfileSection = ({ profile }) => {
               )
             )}
           </div>
-          <p className="pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold">
+          <p
+            className={`pt-[10%] py-[10px] text-md lg:text-lg font-merryweather font-bold ${
+              profile.role !== "moderator" &&
+              profile.username !== "admin" &&
+              `hidden`
+            }`}>
             Parametres du compte
           </p>
           <div className="grid grid-cols-[60%,40%] w-full">
