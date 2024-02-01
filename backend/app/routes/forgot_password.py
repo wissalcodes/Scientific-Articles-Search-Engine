@@ -113,8 +113,6 @@ def init_auth_routes(api):
             
             token = token.replace('$', '.')
             email = confirm_token(token)
-            print("email>>>>>>>>>>>",email)
-
                         
             user=User.query.filter_by(email=email).first()
             if user:

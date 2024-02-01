@@ -12,8 +12,7 @@ def init_auth_routes(api):
     @article_ns.route('/search_articles')
     class SearchResource (Resource):
         
-        @article_ns.doc(description='To search an article using keywords with or with no filters.',
-             security=[{"Bearer Token": []}])
+        @article_ns.doc(description='To search an article using keywords with or with no filters.')
         @article_ns.doc(responses={200: 'Success'})
         @article_ns.doc(params={'search_terms': {'description': 'input search query', 'required': True, 'type': 'string'},'title_filter': {'description': 'Filter by title', 'required': False, 'type': 'boolean'},'authors_filter': {'description': 'Filter by authors', 'required': False, 'type': 'boolean'},'institutions_filter': {'description': 'Filter by institutions', 'required': False, 'type': 'boolean'},'keywords_filter': {'description': 'Filter by keywords', 'required': False, 'type': 'boolean'},'start_date': {'description': 'Filter by period', 'required': False, 'type': 'date'},'end_date': {'description': 'Filter by period', 'required': False, 'type': 'date'}})
         def post(self):
