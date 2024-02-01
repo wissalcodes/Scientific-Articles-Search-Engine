@@ -1,12 +1,13 @@
 
 def init_routes(api):
     
-    from . import auth_manager,forgot_password, user_dashboard_manager, favori_manager
+    from . import auth_manager,forgot_password, user_dashboard_manager, favori_manager, article_manager
     
     auth_manager.init_auth_routes(api)
     forgot_password.init_auth_routes (api)
     user_dashboard_manager.init_auth_routes(api)
     favori_manager.init_auth_routes(api)
+    article_manager.init_auth_routes(api)
 
     
 def init_jwt(jwt,api):

@@ -4,9 +4,8 @@ from flask_jwt_extended import jwt_required, current_user
 from flask_restx import Namespace,Resource
 from app.database import db
 from elasticsearch import Elasticsearch
-from app.models.user import User, FavoriteArticle  
+from app.models.user import FavoriteArticle  
 
-favori_bp = Blueprint('favori_manager', __name__)
 es = Elasticsearch(['http://localhost:9200'])  
 
 def init_auth_routes(api):

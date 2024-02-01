@@ -10,11 +10,9 @@ from .database import db
 from .models.user import User
 from .routes import init_routes,init_jwt,init_route_admin
 from .engine.es import ESKNN
-from .routes.article_manager import article_manager
 
 
 from .engine.es import ESKNN
-from app.routes.favori_manager import favori_bp
 
 
 ##APP##
@@ -23,8 +21,6 @@ app = Flask(__name__)
 CORS(app, origins="http://localhost:5173",methods=["GET", "POST", "PUT", "DELETE"])
 app.config.from_object(Config)
 
-
-app.register_blueprint(article_manager, url_prefix='/article_manager')
 
 ##API##
 api = Api(app,title='API',doc='/api/docs')

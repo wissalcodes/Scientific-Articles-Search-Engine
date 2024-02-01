@@ -1,102 +1,83 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
+from flask_restx import Namespace, Resource
 import requests
-from app.models.article import Article
-from datetime import datetime
 
-article_manager = Blueprint('article_manager', __name__)
 
-@article_manager.route('/index_article', methods=['POST'])
-def index_article():
-    article_data = request.json
-    article = Article(
-        article_id=article_data['article_id'],
-        title=article_data['title'],
-        date=article_data['date'],
-        abstract=article_data['abstract'],
-        keywords=article_data['keywords'],
-        full_text=article_data['full_text'],
-        references=article_data['references'],
-        url=article_data['url'],
-        authors=article_data['authors'],
-        institutions=article_data['institutions'],  
-        is_published=article_data['is_published']
-    )
-    response = requests.post('http://localhost:9200/articles_index/_doc/' + article.article_id, json=article.to_dict())
-    return jsonify(response.json())
+
+def init_auth_routes(api):
+
+    article_ns = Namespace('article_manager',description='searching operations')
+    api.add_namespace(article_ns)
     
-@article_manager.route('/search_articles', methods=['POST'])
-def search_articles():
-    search_data = request.json
-    search_terms = search_data.get('search_terms', '')
-    filters = search_data.get('filters', {})
+    @article_ns.route('/search_articles')
+    class SearchResource (Resource):
+        
+        @article_ns.doc(description='To search an article using keywords with or with no filters.')
+        @article_ns.doc(responses={200: 'Success'})
+        @article_ns.doc(params={'search_terms': {'description': 'input search query', 'required': True, 'type': 'string'},'title_filter': {'description': 'Filter by title', 'required': False, 'type': 'boolean'},'authors_filter': {'description': 'Filter by authors', 'required': False, 'type': 'boolean'},'institutions_filter': {'description': 'Filter by institutions', 'required': False, 'type': 'boolean'},'keywords_filter': {'description': 'Filter by keywords', 'required': False, 'type': 'boolean'},'start_date': {'description': 'Filter by period', 'required': False, 'type': 'date'},'end_date': {'description': 'Filter by period', 'required': False, 'type': 'date'}})
+        def post(self):
+            search_data = request.json
+            search_terms = search_data.get('search_terms', '')
 
-     # Base structure of the Elasticsearch query
-    search_query = {
-        "query": {
-            "bool": {
-                "must": [],
-                "filter": [
-                    {"term": {"is_published": True}}
-                ]
+            # Base structure of the Elasticsearch query
+            search_query = {
+                "query": {
+                    "bool": {
+                        "must": [],
+                        "filter": [
+                            {"term": {"is_published": True}}
+                        ]
+                    }
+                }
             }
-        }
-    }
 
-  
+            # Check and apply filters if provided
+            if search_data.get('title_filter'):
+                search_query['query']['bool']['must'].append({"match": {"title": search_terms}})
+            if search_data.get('authors_filter'):
+                search_query['query']['bool']['must'].append({"match": {"authors": search_terms}})
+            if search_data.get('institutions_filter'):
+                search_query['query']['bool']['must'].append({"match": {"institutions": search_terms}})
+            if search_data.get('keywords_filter'):
+                search_query['query']['bool']['must'].append({"match": {"keywords": search_terms}})
 
-    # Check and apply filters if provided
-    if 'title_filter' in filters and filters['title_filter']:
-        search_query['query']['bool']['must'].append({"match": {"title": search_terms}})
-    if 'authors_filter' in filters and filters['authors_filter']:
-        search_query['query']['bool']['must'].append({"match": {"authors": search_terms}})
-    if 'institutions_filter' in filters and filters['institutions_filter']:
-        search_query['query']['bool']['must'].append({"match": {"institutions": search_terms}})
-    if 'keywords_filter' in filters and filters['keywords_filter']:
-        search_query['query']['bool']['must'].append({"match": {"keywords": search_terms}})
+        # Add date filter if provided
+            if search_data.get('start_date') and search_data.get('end_date'):
+                date_filter = {
+                    "range": {
+                        "date": {
+                            "gte": search_data.get('start_date'),
+                            "lte": search_data.get('end_date'),
+                            "format": "yyyy-MM-dd"
+                        }
+                    }
+                }
+                search_query['query']['bool']['must'].append(date_filter)
+            
 
+            # If no specific filters are provided, perform a broad search
+            if not search_query['query']['bool']['must']:
+                search_query['query']['bool']['must'].append({
+                    "multi_match": {
+                        "query": search_terms,
+                        "fields": ["title", "authors", "institutions", "abstract", "keywords", "full_text", "references"]
+                    }
+                })
 
+            # Add sorting to the query
+            search_query["sort"] = [{"date": {"order": "desc"}}]
 
+            # Send the query to Elasticsearch
+            response = requests.post('http://localhost:9200/articles/_search', json=search_query)
+            
+            if response.status_code == 200:
+                result_data = response.json()
 
+                hits = result_data.get('hits', {}).get('hits', [])
 
-   # Add date filter if provided
-    if 'start_date' in filters and 'end_date' in filters:
-      start_date = filters['start_date']
-      end_date = filters['end_date']
-      date_filter = {
-        "range": {
-            "date": {
-                "gte": datetime.strptime(start_date, '%Y-%m-%d').strftime('%Y-%m-%d'),
-                "lte": datetime.strptime(end_date, '%Y-%m-%d').strftime('%Y-%m-%d')
-            }
-        }
-      }
-      search_query['query']['bool']['filter'].append(date_filter)
+                results = [{'id': hit['_id'], 'source': hit['_source']} for hit in hits]
 
-     # If search terms are introduced within the date filter condition
-      if search_terms:
-         search_query['query']['bool']['must'].append({
-            "multi_match": {
-                "query": search_terms,
-                "fields": [
-                    "title", "authors", "institutions", "abstract", 
-                    "keywords", "full_text", "references", "url"
-                ]
-            }
-         })
-
-
-    # If no specific filters are provided, perform a broad search
-    if not search_query['query']['bool']['must']:
-        search_query['query']['bool']['must'].append({
-            "multi_match": {
-                "query": search_terms,
-                "fields": ["title", "authors", "institutions", "abstract", "keywords", "full_text", "references", "url"]
-            }
-        })
-
-    # Add sorting to the query
-    search_query["sort"] = [{"date": {"order": "desc"}}]
-
-    # Send the query to Elasticsearch
-    response = requests.post('http://localhost:9200/articles/_search', json=search_query)
-    return jsonify(response.json())
+                return {'results': results}, 200
+            else:
+                return {'error': 'Elasticsearch request failed'}, response.status_code
+        
