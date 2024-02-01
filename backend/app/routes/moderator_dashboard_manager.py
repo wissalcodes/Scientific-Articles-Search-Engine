@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 
 def init_ad(api,esknn):
     
-    moderator_ns = Namespace('moderator_dashboard',description='admin operations')
+    moderator_ns = Namespace('moderator_dashboard',description='moderator operations')
         
     article_model=api.model(
     
