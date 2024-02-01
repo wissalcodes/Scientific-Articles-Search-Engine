@@ -51,7 +51,7 @@ class UserUpdateTestCase(unittest.TestCase):
 
         # Verify that the name was updated
         updated_user = User.query.get(user_id)
-        self.assertEqual(updated_user.first_name, 'HEN')
+        self.assertEqual(updated_user.first_name, 'DOU')
 
 if __name__ == '__main__':
     unittest.main()
