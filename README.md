@@ -94,16 +94,3 @@ This project is a web application designed to search scientific articles using a
 - A container will be created in the docker desktop application
 - When launching the container, the engine will run on (localhost:9200)
   
-#### creating the database 
-  - Open a terminal and make sure you are at the backend folder
-  - Start a python shell by typing
-    ```python```
-  - Inside the python shell, enter the  following 2 commands
-    ```python
-    from app import app, db
-    ```
-    ```python
-    with app.app_context(): 
-      db.create_all()
-    ```
-    this will create an SQLite database file with the specified name in config.py containing all the database tables defined in models 
