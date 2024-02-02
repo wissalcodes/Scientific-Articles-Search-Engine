@@ -33,6 +33,20 @@ def init_ad(api,esknn):
             "new_password": fields.String(required=True, description='New password')
         }
     
+    ) 
+    
+    profile_model=api.model(
+    
+        'profile',
+        {
+            "id" : fields.Integer(required=True,description='ID'),
+            "first_name" : fields.String( description='First Name'),
+            "last_name" : fields.String( description= 'Last Name'),
+            "username" : fields.String(description='Username'),
+            "email" : fields.String(description='Email address'),
+            "role" : fields.String(description='Role'),
+        }
+    
     )    
     
     change_profile_model=api.model(
@@ -55,7 +69,7 @@ def init_ad(api,esknn):
         @moderator_ns.doc(description='To Display the info of the profile.',
              security=[{"Bearer Token": []}])
         @moderator_ns.doc(responses={200: 'Success'})
-        @moderator_ns.marshal_with(change_profile_model)
+        @moderator_ns.marshal_with(profile_model)
         @jwt_required()
         
         def get(self):

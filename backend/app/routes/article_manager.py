@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request, jsonify
 from flask_restx import Namespace, Resource
 import requests
@@ -43,12 +44,20 @@ def init_auth_routes(api):
 
         # Add date filter if provided
             if search_data.get('start_date') and search_data.get('end_date'):
+                
+                parts = search_data.get('start_date').split("-")
+                digits = [int(part) for part in parts if part.isdigit()]
+                start_date = datetime(digits[0], digits[1], digits[2], 00, 00, 00).strftime('%Y-%m-%d %H:%M:%S')
+                
+                parts = search_data.get('end_date').split("-")
+                digits = [int(part) for part in parts if part.isdigit()]
+                end_date = datetime(digits[0], digits[1], digits[2], 23, 59, 59).strftime('%Y-%m-%d %H:%M:%S')
+
                 date_filter = {
                     "range": {
                         "date": {
-                            "gte": search_data.get('start_date'),
-                            "lte": search_data.get('end_date'),
-                            "format": "yyyy-MM-dd"
+                            "gte": start_date,
+                            "lte": end_date,
                         }
                     }
                 }
