@@ -45,13 +45,13 @@ def init_auth_routes(api):
         # Add date filter if provided
             if search_data.get('start_date') and search_data.get('end_date'):
                 
-                parts = search_data.get('start_date').split("/")
+                parts = search_data.get('start_date').split("-")
                 digits = [int(part) for part in parts if part.isdigit()]
-                start_date = datetime(digits[2], digits[1], digits[0], 00, 00, 00).strftime('%Y-%m-%d %H:%M:%S')
+                start_date = datetime(digits[0], digits[1], digits[2], 00, 00, 00).strftime('%Y-%m-%d %H:%M:%S')
                 
-                parts = search_data.get('end_date').split("/")
+                parts = search_data.get('end_date').split("-")
                 digits = [int(part) for part in parts if part.isdigit()]
-                end_date = datetime(digits[2], digits[1], digits[0], 23, 59, 59).strftime('%Y-%m-%d %H:%M:%S')
+                end_date = datetime(digits[0], digits[1], digits[2], 23, 59, 59).strftime('%Y-%m-%d %H:%M:%S')
 
                 date_filter = {
                     "range": {
