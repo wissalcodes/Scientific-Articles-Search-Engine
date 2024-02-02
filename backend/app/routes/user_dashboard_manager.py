@@ -20,6 +20,21 @@ def init_auth_routes(api):
     
     )    
     
+    profile_model=api.model(
+    
+        'profile',
+        {
+            "id" : fields.Integer(required=True,description='ID'),
+            "first_name" : fields.String( description='First Name'),
+            "last_name" : fields.String( description= 'Last Name'),
+            "username" : fields.String(description='Username'),
+            "email" : fields.String(description='Email address'),
+            "role" : fields.String(description='Role'),
+            
+        }
+    
+    ) 
+    
     change_profile_model=api.model(
     
         'Change infos profile',
@@ -28,6 +43,7 @@ def init_auth_routes(api):
             "last_name" : fields.String( description= 'Last Name'),
             "username" : fields.String(description='Username'),
             "email" : fields.String(description='Email address'),
+            
         }
     
     )              
@@ -40,7 +56,7 @@ def init_auth_routes(api):
         @user_ns.doc(description='To Display the info of the profile.',
              security=[{"Bearer Token": []}])
         @user_ns.doc(responses={200: 'Success'})
-        @user_ns.marshal_with(change_profile_model)
+        @user_ns.marshal_with(profile_model)
         @jwt_required()
         
         def get(self):
