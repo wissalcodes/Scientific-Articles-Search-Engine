@@ -23,7 +23,7 @@ const LobbyNav = () => {
     }
   };
   return (
-    <div className="z-20 grid px-[7%] py-[20px] w-full grid-cols-2 justify-center fixed top-0">
+    <div className="px-[10px] lg:px-[30px] lg:bg-transparent pt-[10px] py-[40px] font-bold top-0  fixed w-full h-[80px] text-[14px] xl:text-[20px] grid-cols-[4fr,1fr] gap-[10px] lg:gap-0 md:grid-cols-[5fr,1.5fr] lg:grid-cols-[6fr,1fr] grid justify-center items-center">
       <div className="w-[150px] lg:w-[200px] flex items-center h-full flex-col justify-center ">
         <Link to="/">
           <img src={logo} />
@@ -34,7 +34,7 @@ const LobbyNav = () => {
           <Link
             onClick={handleLogOut}
             to="/sign_in"
-            className="text-[#152522] py-[4px] border-b-[4px] border-[#D9C65A] font-merryweather">
+            className="text-[#152522] lg:text-lg xl:text-lg py-[4px] border-b-[4px] border-[#D9C65A] font-merryweather">
             Se deconnecter
           </Link>
         </p>

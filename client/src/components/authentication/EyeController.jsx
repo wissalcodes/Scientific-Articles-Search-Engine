@@ -16,7 +16,7 @@ export const EyeController = ({ onVisibilityChange }) => {
   return (
     <div onClick={toggleVisibility} style={{ cursor: "pointer" }}>
       {/* if the eye asset is clicked, load the opposite state asset */}
-      <img src={isVisible ? closedEye : openEye} />
+      <img width="20px" src={isVisible ? closedEye : openEye} />
     </div>
   );
 };

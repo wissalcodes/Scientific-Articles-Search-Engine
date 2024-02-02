@@ -4,8 +4,10 @@ import artAssetDark from "../../../public/images/user/article-dark.svg";
 import heart from "../../../public/images/user/e-heart.svg";
 import filledheart from "../../../public/images/user/filledheart.svg";
 import { ArticlePopout } from "../moderatorlobby/ArticlePopout";
+import Cookies from "js-cookie";
 
 export const Article = ({ article, type, profile }) => {
+  const token = Cookies.get("authToken");
   const [isFavorited, setIsFavorited] = useState(type);
   const toggleIsFavorited = () => setIsFavorited(!isFavorited);
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
@@ -33,7 +35,11 @@ export const Article = ({ article, type, profile }) => {
     try {
       const favsUrl = `http://localhost:5000/favori_manager/remove_favorite/${profile.id}/${article._id}`;
       console.log(favsUrl);
-      const response = await axios.post(favsUrl, {});
+      const response = await axios.post(favsUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
       } else {
@@ -49,7 +55,11 @@ export const Article = ({ article, type, profile }) => {
     try {
       const favsUrl = `http://localhost:5000/favori_manager/add_favorite/${profile.id}/${article._id}`;
       console.log(favsUrl);
-      const response = await axios.post(favsUrl, {});
+      const response = await axios.post(favsUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
       } else {
@@ -76,11 +86,11 @@ export const Article = ({ article, type, profile }) => {
       <h1
         onClick={togglePopout}
         className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-xl">
-        {article._source?.title || "Title Not Available"}
+        {article.source.title || "Title Not Available"}
       </h1>
       {/* Article release date */}
       <p className="text mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-xl flex justify-center items-center lg:px-[10px]">
-        {article._source?.date || "Date Not Available"}
+        {article.source.date || "Date Not Available"}
       </p>
       <button
         className="flex flex-col items-center justify-center pl-[10px] lg:pl-0"

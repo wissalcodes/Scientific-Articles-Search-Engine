@@ -77,7 +77,7 @@ export const ModeratorLobby = () => {
       </div>
       {/* Profile card for large screens */}
       <div className="lg:block hidden w-full">
-        <ProfileCard profile={profile} />
+        <ProfileCard profile={profile} role={"moderator"} />
       </div>
     </div>
   );

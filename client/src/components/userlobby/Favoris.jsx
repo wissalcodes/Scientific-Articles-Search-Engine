@@ -17,7 +17,7 @@ export const Favoris = ({ favorites, profile }) => {
 
   return (
     <div
-      className={`bg-[#395143] z-30 text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:-translate-y-[15vh] xl:-translate-y-[20vh] top-1/4 -translate-y-[0vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[80vw] h-[60vh] transform transition-transform duration-500 ease-in-out ${
+      className={`bg-[#395143]  text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:translate-y-[8vh] xl:-translate-y-[5vh] top-1/4 -translate-y-[0vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[80vw] h-[60vh] transform transition-transform duration-500 ease-in-out ${
         showCard
           ? "translate-x-0"
           : "-translate-x-[80vw] lg:-translate-x-[80vw]"
@@ -33,10 +33,13 @@ export const Favoris = ({ favorites, profile }) => {
           ))}
         </div>
         <div className="top-0 flex flex-col absolute h-full right-[0px] translate-x-[35px] lg:translate-x-[45px]">
-          <img src={window.innerWidth > 1023 ? right : rightSmall} />
+          <img
+            className="z-80"
+            src={window.innerWidth > 1023 ? right : rightSmall}
+          />
           <button onClick={handleCardAnimation}>
             <img
-              className="fixed right-[10px] lg:right-[9px] top-[15px] lg:top-[20px] w-[23px] lg:w-[35px]"
+              className=" absolute right-[10px] lg:right-[9px] top-[15px] lg:top-[20px] w-[23px] lg:w-[35px]"
               src={img}
             />
           </button>

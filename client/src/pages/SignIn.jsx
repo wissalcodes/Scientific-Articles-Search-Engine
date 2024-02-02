@@ -123,7 +123,7 @@ export default function SignIn() {
   };
   return (
     <div className="w-screen h-screen pb-[10%] lg:mb-0 relative bg-[#E7E4D5] lg:bg-gradient-to-r from-[#395143] to-[#A79629] ">
-      <AuthNavbar />
+      <AuthNavbar inv={true} />
       {/* Displays grid in large screens and a flex in mobiles */}
       <div className="w-screen h-screen flex flex-col lg:grid lg:grid-cols-[45%,55%] xl:grid-cols-2">
         {/* image assets */}
@@ -137,18 +137,18 @@ export default function SignIn() {
         <div className="h-full  w-full  items-center justify-center flex flex-col">
           <div className="flex bg-[#E7E4D5] w-full lg:w-[80%] lg:rounded-[15px] px-[9%] py-[5%] flex-col  sm:px-[10%]  justify-center items-center">
             <div className="w-full flex justify-start items-start">
-              <h1 className="text-[#152522] leading-[120%] hidden lg:block font-semibold font-merryweather text-start text-[24px] lg:text-[40px] xl:text-[50px]">
+              <h1 className="text-[#152522] leading-[120%] hidden lg:block font-semibold font-merryweather text-start text-lg lg:text-3xl xl:text-5xl">
                 Connectez-vous maintenant !
               </h1>
             </div>
             <div className="w-full flex flex-col justify-center items-center ">
-              <div className="w-full mb-[10px] pt-[20px] lg:pt-[60px] flex justify items-start">
-                <h1 className="font-semibold font-merryweather text-[#395143]">
+              <div className="w-full mb-[10px] pt-[20px]  flex justify items-start">
+                <h1 className="font-semibold text-sm font-merryweather text-[#395143]">
                   E-MAIL
                 </h1>
                 <ErrorMessage message={errorMsg} />
               </div>
-              <div className="w-full drop-shadow flex bg-[white] px-[20px]  py-[10px] lg:py-[15px]  rounded-[10px]">
+              <div className="w-full drop-shadow flex bg-[white] px-[20px]  py-[10px]   rounded-[10px]">
                 <input
                   className="text-[16px] font-lora w-[90%] focus:outline-none focus:border-transparent bg-transparent pr-[10px]"
                   type="text"
@@ -159,11 +159,11 @@ export default function SignIn() {
             </div>
             <div className="w-full flex flex-col justify-center items-center ">
               <div className="w-full mb-[10px] pt-[10px] xl::pt-[30px] flex flex-col justify-center items-start">
-                <h1 className="font-semibold font-merryweather text-[#395143]">
+                <h1 className="font-semibold text-sm font-merryweather text-[#395143]">
                   MOT DE PASSE
                 </h1>
               </div>
-              <div className="relative w-full drop-shadow flex bg-[white] px-[20px] py-[10px] lg:py-[15px] rounded-[10px]">
+              <div className="relative w-full drop-shadow flex bg-[white] px-[20px] py-[10px] rounded-[10px]">
                 <input
                   className="text-[16px] focus:outline-none w-[90%] focus:border-transparent  bg-transparent pr-[10px]"
                   type={isPasswordVisible ? "text" : "password"}
@@ -174,11 +174,11 @@ export default function SignIn() {
                   <EyeController onVisibilityChange={setIsPasswordVisible} />
                 </div>
               </div>
-              <div className="w-full h-full flex flex-col justify-center lg:items-start pt-[40px]">
+              <div className="w-full h-full flex flex-col justify-center lg:items-start pt-[40px] lg:pt-[20px] xl:pt-[20px] ">
                 <div className="transform transition-transform duration-200 ease-in-out hover:scale-110 lg:w-[60%] xl:w-[60%] w-full drop-shadow flex bg-[#395143] px-[20px] py-[10px] lg:py-[10px] rounded-[10px] lg:mb-[10px] ">
                   <button
                     onClick={handleSignIn}
-                    className="text-md lg:text-lg xl:text-xl  mx-auto font-lora text-[#F1D896] bg-transparent ">
+                    className="text-sm lg:text-md xl:text-lg  mx-auto font-lora text-[#F1D896] bg-transparent ">
                     SE CONNECTER
                   </button>
                 </div>

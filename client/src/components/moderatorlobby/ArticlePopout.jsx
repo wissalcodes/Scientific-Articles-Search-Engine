@@ -18,10 +18,10 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 // Create new plugin instance
 
 export const ArticlePopout = ({ onClose, article }) => {
-  const title = article._source.title;
-  const text = article._source.article;
+  const title = article.source.title;
+  const text = article.source.article;
   // for displaying the article PDF
-  const url = article._source.url;
+  const url = article.source.url;
 
   const openPdfInNewTab = () => {
     const googleDriveViewerUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
@@ -31,18 +31,20 @@ export const ArticlePopout = ({ onClose, article }) => {
   };
   return (
     <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[40px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95vw] lg:w-[87%] xl:w-[85vw] h-[80vh] bg-[#BEB9A1]">
-      <div className="text-[#E7E4D5] items-center justify-center gap-[15px] text-xsm lg:text-lg xl:text-lg  flex w-full">
-        <div className="w-[80%] text-start font-bold text-black font-merryweather text-sm lg:text-2xl xl:text-3xl flex  gap-[15px]">
+      <div className="text-[#E7E4D5] items-center justify-center gap-[15px] text-xsm lg:text-lg xl:text-lg  grid grid-cols-[70%,20%,10%] w-full">
+        <div className="w-[100%] text-start font-bold text-black font-merryweather text-sm lg:text-2xl xl:text-3xl flex  gap-[15px]">
           {title}
         </div>
 
-        {/* See PDF button, when clicked opens the PDF file for the article */}
-        <button
-          onClick={openPdfInNewTab}
-          className="bg-[#395143] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
-          Voir le PDF
-        </button>
-        <div className="w-[30px] flex items-center justify-end">
+        <div className="w-full flex justify-end">
+          {/* See PDF button, when clicked opens the PDF file for the article */}
+          <button
+            onClick={openPdfInNewTab}
+            className="bg-[#395143] w-[70%] rounded-[8px] lg:rounded-[15px] px-[10px]  lg:px-[20px] py-[8px]">
+            Voir le PDF
+          </button>
+        </div>
+        <div className="w-full flex items-center justify-end">
           <img src={x} onClick={onClose} />
         </div>
       </div>

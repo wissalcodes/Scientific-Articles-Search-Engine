@@ -67,11 +67,11 @@ export const FavArticle = ({ article, type, profile }) => {
       <h1
         onClick={togglePopout}
         className="lg:px-[10px] text-start text-sm lg:text-xl xl:text-xl">
-        {type === "fav" ? article._source.title : article._source.title}
+        {type === "fav" ? article.source.title : article.source.title}
       </h1>
       {/* Article release date */}
       <p className="text  mt-[4px] lg:mt-0 text-md py-[10px] lg:py-0 lg:text-xl xl:text-xl flex justify-center items-center lg:px-[10px]">
-        {type === "fav" ? article._source.date : article._source.date}
+        {type === "fav" ? article.source.date : article.source.date}
       </p>
       <button
         className="pl-[10px] lg:pl-0"

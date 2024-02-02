@@ -5,28 +5,28 @@ import AuthNavbar from "../components/layout/AuthNavbar";
 
 export const MailSent = () => {
   return (
-    <div className="bg-gradient-to-r from-[#395143] to-[#A79629] relative w-screen overflow-hidden h-screen flex flex-col items-center lg:justify-center lg:grid lg:grid-cols-[60%,40%]">
+    <div className="bg-gradient-to-r from-[#395143] to-[#A79629] relative w-screen overflow-hidden h-screen flex flex-col items-center lg:justify-center lg:grid lg:grid-cols-[45%,55%] xl:grid-cols-[50%,50%]">
       <AuthNavbar />
-      <div className="h-full w-full hidden lg:flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:pl-[10%] xl:px-[70px] xl:pl-[90px] justify-start items-center ">
+      <div className="h-full w-full hidden lg:flex flex-col px-[20px] sm:px-[70px] md:px-[100px] lg:px-[50px]  xl:px-[70px] xl:pl-[90px] justify-start items-center ">
         <div className="w-full text-[#E7E4D5] flex flex-col justify-center items-start h-full z-80">
-          <h1 className="z-70 text-[#FFF3B2] font-bold hidden lg:flex text-start font-merryweather  text-5xl xl:text-6xl">
+          <h1 className="z-70 text-[#FFF3B2] font-bold hidden lg:flex text-start font-merryweather text-lg lg:text-4xl xl:text-5xl">
             <Typed typeSpeed={55} strings={["Mail envoyé!"]} />
           </h1>
           <div className="flex w-full ">
             {window.innerWidth > 1023 ? (
-              <p className="w-full flex text-2xl leading-[140%] text-start pt-[5%] pb-[8%] lg:text-3xl xl:text-4xl">
+              <p className="w-full flex text-2xl leading-[140%] font-merryweather text-start pt-[5%] pb-[8%] lg:text-2xl xl:text-4xl">
                 Vérifiez votre courriel et cliquez sur le lien qui vous a été
                 envoyé
               </p>
             ) : (
-              <p className="w-full flex text-[20px] pt-[5%] pb-[10px] xl:text-[32px]">
+              <p className="w-full flex font-merryweather text-[20px] pt-[5%] pb-[10px] xl:text-[32px]">
                 Vérifiez votre courriel et cliquez sur le lien qui vous a été
               </p>
             )}
           </div>
         </div>
       </div>
-      <div className=" absolute lg:relative w-[110px] md:w-[150px] translate-x-[15%] lg:translate-x-0 translate-y-[18%] md:translate-y-[40px] lg:right-[50px] xl:right-[100px] lg:translate-y-[25vh] xl:translate-y-[18vh] h-full lg:w-[100%]">
+      <div className="  absolute lg:relative w-[110px] md:w-[150px] translate-x-[15%] lg:translate-y-0 lg:translate-x-0 translate-y-[18%] flex flex-col justify-center items-center h-full lg:w-[80%] xl:w-[70%]">
         {window.innerWidth > 1023 ? (
           <img src={MailSentPic} />
         ) : (

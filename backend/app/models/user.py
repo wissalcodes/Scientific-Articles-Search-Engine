@@ -85,7 +85,7 @@ class User(db.Model):
             db.session.rollback()
             return 'Database error occurred', False
                     
-    def update_name(self, new_name):
+    def update_first_name(self, new_name):
         self.first_name = new_name
         db.session.commit()
 

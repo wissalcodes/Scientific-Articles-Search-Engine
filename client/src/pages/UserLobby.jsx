@@ -9,6 +9,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Favoris } from "../components/userlobby/Favoris";
 import { Article } from "../components/userlobby/Article";
+import { useJwt } from "react-jwt";
 
 export const UserLobby = () => {
   // get the access token
@@ -59,7 +60,7 @@ export const UserLobby = () => {
       try {
         // fetch the user's personal information
         const userResponse = await axios.get(
-          "http://127.0.0.1:5000/admin_dashboard/my_profile",
+          "http://127.0.0.1:5000/user_dashboard/my_profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -70,7 +71,12 @@ export const UserLobby = () => {
           setProfile(userResponse.data);
           // fetch the user's favourite articles
           const response = await axios.get(
-            `http://127.0.0.1:5000/favori_manager/favorite_articles/${userResponse.data.id}`
+            `http://127.0.0.1:5000/favori_manager/favorite_articles/${userResponse.data.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           console.log(response.data.articles);
           setFavorites(response.data.articles);
@@ -98,17 +104,15 @@ export const UserLobby = () => {
             institutions_filter: institutionClicked ? true : false,
             authors_filter: authorClicked ? true : false,
             keywords_filter: keywordsClicked ? true : false,
-            date_range: {
-              start_date: startDate,
-              end_date: endDate,
-            },
+            start_date: startDate,
+            end_date: endDate,
           },
         }
       );
       if (response.status >= 200 && response.status < 300) {
         console.log("successful search");
-        console.log(response.data.hits.hits);
-        const articles = response.data.hits.hits;
+        console.log(response.data.results);
+        const articles = response.data.results;
         setSearchResult(articles);
       } else {
         console.log("error searching articles");
@@ -125,16 +129,16 @@ export const UserLobby = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      className=" bg-[#E7E4D5] z-0 bg-none w-screen h-screen pt-[50px] md:pt-[8%] lg:pt-[2%] flex flex-col items-center justify-center px-[40px] md:px-[30px] lg:px-[8%] xl:px-[10%] ">
+      className=" bg-[#E7E4D5] z-0 bg-none w-screen h-screen py-[50px] md:pt-[8%] lg:pt-[2%] flex flex-col items-center justify-center px-[40px] md:px-[30px] lg:px-[8%] xl:px-[10%] ">
       {/* Navbar */}
       <LobbyNav />
       {/* if the screen if small, display 2 extensible sections of profile and favorites */}
       <div className="lg:h-[30vh] lg:hidden">
-        <ProfileCard profile={profile} />
+        <ProfileCard profile={profile} role={"user"} />
         <Favoris favorites={favorites} profile={profile} />
       </div>
 
-      <div id="main-container" className="w-full flex flex-col">
+      <div id="main-container" className="pt-[90px] w-full flex flex-col">
         {!search && (
           <div className="pt-[4%] w-full h-full hidden lg:grid lg:grid-cols-[50%,50%]">
             <div className="hidden lg:flex w-[100%] flex-col items-center justify-center">
@@ -153,7 +157,7 @@ export const UserLobby = () => {
           className={`z-0 md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ${
             search ? `` : ""
           }`}>
-          <div className="pl-[20px] drop-shadow flex w-full h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px]">
+          <div className="pl-[20px] drop-shadow flex w-full lg:h-[80%] xl:h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px] ">
             <img className="lg:block hidden w-[25px]" src={searchAsset} />
             <input
               placeholder="Rechercher des articles..."
@@ -258,7 +262,7 @@ export const UserLobby = () => {
 
       {/* if the screen is large, display the fixed animated sections  */}
       <div className="lg:block hidden w-full">
-        <ProfileCard profile={profile} />
+        <ProfileCard profile={profile} role={"user"} />
         <Favoris favorites={favorites} profile={profile} />
       </div>
     </div>

@@ -126,7 +126,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     }
   };
   return (
-    <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[60px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
+    <div className="z-20 drop-shadow px-[20px] pb-[40px] py-[20px] lg:py-[30px] lg:pb-[70px] lg:px-[30px] flex flex-col rounded-[12px] lg:rounded-[40px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] lg:w-[87%] xl:w-[85%] h-[80vh] bg-[#BEB9A1]">
       {/* Validate button, when clicked posts the data to the API endpoint */}
       <div className="absolute bottom-[10px] lg:bottom-[20px] right-[10px] lg:right-0 items-center w-[30%] justify-start">
         <button
@@ -155,8 +155,10 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
       {/* grid */}
       <div className="overflow-x-hidden px-[0px] gap-[20px] mt-[50px] flex flex-col w-full custom-scrollBar overflow-y-scroll relative text-xs  max-h-[80%]">
         {/* article title section*/}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">Titre</h1>
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="font-bold lg:text-md xl:text-lg text-start font-merryweather">
+            Titre
+          </h1>
           {isEditing.title ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
@@ -196,8 +198,10 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}{" "}
         </div>
         {/* article resume section*/}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">Résumé</h1>
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="font-bold lg:text-md xl:text-lg text-start font-merryweather">
+            Résumé
+          </h1>
           {isEditing.resume ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
@@ -237,8 +241,10 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}{" "}
         </div>
         {/* article authors section */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">authors</h1>
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="font-bold lg:text-md xl:text-lg text-start font-merryweather">
+            Auteurs
+          </h1>
           {isEditing.authors ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
@@ -295,8 +301,8 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
         </div>
         {/* article Institutions section */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="font-bold lg:text-md xl:text-lg text-start font-merryweather">
             Institutions
           </h1>
           {isEditing.institutions ? (
@@ -355,8 +361,10 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
         </div>
         {/* article keywords section */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">Mots cles</h1>
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="font-bold text-start lg:text-md xl:text-lg font-merryweather">
+            Mots cles
+          </h1>
           {isEditing.keywords ? (
             <img
               className="lg:hidden w-[15px] lg:w-[25px]"
@@ -413,8 +421,8 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
         </div>
         {/* article references section */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
-          <h1 className="font-bold text-start font-merryweather">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
+          <h1 className="text-sm lg:text-lg xl:text-lg font-bold text-start font-merryweather">
             Références bibliographique
           </h1>
           {isEditing.references ? (
@@ -473,7 +481,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
           )}
         </div>
         {/* article text section */}
-        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl  flex flex-wrap lg:grid lg:grid-cols-[12%,78%,10%] gap-[15px]">
+        <div className="w-full font-lora text-sm lg:text-lg xl:text-xl flex flex-wrap lg:grid lg:grid-cols-[15%,75%,10%] gap-[15px]">
           <h1 className="font-bold text-start font-merryweather">Texte</h1>
           {isEditing.text ? (
             <img

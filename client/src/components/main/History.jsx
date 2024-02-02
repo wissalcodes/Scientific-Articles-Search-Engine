@@ -13,20 +13,6 @@ import func3 from "../../../public/images/main/func3.svg";
 gsap.registerPlugin(ScrollTrigger);
 
 const History = () => {
-  const assetRef = useRef(null);
-
-  useEffect(() => {
-    gsap.from(assetRef.current, {
-      scrollTrigger: {
-        trigger: assetRef.current,
-        start: "top bottom",
-        end: "+=100",
-        scrub: 1,
-      },
-      x: -400,
-    });
-  }, [assetRef]);
-
   return (
     <div
       style={{
@@ -34,9 +20,9 @@ const History = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      className=" w-full h-full flex flex-col pt-[5%] pb-[2%] justify-center items-center">
-      <div className="  py-[40px] text-md font-bold h-full lg:text-[50px] text-[#395143] leading-1 xl:text-[60px] w-full flex flex-col justify-center items-center">
-        <h1 className="text-center xl:text-[64px] lg:text-[40px] md:text-[30px] text-[24px] font-bold font-merryweather lg:pb-[8%] xl:pb-[4%] ">
+      className="w-full h-full flex flex-col pt-[5%] pb-[2%] justify-center items-center">
+      <div className="py-[40px] font-bold h-full  text-[#395143] leading-1 w-full flex flex-col justify-center items-center">
+        <h1 className="text-center  text-2xl lg:text-4xl xl:text-5xl font-bold font-merryweather lg:pb-[8%] xl:pb-[4%] ">
           Nos services
         </h1>
         <div className=" w-full h-full px-[5%] md:mt-[60px] xl:px-[12%] pt-[5%] hidden md:grid grid-cols-3  gap-[40px] xl:gap-[80px]">

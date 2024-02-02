@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import right from "../../../../public/images/admin/right.svg";
 import rightSmall from "../../../../public/images/user/right-small-yellow.svg";
-
 import img from "../../../../public/images/admin/profile.svg";
 import ErrorMessage from "../../authentication/Error";
 import Edit from "../../../../public/images/moderator/edit2.svg";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export const ProfileCard = ({ profile }) => {
+export const ProfileCard = ({ profile, role }) => {
   //get the access token
   const token = Cookies.get("authToken");
   // when the fields are being edited
@@ -20,74 +19,7 @@ export const ProfileCard = ({ profile }) => {
     email: profile.email,
   });
 
-  const updateFirstNameUrl = `http://localhost:5000/users/update_name/${profile.id}`;
-  const updateLastNameUrl = `http://localhost:5000/users/update_family_name/${profile.id}`;
-  const updateUsernameUrl = `http://localhost:5000/users/update_username/${profile.id}`;
-  const updateEmailUrl = `http://localhost:5000/users/update_email/${profile.id}`;
-
   // API call functions for user
-
-  const updateUserFirstname = async () => {
-    setEditing(false);
-
-    try {
-      const response = await axios.put(updateFirstNameUrl, {
-        new_name: editedValues.first_name,
-      });
-      if (response.status >= 200 && response.status < 300) {
-        console.log("successful update", response.data);
-      }
-    } catch (error) {
-      console.log(error.data);
-    }
-  };
-  const updateUserLastName = async () => {
-    setEditing(false);
-
-    try {
-      const response = await axios.put(updateLastNameUrl, {
-        new_family_name: editedValues.last_name,
-      });
-      if (response.status >= 200 && response.status < 300) {
-        console.log("successful update");
-      }
-    } catch (error) {
-      console.log(error.data);
-    }
-  };
-
-  const updateUserUsername = async () => {
-    setEditing(false);
-
-    try {
-      const response = await axios.put(updateUsernameUrl, {
-        new_username: editedValues.username,
-      });
-      console.log(response.status);
-      console.log(response.data);
-      if (response.status >= 200 && response.status < 300) {
-        console.log("successful update");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("Ce nom d'utilisateur est deja utilise!");
-    }
-  };
-
-  const updateUserEmail = async () => {
-    setEditing(false);
-
-    try {
-      const response = await axios.put(updateEmailUrl, {
-        new_email: editedValues.email,
-      });
-      console.log("successful update");
-    } catch (error) {
-      console.log(error);
-      alert("Cette adresse est invalide!");
-    }
-  };
-
   const toggleEdit = () => {
     setEditing(!editing);
   };
@@ -112,6 +44,7 @@ export const ProfileCard = ({ profile }) => {
     setEditing(false);
 
     // Call updateInfo with the edited fields
+    console.log(editedFields);
     await updateInfo(editedFields);
   };
   // control the state of the input fields
@@ -172,12 +105,14 @@ export const ProfileCard = ({ profile }) => {
       alert("Mot de passe incorrect!");
     }
   };
-
-  const updateInfo = async (updatedFields) => {
+  const resetPasswordUser = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/moderator_dashboard/my_profile/change_infos",
-        updatedFields,
+        "http://127.0.0.1:5000/user_dashboard/my_profile/change_password",
+        {
+          old_password: passwordOld,
+          new_password: passwordNew,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -185,12 +120,37 @@ export const ProfileCard = ({ profile }) => {
         }
       );
       if (response.status >= 200 && response.status < 300) {
+        alert("mot de passe de l'utilisateur MAJ avec succes");
+      } else {
+        console.log("error updating password");
+      }
+    } catch (error) {
+      alert("Mot de passe incorrect!");
+    }
+  };
+  const updateInfo = async (updatedFields) => {
+    console.log(updatedFields);
+    console.log(token);
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:5000/${
+          role === "moderator" ? `moderator` : `user`
+        }_dashboard/my_profile/change_infos`,
+        updatedFields,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.status >= 200 && response.status < 300) {
         alert("info updated successfully");
       } else {
         console.log("error updating info");
       }
     } catch (error) {
-      alert("Mot de passe incorrect!");
+      alert("error updating infos");
     }
   };
 
@@ -204,13 +164,13 @@ export const ProfileCard = ({ profile }) => {
   }, [profile]);
   return (
     <div
-      className={`bg-[#F5EAAB] z-20 drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/3 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] ${
-        profile.role !== "moderator" ? `h-[300px]` : `h-[400px]`
-      } transform transition-transform duration-500 ease-in-out ${
-        showCard
-          ? "translate-x-0"
-          : "-translate-x-[300px] lg:-translate-x-[350px]"
-      }`}>
+      className={`bg-[#F5EAAB]  drop-shadow py-[10px] font-lora rounded-br-[14px] top-1/3 xl:top-1/4 fixed left-0 -translate-y-[20vh] w-[300px] lg:w-[350px] 
+        h-[400px]
+       transform transition-transform duration-500 ease-in-out ${
+         showCard
+           ? "translate-x-0"
+           : "-translate-x-[300px] lg:-translate-x-[351px]"
+       }`}>
       <div className="px-[20px] flex flex-col  items-start h-full w-full">
         <h1 className="z-30 text-[32px] pt-[10px] font-bold font-merryweather">
           Mon Profile
@@ -236,11 +196,7 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={
-                profile.role === "moderator"
-                  ? handleSaveClick
-                  : updateUserFirstname
-              }>
+              onClick={handleSaveClick}>
               Save
             </button>
           ) : (
@@ -273,11 +229,7 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={
-                profile.role === "moderator"
-                  ? handleSaveClick
-                  : updateUserLastName
-              }>
+              onClick={handleSaveClick}>
               Save
             </button>
           ) : (
@@ -310,11 +262,7 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={
-                profile.role === "moderator"
-                  ? handleSaveClick
-                  : updateUserUsername
-              }>
+              onClick={handleSaveClick}>
               Save
             </button>
           ) : (
@@ -347,9 +295,7 @@ export const ProfileCard = ({ profile }) => {
           {editing ? (
             <button
               className="bg-[#395143] w-full z-40  text-[#E7E4D5] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px]  lg:px-[10px]  py-[5px]"
-              onClick={
-                profile.role === "moderator" ? handleSaveClick : updateUserEmail
-              }>
+              onClick={handleSaveClick}>
               Save
             </button>
           ) : (
@@ -370,10 +316,7 @@ export const ProfileCard = ({ profile }) => {
           }`}>
           Parametres du compte
         </p>
-        <div
-          className={`grid grid-cols-[60%,40%] w-full  ${
-            profile.role !== "moderator" ? "hidden" : ""
-          }`}>
+        <div className={`grid grid-cols-[60%,40%] w-full `}>
           <p className="text-start">Mot de passe</p>
           <div className="border-5 border-b-[1px] border-black flex w-full">
             <input
@@ -385,11 +328,7 @@ export const ProfileCard = ({ profile }) => {
             />
           </div>
         </div>
-        <div
-          className={`grid grid-cols-[60%,40%] w-full  ${
-            profile.role !== "moderator" ? "hidden" : ""
-          }`}>
-          {" "}
+        <div className={`grid grid-cols-[60%,40%] w-full `}>
           <p className="text-start">Nouveau Mot de passe</p>
           <div className="border-5 border-b-[1px] border-black flex w-full">
             <input
@@ -401,18 +340,15 @@ export const ProfileCard = ({ profile }) => {
             />
           </div>
         </div>
-        <div
-          className={`mt-[50px]  w-full justify-end items-end flex ${
-            profile.role !== "moderator" ? `hidden` : ``
-          }`}>
+        <div className={`mt-[50px]  w-full justify-end items-end flex `}>
           <ErrorMessage message={message} />
           <button
             onClick={
               profile.username === "admin"
                 ? resetPasswordAdmin
-                : profile.role === "moderator"
+                : role === "moderator"
                 ? resetPasswordModerator
-                : null
+                : resetPasswordUser
             }
             className="bg-[#152522] text-[#F1D896] transform transition-transform duration-200 ease-in-out hover:scale-105 rounded-[10px] px-[10px] xl:px-[40px] py-[5px]">
             Confirmer
