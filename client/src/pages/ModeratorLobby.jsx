@@ -1,19 +1,52 @@
 import { useEffect, useState } from "react";
-import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
-import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import LobbyNav from "../components/layout/LobbyNav";
+import { ProfileCard } from "../components/shared/ProfileCard";
+import { ProfileSection } from "../components/shared/ProfileSection";
 import { Article } from "../components/moderatorlobby/Article";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useJwt } from "react-jwt";
 import "../styles/globals.css";
 
 export const ModeratorLobby = () => {
   // retrieve access token
   const token = Cookies.get("authToken");
+  const refreshToken = Cookies.get("refreshToken");
+  // decode token to test if it's expired
+  const { decodedToken, isExpired } = useJwt(refreshToken);
   // fetch all the articles
   const [articles, setArticles] = useState([]);
   // fetch moderator data after login
   const [profile, setProfile] = useState({});
+
+  // function to refresh access token
+  const refreshAccessToken = async () => {
+    try {
+      const refreshToken = Cookies.get("refreshToken");
+
+      if (refreshToken) {
+        const response = await axios.post("http://127.0.0.1:5000/auth/refresh");
+
+        if (response.status === 200) {
+          const newAccessToken = response.data.access_token;
+
+          // Update the stored access token
+          Cookies.set("authToken", newAccessToken, {
+            expires: 7,
+            secure: true,
+            httpOnly: true,
+          });
+
+          console.log("Access token refreshed successfully");
+        } else {
+          console.log("Failed to refresh access token");
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+    }
+  };
+
   useEffect(() => {
     let fetchData = async () => {
       try {
@@ -50,7 +83,10 @@ export const ModeratorLobby = () => {
       }
     };
     fetchData();
+    // if the token has expired, refresh it
+    isExpired && refreshAccessToken();
   }, []);
+
   return (
     <div className=" bg-[#E7E4D5] bg-none w-screen h-screen lg:h-screen pt-[100px] lg:pt-[2%] flex flex-col items-center justify-center px-[20px] lg:px-[7%] xl:px-[8%]">
       {/* Navbar */}
@@ -69,7 +105,7 @@ export const ModeratorLobby = () => {
           </h1>
         </div>
         {/* iterate through the pending articles and display each one */}
-        <div className="mt-[50px] flex flex-col w-full overflow-x-hidden custom-scrollBar overflow-y-scroll relative text-xs max-h-[50vh] lg:max-h-[70vh]">
+        <div className="mt-[50px] flex flex-col w-full overflow-x-hidden custom-scrollBar overflow-y-scroll relative text-xs max-h-[60vh] lg:max-h-[70vh]">
           {articles.map((a, index) => (
             <Article key={index} article={a} />
           ))}

@@ -4,7 +4,6 @@ import Typed from "react-typed";
 
 const AboutUs = () => {
   const assetRef = useRef(null);
-
   return (
     <div className="bg-[#395143] flex flex-col items-center text-[#E7E4D5] py-[50px] lg:py-0 px-[20px] md:px-[40px] lg:px-[70px] xl:px-[108px] w-full md:grid md:grid-cols-[45%,55%] lg:grid-cols-2  lg:h-screen lg:gap-[5%] xl:gap-[10%]">
       <div className=" h-full md:w-[90%] lg:w-full flex flex-col  lg:pt-0 justify-center items-center">

@@ -27,12 +27,12 @@ const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-
   // user object
   const [user, setUser] = useState(null);
-
+  // navigate between routes
   const navigate = useNavigate();
 
+  // function to call the Sign Up API
   const handleSignUp = async () => {
     // clean up the error messages variables
     setErrorMsg("");
@@ -67,6 +67,7 @@ const SignIn = () => {
           first_name: firstName,
           username: username,
         });
+        // sign in user after a successful sign up
         if (response.status === 201) {
           try {
             // call the POST api for sign in
@@ -80,7 +81,6 @@ const SignIn = () => {
             if (response.status === 200) {
               const token = response.data.access_token;
               const refreshToken = response.data.refresh_token;
-
               // Store tokens securely (e.g., in cookies or localStorage)
               Cookies.set("authToken", token, {
                 expires: 7,
@@ -116,10 +116,12 @@ const SignIn = () => {
               setErrorMsg("An error occurred during sign-in");
             }
           }
+          // redirect user to their account
           navigate("/user_lobby");
         }
       } catch (error) {
         console.error("Error:", error);
+        // update the error messages based on the error type
         if (error.response) {
           setmailErrorMsg("");
           setLastNameErrorMsg("");
@@ -139,8 +141,14 @@ const SignIn = () => {
   };
 
   return (
-    <div className="w-screen lg:h-screen relative bg-[#E7E4D5] lg:bg-gradient-to-r lg:from-[#395143] lg:to-[#A79629] ">
+    <div className="w-screen h-screen relative bg-[#E7E4D5] lg:bg-gradient-to-r lg:from-[#395143] lg:to-[#A79629] ">
       <RegisterNav />
+      <div className="lg:h-full lg:bg-none bg-gradient-to-r from-[#395143] to-[#A79629] h-[40vh] w-full  flex lg:hidden flex-col items-center rounded-b-[20px] lg:rounded-[0px] justify-center">
+        <img
+          className="mt-[44px] sm:mt-[80px] lg:mt-0 w-[70%] lg:w-[60%] h-[60%]"
+          src={SignUpIllustration}
+        />
+      </div>
       <div className="w-screen text-sm lg:text-md xl:text-xl lg:h-screen flex flex-col lg:grid lg:grid-cols-[55%,45%] xl:grid-cols-2">
         <div className="h-full pb-[20px] lg:py-0 w-full  items-center lg:items-center justify-center flex flex-col">
           <div className="px-[20px]  flex bg-[#E7E4D5] w-full sm:w-[70%] md:w-[70%] lg:w-[90%]  lg:rounded-[15px] flex-col lg:px-[50px] xl:px-[40px] py-[20px] lg:pt-[20px] justify-center items-center">
@@ -271,7 +279,7 @@ const SignIn = () => {
             </div>
           </div>
         </div>
-        <div className="lg:h-full lg:bg-none bg-gradient-to-r from-[#395143] to-[#A79629] h-[40vh] w-full  flex flex-col items-center rounded-b-[20px] lg:rounded-[0px] justify-center">
+        <div className="lg:h-full lg:bg-none bg-gradient-to-r from-[#395143] to-[#A79629] h-[40vh] w-full hidden lg:flex flex-col items-center rounded-b-[20px] lg:rounded-[0px] justify-center">
           <img
             className="mt-[44px] sm:mt-[80px] lg:mt-0 w-[70%] lg:w-[60%] h-[60%]"
             src={SignUpIllustration}

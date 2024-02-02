@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Contact = () => {
   useEffect(() => {
-    let tween = gsap.from(".form-container", {
-      duration: 2,
-      y: 20,
+    // Form animation
+    gsap.from(".form-container", {
+      duration: 0.5,
+      y: 50,
       yoyo: true,
       repeat: -1,
     });
@@ -28,6 +28,7 @@ const Contact = () => {
           </p>
         </div>
       </div>
+      {/* Contact Form */}
       <div className="flex pt-[40px] font-merryweather xl:text-[20px] text-sm lg:text-[16px] w-full justify-center items-center ">
         <div className="form-container drop-shadow w-[95%] rounded-[20px] bg-[#BEB9A1E5] px-[20px] lg:px-[40px] py-[20px] lg:py-[40px] h-full flex flex-col justify-center items-center">
           <p className="py-[10px] w-full font-light text-start text-md xl:text-lg">

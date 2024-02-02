@@ -3,21 +3,28 @@ import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/admin/url.svg";
 import upload from "../../public/images/admin/upload.svg";
 import { Moderateurs } from "../components/adminlobby/laptops/Moderateurs";
-import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
-import { ProfileSection } from "../components/adminlobby/mobile/ProfileSection";
 import { ModeratorsSection } from "../components/adminlobby/mobile/ModeratorsSection";
+import { ProfileCard } from "../components/shared/ProfileCard";
+import { ProfileSection } from "../components/shared/ProfileSection";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
 import Cookies from "js-cookie";
+
+// Admin's lobby
 export const AdminLobby = () => {
-  // fetch admin data after login
   const [profile, setProfile] = useState({});
-  // all the moderators
+  // fetch all the moderators
   const [moderateurs, setModerateurs] = useState([]);
-  //get the access token
+
+  // get the access token
   const token = Cookies.get("authToken");
+  const refreshToken = Cookies.get("refreshToken");
+  // decode token to test if it's expired
+  const { decodedToken, isExpired } = useJwt(refreshToken);
+
   // the upload URL
   const [url, setUrl] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,7 +39,8 @@ export const AdminLobby = () => {
         );
         if (response.status >= 200 && response.status < 300) {
           setProfile(response.data);
-          // fetch the moderators
+
+          // fetch all the moderators
           const moderatorsResponse = await axios.get(
             "http://127.0.0.1:5000/admin_dashboard/all_moderators",
             {
@@ -57,7 +65,10 @@ export const AdminLobby = () => {
       }
     };
     fetchData();
+    // if the token has expired, refresh it
+    isExpired && refreshAccessToken();
   }, []);
+
   // function to upload the articles to articles search
   const handleUpload = async () => {
     if (url) {
@@ -84,6 +95,35 @@ export const AdminLobby = () => {
       alert("Veuillez introduire un lien");
     }
   };
+
+  // function to refresh access token
+  const refreshAccessToken = async () => {
+    try {
+      const refreshToken = Cookies.get("refreshToken");
+
+      if (refreshToken) {
+        const response = await axios.post("http://127.0.0.1:5000/auth/refresh");
+
+        if (response.status === 200) {
+          const newAccessToken = response.data.access_token;
+
+          // Update the stored access token
+          Cookies.set("authToken", newAccessToken, {
+            expires: 7,
+            secure: true,
+            httpOnly: true,
+          });
+
+          console.log("Access token refreshed successfully");
+        } else {
+          console.log("Failed to refresh access token");
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+    }
+  };
+
   return (
     // Background image if the screen is large, raw otherwise
     <div

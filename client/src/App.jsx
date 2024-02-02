@@ -24,7 +24,6 @@ function App() {
           <Route path="/recover_password" element={<PasswordRecovery />} />
           <Route path="/reset_password/:token" element={<Reset />} />
           <Route path="/mail_sent" element={<MailSent />} />
-          {/* Add other routes as needed */}
         </Routes>
       </Router>
     </div>

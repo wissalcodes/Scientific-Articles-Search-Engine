@@ -93,11 +93,10 @@ export const Reset = () => {
       <div className="h-full w-full flex flex-col px-[20px] sm:px-[70px] justify-start items-center bg-[#E7E4D5]">
         <div className="w-full flex flex-col items-center justify-center lg:h-full z-80">
           {/* section title */}
-          <h1 className="z-70 text-[#395143] w-full font-bold hidden lg:flex text-start font-merryweather  text-md lg:text-3xl xl:text-5xl">
+          <h1 className="z-70 text-[#395143] w-full font-bold hidden lg:flex text-start font-merryweather text-md lg:text-3xl xl:text-5xl">
             Réinitialiser le mot de passe
           </h1>
           <ErrorMessage message={errorMsg} />
-
           <div className="flex w-full ">
             {window.innerWidth > 1023 ? (
               <p className="w-full flex pt-[5%] pb-[10px] text-md lg:text-xl xl:text-2xl">

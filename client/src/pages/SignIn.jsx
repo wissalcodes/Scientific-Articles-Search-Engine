@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import AuthNavbar from "../components/layout/AuthNavbar";
 import SignInIllustration from "../../public/images/authentication/sign-in-illustration.svg";
 import { EyeController } from "../components/authentication/EyeController";
@@ -20,7 +20,7 @@ export default function SignIn() {
   // controls whether or not the password is visible
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // user state variable
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [token, setToken] = useState("token");
   const { decodedToken, isExpired } = useJwt(token);
   // Integration function for calling the Sign in API
@@ -44,8 +44,7 @@ export default function SignIn() {
         if (response.status === 200) {
           const token = response.data.access_token;
           const refreshToken = response.data.refresh_token;
-
-          // Store tokens securely (e.g., in cookies or localStorage)
+          // store token in cookies
           Cookies.set("authToken", token, {
             expires: 7,
           });
@@ -64,6 +63,7 @@ export default function SignIn() {
             }
           );
           setUser(userResponse.data);
+          // navigate to the corresponding lobby
           if (userResponse.data.username === "admin") {
             navigate("/admin_dashboard");
           } else {
@@ -90,36 +90,6 @@ export default function SignIn() {
         }
       }
     }
-
-    // function to refresh access token
-    const refreshAccessToken = async () => {
-      try {
-        const refreshToken = Cookies.get("refreshToken");
-
-        if (refreshToken) {
-          const response = await axios.post(
-            "http://127.0.0.1:5000/auth/refresh"
-          );
-
-          if (response.status === 200) {
-            const newAccessToken = response.data.access_token;
-
-            // Update the stored access token
-            Cookies.set("authToken", newAccessToken, {
-              expires: 7,
-              secure: true,
-              httpOnly: true,
-            });
-
-            console.log("Access token refreshed successfully");
-          } else {
-            console.log("Failed to refresh access token");
-          }
-        }
-      } catch (error) {
-        console.error("Error refreshing access token:", error);
-      }
-    };
   };
   return (
     <div className="w-screen h-screen pb-[10%] lg:mb-0 relative bg-[#E7E4D5] lg:bg-gradient-to-r from-[#395143] to-[#A79629] ">

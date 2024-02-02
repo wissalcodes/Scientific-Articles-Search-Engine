@@ -3,7 +3,7 @@ import blobs from "../../public/images/main/blured-blobs.svg";
 import urlImg from "../../public/images/main/welcome.svg";
 import searchAsset from "../../public/images/user/search.svg";
 import noresult from "../../public/images/user/noresult.svg";
-import { ProfileCard } from "../components/adminlobby/laptops/ProfileCard";
+import { ProfileCard } from "../components/shared/ProfileCard";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -14,6 +14,9 @@ import { useJwt } from "react-jwt";
 export const UserLobby = () => {
   // get the access token
   const token = Cookies.get("authToken");
+  const refreshToken = Cookies.get("refreshToken");
+  // decode token to test if it's expired
+  const { decodedToken, isExpired } = useJwt(refreshToken);
   const [favorites, setFavorites] = useState([]);
   // to control displaying the search results or the input field
   const [search, setSearch] = useState(false);
@@ -29,7 +32,6 @@ export const UserLobby = () => {
   const [authorClicked, setAuthorClicked] = useState(false);
   const [institutionClicked, setInstitutionClicked] = useState(false);
   const [keywordsClicked, setKeywordsClicked] = useState(false);
-  const [filters, setFilters] = useState([]);
 
   // Function to handle author button click
   const handleAuthorClick = () => {
@@ -55,10 +57,39 @@ export const UserLobby = () => {
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
+
+  // function to refresh access token
+  const refreshAccessToken = async () => {
+    try {
+      const refreshToken = Cookies.get("refreshToken");
+
+      if (refreshToken) {
+        const response = await axios.post("http://127.0.0.1:5000/auth/refresh");
+
+        if (response.status === 200) {
+          const newAccessToken = response.data.access_token;
+
+          // Update the stored access token
+          Cookies.set("authToken", newAccessToken, {
+            expires: 7,
+            secure: true,
+            httpOnly: true,
+          });
+
+          console.log("Access token refreshed successfully");
+        } else {
+          console.log("Failed to refresh access token");
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // fetch the user's personal information
+        // fetch the user's personal information on component mount
         const userResponse = await axios.get(
           "http://127.0.0.1:5000/user_dashboard/my_profile",
           {
@@ -68,6 +99,7 @@ export const UserLobby = () => {
           }
         );
         if (userResponse.status >= 200 && userResponse.status < 300) {
+          // save user infos
           setProfile(userResponse.data);
           // fetch the user's favourite articles
           const response = await axios.get(
@@ -78,7 +110,6 @@ export const UserLobby = () => {
               },
             }
           );
-          console.log(response.data.articles);
           setFavorites(response.data.articles);
         } else {
           console.log("error fetching data");
@@ -88,31 +119,32 @@ export const UserLobby = () => {
       }
     };
     fetchData();
+    // if the token has expired, refresh it
+    isExpired && refreshAccessToken();
   }, []);
 
-  // function to search the articles to articles search
+  // function to post the search terms and parameters to the search API
   const handleSearch = async () => {
     setSearch(true);
     setSearchResult([]);
-
+    // call the search API with corresponding filters
     try {
       const response = await axios.post(
         "http://localhost:5000/article_manager/search_articles",
         {
-          search_terms: searchTerms, // Pass the user's search input
-          filters: {
-            institutions_filter: institutionClicked ? true : false,
-            authors_filter: authorClicked ? true : false,
-            keywords_filter: keywordsClicked ? true : false,
-            start_date: startDate,
-            end_date: endDate,
-          },
+          search_terms: searchTerms,
+          institutions_filter: institutionClicked ? true : false,
+          authors_filter: authorClicked ? true : false,
+          keywords_filter: keywordsClicked ? true : false,
+          start_date: startDate,
+          end_date: endDate,
         }
       );
+      console.log(startDate, endDate);
       if (response.status >= 200 && response.status < 300) {
         console.log("successful search");
-        console.log(response.data.results);
         const articles = response.data.results;
+        // save the search results
         setSearchResult(articles);
       } else {
         console.log("error searching articles");
@@ -133,11 +165,10 @@ export const UserLobby = () => {
       {/* Navbar */}
       <LobbyNav />
       {/* if the screen if small, display 2 extensible sections of profile and favorites */}
-      <div className="lg:h-[30vh] lg:hidden">
+      <div className="lg:h-[30vh] lg:hidden  z-50">
         <ProfileCard profile={profile} role={"user"} />
         <Favoris favorites={favorites} profile={profile} />
       </div>
-
       <div id="main-container" className="pt-[90px] w-full flex flex-col">
         {!search && (
           <div className="pt-[4%] w-full h-full hidden lg:grid lg:grid-cols-[50%,50%]">
@@ -154,9 +185,7 @@ export const UserLobby = () => {
         )}
         {/* URL input field */}
         <div
-          className={`z-0 md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px] ${
-            search ? `` : ""
-          }`}>
+          className={`md:mt-[300px] lg:mt-0 w-full text-[#395143] flex flex-col lg:flex-row h-[50px] justify-center items-center my-[40px]`}>
           <div className="pl-[20px] drop-shadow flex w-full lg:h-[80%] xl:h-full lg:mr-[15px] bg-[#56695C] lg:bg-[#BEB9A1B2] rounded-[10px] ">
             <img className="lg:block hidden w-[25px]" src={searchAsset} />
             <input
@@ -241,7 +270,7 @@ export const UserLobby = () => {
             {searchResult.length > 0 ? (
               searchResult.map((article, index) => {
                 const isFavorite = favorites.some(
-                  (fav) => fav._id === article._id
+                  (fav) => fav._id === article.id
                 );
                 console.log(isFavorite);
                 return (

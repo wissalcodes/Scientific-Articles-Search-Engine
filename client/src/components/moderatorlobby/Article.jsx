@@ -1,8 +1,8 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { ModerateArticlePopout } from "./ModerateArticlePopout";
 import artAssetDark from "../../../public/images/user/article-dark.svg";
 
+// Article to display in pending articles section
 export const Article = ({ article }) => {
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
   const togglePopout = () => {

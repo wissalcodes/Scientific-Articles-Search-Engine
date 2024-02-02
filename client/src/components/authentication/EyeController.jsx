@@ -2,6 +2,7 @@ import { useState } from "react";
 import closedEye from "../../../public/images/authentication/eye-off.svg";
 import openEye from "../../../public/images/authentication/eye.svg";
 
+// component to control displaying/hiding passwords
 export const EyeController = ({ onVisibilityChange }) => {
   // password initially invisible
   const [isVisible, setIsVisible] = useState(false);

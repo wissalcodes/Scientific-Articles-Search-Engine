@@ -1,30 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import right from "../../../public/images/user/right-green.svg";
 import rightSmall from "../../../public/images/user/right-small.svg";
-
 import img from "../../../public/images/user/heart.svg";
-import ErrorMessage from "../authentication/Error";
 import { FavArticle } from "./FavArticle";
-import Cookies from "js-cookie";
-import axios from "axios";
 
 export const Favoris = ({ favorites, profile }) => {
-  // when the fields are being edited
+  // initially the card is invisible
   const [showCard, setShowCard] = useState(false);
   const handleCardAnimation = () => {
     setShowCard((prevShowCard) => !prevShowCard);
   };
-
   return (
     <div
-      className={`bg-[#395143]  text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:translate-y-[8vh] xl:-translate-y-[5vh] top-1/4 -translate-y-[0vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[80vw] h-[60vh] transform transition-transform duration-500 ease-in-out ${
+      className={`bg-[#395143]  text-[#E7E4D5] drop-shadow py-[10px] font-lora rounded-br-[14px]  lg:-translate-y-[8vh] xl:-translate-y-[5vh] top-1/4 -translate-y-[0vh] lg:top-1/2 xl:top-1/2 fixed left-0 w-[80vw] lg:w-[80vw] h-[60vh] transform transition-transform duration-500 ease-in-out ${
         showCard
           ? "translate-x-0"
           : "-translate-x-[80vw] lg:-translate-x-[80vw]"
       }`}>
       {" "}
       <div className="px-[20px] flex flex-col  items-start h-full w-full">
-        <h1 className="z-10 text-[32px] pt-[10px] font-bold font-merryweather">
+        <h1 className="z-10 text-xl lg:text-[32px] pt-[10px] font-bold font-merryweather">
           Mes Favoris
         </h1>
         <div className="w-full z-50 h-[40vh] custom-scrollBar overflow-y-scroll">

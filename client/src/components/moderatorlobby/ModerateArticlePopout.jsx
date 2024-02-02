@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable react/prop-types */
 import { useState } from "react";
 import Edit from "../../../public/images/moderator/edit.svg";
 import x from "../../../public/images/admin/x.svg";
@@ -33,6 +31,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     text: false,
   });
 
+  // Function to call DELETE API for deleting an article if it contains too many errors
   const handleDeleteArticle = async () => {
     try {
       const response = await axios.delete(
@@ -59,7 +58,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     const googleDriveViewerUrl = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
       url
     )}`;
-
+    // open pdf file in a new tab
     window.open(googleDriveViewerUrl, "_blank");
   };
 
@@ -94,7 +93,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
       [field]: false,
     }));
   };
-
+  // Function to post the moderation results to API
   const handleModerateArticle = async () => {
     try {
       const response = await axios.put(

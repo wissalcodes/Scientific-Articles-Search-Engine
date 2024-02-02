@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import artAssetDark from "../../../public/images/user/article-dark.svg";
 import heart from "../../../public/images/user/e-heart.svg";
 import filledheart from "../../../public/images/user/filledheart.svg";
-import { ArticlePopout } from "../moderatorlobby/ArticlePopout";
+import { ArticlePopout } from "./ArticlePopout";
 import Cookies from "js-cookie";
 
+// Article to display in search results
 export const Article = ({ article, type, profile }) => {
   const token = Cookies.get("authToken");
+
+  // track the state of the heart input
   const [isFavorited, setIsFavorited] = useState(type);
   const toggleIsFavorited = () => setIsFavorited(!isFavorited);
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
@@ -23,23 +26,27 @@ export const Article = ({ article, type, profile }) => {
     } else {
       container.classList.remove("blurred");
     }
-
     // Cleanup effect
     return () => {
       container.classList.remove("blurred");
     };
   }, [isPopoutOpen]);
-  const handleRemoveFav = async () => {
-    toggleIsFavorited();
 
+  // function to call the DELETE API on favorites to remove the article from the user's favourites
+  const handleRemoveFav = async () => {
+    // update heart asset
+    toggleIsFavorited();
     try {
-      const favsUrl = `http://localhost:5000/favori_manager/remove_favorite/${profile.id}/${article._id}`;
-      console.log(favsUrl);
-      const response = await axios.post(favsUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const favsUrl = `http://localhost:5000/favori_manager/remove_favorite/${profile.id}/${article.id}`;
+      const response = await axios.post(
+        favsUrl,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
       } else {
@@ -50,16 +57,21 @@ export const Article = ({ article, type, profile }) => {
     }
   };
 
+  // function to call the POST API on favorites to add the article to the user's favourites
   const handleAddFav = async () => {
+    // update heart asset
     toggleIsFavorited();
     try {
-      const favsUrl = `http://localhost:5000/favori_manager/add_favorite/${profile.id}/${article._id}`;
-      console.log(favsUrl);
-      const response = await axios.post(favsUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const favsUrl = `http://localhost:5000/favori_manager/add_favorite/${profile.id}/${article.id}`;
+      const response = await axios.post(
+        favsUrl,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
       } else {
@@ -69,7 +81,6 @@ export const Article = ({ article, type, profile }) => {
       console.log(error);
     }
   };
-
   return (
     <div
       key={isFavorited}

@@ -75,7 +75,7 @@ def init_auth_routes(api):
 
             # Add sorting to the query
             search_query["sort"] = [{"date": {"order": "desc"}}]
-
+            print(search_query)
             # Send the query to Elasticsearch
             response = requests.post('http://localhost:9200/articles/_search', json=search_query)
             
@@ -87,6 +87,7 @@ def init_auth_routes(api):
                 results = [{'id': hit['_id'], 'source': hit['_source']} for hit in hits]
 
                 return {'results': results}, 200
+                
             else:
                 return {'error': 'Elasticsearch request failed'}, response.status_code
         

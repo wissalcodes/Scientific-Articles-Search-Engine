@@ -1,11 +1,13 @@
 import { useState } from "react";
 import MDPOublie from "../../public/images/authentication/mdps-oublie.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthNavbar from "../components/layout/AuthNavbar";
 import Cookies from "js-cookie";
 export const PasswordRecovery = () => {
+  // e-mail input field
   const [email, setEmail] = useState("");
+  // to navigate between routes
   const navigate = useNavigate();
 
   const handleResetMail = async () => {
@@ -23,7 +25,9 @@ export const PasswordRecovery = () => {
             "Successfully sent request to reset pass ",
             response.data
           );
+          // save the e-mail adress in cookies
           Cookies.set("email", email);
+          // navigate to the mail sent page
           navigate("/mail_sent");
         } else {
           console.log("Failed to request reset link");
@@ -33,7 +37,7 @@ export const PasswordRecovery = () => {
         if (error.response) {
           console.error("Server Error Message:", error.response.data);
         } else {
-          //  setErrorMsg("An error occurred during sign-in");
+          console.log("An error occurred during mail sending");
         }
       }
     }
