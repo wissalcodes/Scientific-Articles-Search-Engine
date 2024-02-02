@@ -15,7 +15,7 @@ export const AddModeratorPopout = ({ onClose }) => {
   const handleAddModerator = async () => {
     const token = Cookies.get("authToken");
     try {
-      // fetch the admin's personal information
+      // post moderator data to API
       const response = await axios.post(
         "http://127.0.0.1:5000/admin_dashboard/all_moderators/add_new_moderator",
         {
@@ -35,6 +35,7 @@ export const AddModeratorPopout = ({ onClose }) => {
       if (response.status >= 200 && response.status < 300) {
         alert("Moderateur ajoute avec succes");
       }
+      // if the credentials are invalid
     } catch (error) {
       alert(
         "Le mot d'utilisateur et l'adresse e-mail appartiennent a un compte deja existant."
@@ -126,7 +127,6 @@ export const AddModeratorPopout = ({ onClose }) => {
                 </div>
               </div>
             </div>
-
             <div className="w-full flex flex-col justify-center items-center ">
               <div className="w-full mb-[5px] pt-[10px]  lg:pt-[7px] flex  justify-start items-start">
                 <h1 className="font-semibold  font-merryweather text-[#395143]">

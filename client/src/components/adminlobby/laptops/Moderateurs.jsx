@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ArrowUp from "../../../../public/images/admin/two-up-arrows.svg";
 import Add from "../../../../public/images/admin/add.svg";
 import { Moderateur } from "../Moderateur";
-import Cookies from "js-cookie";
 import { AddModeratorPopout } from "../AddModeratorPopout";
+
 export const Moderateurs = ({ moderateurs }) => {
   // add moderator popout state
   const [isPopoutOpen, setIsPopoutOpen] = useState(false);
-  const [displayFullReports, setDisplayFullReports] =
+  const [displayFullList, setDisplayFullList] =
     window.innerWidth > 1023 ? useState(false) : useState(true);
-
+  // extend the section or not
   const toggleDisplay = () => {
-    setDisplayFullReports((prev) => !prev);
+    setDisplayFullList((prev) => !prev);
   };
+  // add moderator popout state
   const togglePopout = () => {
     setIsPopoutOpen((prev) => !prev);
   };
-  // Controls whether to show the Project Reports section or not (small screens)
+  // Controls whether to show the moderators list section or not
   const [isVisible, setIsVisible] =
     window.innerWidth > 1023 ? useState(true) : useState(false);
-  const toggleVisibility = () => {
-    setIsVisible((prev) => !prev);
-  };
 
   useEffect(() => {
     const container = document.getElementById("main-container");
@@ -52,9 +50,9 @@ export const Moderateurs = ({ moderateurs }) => {
             "-6px -6px 6px -6px rgba(0, 0, 0, 0.15), 6px 0 6px -6px rgba(0, 0, 0, 0.15)",
         }}
         className={`fixed bottom-0 py-[4px]  font-merryweather bg-[#56695C] text-[#E7E4D5] overflow-x-hidden overflow-y-auto lg:overflow-hidden ${
-          !displayFullReports ? "lg:pt-[40px]" : "lg:py-[20px]"
+          !displayFullList ? "lg:pt-[40px]" : "lg:py-[20px]"
         } lg:px-[20px] px-[30px] lg:shadow-md w-[100%] rounded-[14px] flex flex-col items-center justify-center lg:ease-in-out lg:duration-150 relative ${
-          displayFullReports
+          displayFullList
             ? "lg:h-full lg:transform lg:-translate-y-[40px] xl:-translate-y-[150px] "
             : "lg:h-[150px] "
         }`}>
@@ -71,7 +69,7 @@ export const Moderateurs = ({ moderateurs }) => {
             <img
               onClick={toggleDisplay}
               className={`${
-                displayFullReports ? "transform rotate-180" : ""
+                displayFullList ? "transform rotate-180" : ""
               } w-[20px] h-[30px] overflow-auto cursor-pointer`}
               alt=""
               src={ArrowUp}
@@ -79,7 +77,6 @@ export const Moderateurs = ({ moderateurs }) => {
           </div>
           {/* Line asset */}
           <div className="flex flex-col justify-center w-full lg:items-end pr-[26px]">
-            {/* Display the Add report button in all large screens and in mobile screens if the section visibility is set to true */}
             {isVisible ? (
               <div
                 onClick={togglePopout}
@@ -92,7 +89,7 @@ export const Moderateurs = ({ moderateurs }) => {
             ) : null}
           </div>
         </div>
-        {/* Second row, reports cards  */}
+        {/* moderators list */}
         <div className="w-full h-full">
           {moderateurs.map((m) => (
             <Moderateur moderateur={m} key={m.id} />

@@ -13,6 +13,7 @@ export const Moderateur = ({ moderateur }) => {
     username: moderateur.username,
     email: moderateur.email,
   });
+
   // function for calling the moderator DELETE API to delete moderator
   const deleteModerator = async () => {
     try {

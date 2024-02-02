@@ -2,6 +2,7 @@ import { useState } from "react";
 import closedEye from "../../../public/images/authentication/eye-off.svg";
 import openEye from "../../../public/images/authentication/eye.svg";
 
+// component to control displaying/hiding passwords
 export const EyeController = ({ onVisibilityChange }) => {
   // password initially invisible
   const [isVisible, setIsVisible] = useState(false);
@@ -16,7 +17,7 @@ export const EyeController = ({ onVisibilityChange }) => {
   return (
     <div onClick={toggleVisibility} style={{ cursor: "pointer" }}>
       {/* if the eye asset is clicked, load the opposite state asset */}
-      <img src={isVisible ? closedEye : openEye} />
+      <img width="20px" src={isVisible ? closedEye : openEye} />
     </div>
   );
 };
