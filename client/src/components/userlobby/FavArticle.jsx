@@ -4,7 +4,7 @@ import artAsset from "../../../public/images/user/article.svg";
 import artAssetDark from "../../../public/images/user/article-dark.svg";
 import heart from "../../../public/images/user/e-heart.svg";
 import bin from "../../../public/images/user/bin.svg";
-import { ArticlePopout } from "./ArticlePopout";
+import { FavArticlePopout } from "./FavArticlePopout";
 import Cookies from "js-cookie";
 
 // Article to be displayeed in the user's favorite articles section
@@ -84,7 +84,7 @@ export const FavArticle = ({ article, type, profile }) => {
         src={type === "fav" ? artAsset : artAssetDark}
       />
       {isPopoutOpen && (
-        <ArticlePopout article={article} onClose={togglePopout} />
+        <FavArticlePopout article={article} onClose={togglePopout} />
       )}
       {/* Article title */}
       <h1

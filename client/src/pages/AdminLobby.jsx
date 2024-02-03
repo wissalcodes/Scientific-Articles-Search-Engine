@@ -9,6 +9,7 @@ import { ProfileSection } from "../components/shared/ProfileSection";
 import LobbyNav from "../components/layout/LobbyNav";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useJwt } from "react-jwt";
 
 // Admin's lobby
 export const AdminLobby = () => {
