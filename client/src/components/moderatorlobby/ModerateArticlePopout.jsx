@@ -51,7 +51,7 @@ export const ModerateArticlePopout = ({ onClose, article }) => {
     } catch (error) {
       console.log(error);
     }
-    alert("delete article");
+    alert("Article supprimé avec succés");
   };
 
   const openPdfInNewTab = () => {
